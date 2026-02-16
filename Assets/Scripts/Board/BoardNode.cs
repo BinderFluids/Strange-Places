@@ -1,18 +1,25 @@
 
 using System;
+using EventBus;
 using UnityEngine;
 using Registry;
 
 public class BoardNode : MonoBehaviour, IGridNode
 {
     [SerializeField] private BoardPiece piece;
+    private EventBinding<SelectBoardNodeEvent> selectBinding;
 
     private void Awake()
     {
         Registry<BoardNode>.TryAdd(this); 
+        selectBinding = new EventBinding<SelectBoardNodeEvent>(OnSelectBindingEvent);
+        EventBus<SelectBoardNodeEvent>.Register(selectBinding);
     }
 
-   
+    void OnSelectBindingEvent(SelectBoardNodeEvent boardNodeEvent)
+    {
+        if (boardNodeEvent.selectedNode != this) return;
+    }
     
     public bool IsOccupied()
     {
@@ -39,5 +46,6 @@ public class BoardNode : MonoBehaviour, IGridNode
     private void OnDestroy()
     {
         Registry<BoardNode>.Remove(this); 
+        EventBus<SelectBoardNodeEvent>.Deregister(selectBinding);
     }
 }

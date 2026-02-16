@@ -1,0 +1,40 @@
+using EventBus;
+using UnityEngine;
+using Registry; 
+public class MouseRaycast3D : MonoBehaviour
+{
+    [SerializeField] private Camera cam;
+    [SerializeField] private LayerMask mask = ~0;
+    [SerializeField] private float maxDistance = 1000f;
+
+    private void Awake()
+    {
+        if (cam == null) cam = Camera.main;
+    }
+
+    private void Update()
+    {
+        if (cam == null) return;
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, mask, QueryTriggerInteraction.Ignore))
+            {
+                BoardNode selectedNode = Registry<BoardNode>.Get(new Closest(Mathf.Sqrt(0.5f), hit.point));
+                EventBus<SelectBoardNodeEvent>.Raise(new SelectBoardNodeEvent
+                {
+                    selectedNode = selectedNode
+                });
+            }
+        }
+    }
+    
+    
+}
+
+public struct SelectBoardNodeEvent : IEvent
+{
+    public BoardNode selectedNode;
+}
