@@ -16,19 +16,18 @@ public class MouseRaycast3D : MonoBehaviour
     {
         if (cam == null) return;
 
-        if (Input.GetMouseButtonDown(0))
+        if (!Input.GetMouseButtonDown(0)) return; 
+        
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        if (!Physics.Raycast(ray, out RaycastHit hit, maxDistance, mask, QueryTriggerInteraction.Ignore)) return; 
+        
+        BoardNode selectedNode = Registry<BoardNode>.Get(new Closest(Mathf.Sqrt(0.5f), hit.point));
+        if (selectedNode == null) return; 
+        
+        EventBus<SelectBoardNodeEvent>.Raise(new SelectBoardNodeEvent
         {
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, mask, QueryTriggerInteraction.Ignore))
-            {
-                BoardNode selectedNode = Registry<BoardNode>.Get(new Closest(Mathf.Sqrt(0.5f), hit.point));
-                EventBus<SelectBoardNodeEvent>.Raise(new SelectBoardNodeEvent
-                {
-                    selectedNode = selectedNode
-                });
-            }
-        }
+            selectedNode = selectedNode
+        });
     }
     
     
