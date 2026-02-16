@@ -1,16 +1,20 @@
 using System;
 using EventBus;
 using PrimeTween;
+using ScriptableVariables;
 using UnityEngine;
 
 public class MachineBehavior : MonoBehaviour
 {
+    [SerializeField] private IntVariable points;
     [SerializeField] private float moveDistance;
     [SerializeField] private float moveDuration;
 
     [SerializeField] private Transform _transform;
     private EventBinding<BoardPositionEvent> boardPositionEventBinding;
     private Tween movementTween;
+
+    public event Action onMoveComplete;
     
     private void Awake()
     {
@@ -36,8 +40,11 @@ public class MachineBehavior : MonoBehaviour
                 break;
         }   
         float moveVector = moveDistance * moveDir;
+        points.Value += moveDir;
         
-        movementTween = Tween.PositionX(_transform, _transform.position.x + moveVector, moveDuration);
+        movementTween = Tween
+            .PositionX(_transform, _transform.position.x + moveVector, moveDuration)
+            .OnComplete(onMoveComplete);
     }
 
     private void OnDestroy()
