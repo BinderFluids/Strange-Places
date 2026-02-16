@@ -1391,30 +1391,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1354427790}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1428862626 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5907345521320713738, guid: bcb91f9f7e7f6fbd0b2584394f10cf6a, type: 3}
-  m_PrefabInstance: {fileID: 1558504539125195760}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1428862627 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1242494275046859649, guid: bcb91f9f7e7f6fbd0b2584394f10cf6a, type: 3}
   m_PrefabInstance: {fileID: 1558504539125195760}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1428862628
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1428862626}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7996a38c1f8e43758184fc0062a1e4c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gridWidth: 3
-  gridHeight: 4
 --- !u!1 &1499095583
 GameObject:
   m_ObjectHideFlags: 0
@@ -2420,6 +2401,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 837851623}
     m_Modifications:
+    - target: {fileID: 514068641758468869, guid: bcb91f9f7e7f6fbd0b2584394f10cf6a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 514068641758468869, guid: bcb91f9f7e7f6fbd0b2584394f10cf6a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.03298651
+      objectReference: {fileID: 0}
+    - target: {fileID: 514068641758468869, guid: bcb91f9f7e7f6fbd0b2584394f10cf6a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.75
+      objectReference: {fileID: 0}
     - target: {fileID: 1242494275046859649, guid: bcb91f9f7e7f6fbd0b2584394f10cf6a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2460,6 +2453,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4711528176800482980, guid: bcb91f9f7e7f6fbd0b2584394f10cf6a, type: 3}
+      propertyPath: gridWidth
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4711528176800482980, guid: bcb91f9f7e7f6fbd0b2584394f10cf6a, type: 3}
+      propertyPath: gridHeight
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4711528176800482980, guid: bcb91f9f7e7f6fbd0b2584394f10cf6a, type: 3}
+      propertyPath: gridCellSize
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 5907345521320713738, guid: bcb91f9f7e7f6fbd0b2584394f10cf6a, type: 3}
       propertyPath: m_Name
       value: Game Board
@@ -2468,10 +2473,7 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 6391921655882639785, guid: bcb91f9f7e7f6fbd0b2584394f10cf6a, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5907345521320713738, guid: bcb91f9f7e7f6fbd0b2584394f10cf6a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1428862628}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bcb91f9f7e7f6fbd0b2584394f10cf6a, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
