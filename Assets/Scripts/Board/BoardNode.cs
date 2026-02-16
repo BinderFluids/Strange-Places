@@ -1,11 +1,25 @@
 
 using System;
 using UnityEngine;
+using Registry;
 
 public class BoardNode : MonoBehaviour, IGridNode
 {
     [SerializeField] private BoardPiece piece;
 
+    private void Awake()
+    {
+        Registry<BoardNode>.TryAdd(this); 
+    }
+
+   
+    
+    public bool IsOccupied()
+    {
+        return piece != null; 
+    }
+    
+#if UNITY_EDITOR
     private Color gizmoColor;
     private float gizmoSize;
     public void Init(Color gizmoColor, float gizmoSize)
@@ -13,17 +27,17 @@ public class BoardNode : MonoBehaviour, IGridNode
         this.gizmoColor = gizmoColor;
         this.gizmoSize = gizmoSize;
     }
-    
-    public bool IsOccupied()
-    {
-        return piece != null; 
-    }
-
     private void OnDrawGizmos()
     {
         Gizmos.color = gizmoColor;
         
         Vector3 cubeSize = new Vector3(gizmoSize, .01f, gizmoSize);
         Gizmos.DrawCube(transform.position, cubeSize);
+    }
+#endif
+    
+    private void OnDestroy()
+    {
+        Registry<BoardNode>.Remove(this); 
     }
 }

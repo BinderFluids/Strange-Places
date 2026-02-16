@@ -28,7 +28,10 @@ public class Board : MonoBehaviour
             for (int x = 0; x < gridHeight; x++)
             {
                 BoardNode node = Instantiate(boardNodePrefab, transform);
+                
+#if UNITY_EDITOR
                 node.Init(colors[colorIndex % 2], gridCellSize);
+#endif
                 
                 Vector3 boardOffset = new Vector3(x * gridCellSize, 0, y * gridCellSize);
                 Vector3 squareOffset = new Vector3(gridCellSize / 2, 0, gridCellSize / 2);
