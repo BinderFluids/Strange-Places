@@ -7,13 +7,6 @@
       "dependencies": {},
       "hash": "30369db441fe3ab8b884a2d47ef6ad3695224a48"
     },
-    "com.binderfluids.projectsetup": {
-      "version": "https://github.com/BinderFluids/Project-Setup.git",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "d4add22c13869731f2058875fee781f92e823063"
-    },
     "com.binderfluids.registry": {
       "version": "git+https://github.com/BinderFluids/Registry.git",
       "depth": 0,
@@ -48,13 +41,6 @@
       "source": "git",
       "dependencies": {},
       "hash": "ee927cd3f735f5c5b08572b4df5ba2aab03bf5ce"
-    },
-    "com.kylewbanks.scenerefattribute": {
-      "version": "git+https://github.com/KyleBanks/scene-ref-attribute.git",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "8d3a0ee421588faaf373e0fe4b8f4577a522f029"
     },
     "com.kyrylokuzyk.primetween": {
       "version": "file:../Assets/Plugins/PrimeTween/internal/com.kyrylokuzyk.primetween.tgz",
