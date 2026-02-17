@@ -30,15 +30,16 @@ public class NeutralizeCharges : PieceConflictResolver
         }
         
         if (active.Piece.Charge > other.Piece.Charge)
-            DoNeutralizeCharges(active, other, direction);
-        if (active.Piece.Charge < other.Piece.Charge)
-            DoNeutralizeCharges(other, active, direction);
+            DoNeutralizeCharges(active, active, other, direction);
+        else if (active.Piece.Charge < other.Piece.Charge)
+            DoNeutralizeCharges(active, other, active, direction);
     }
 
-    void DoNeutralizeCharges(BoardNode bigCharge, BoardNode smallCharge, Vector2Int direction)
+    void DoNeutralizeCharges(BoardNode active, BoardNode bigCharge, BoardNode smallCharge, Vector2Int direction)
     {
+        bigCharge.TakeCharge(smallCharge.Piece.Charge);
         smallCharge.TakePiece();
-        bigCharge.Piece.ChangeCharge(-smallCharge.Piece.Charge);
-        bigCharge.TranslatePiece(direction, new PushOtherPiece());
+        if (active != null)
+            active.TranslatePiece(direction, new PushOtherPiece());
     }
 }

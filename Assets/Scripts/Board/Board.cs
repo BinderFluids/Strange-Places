@@ -50,39 +50,28 @@ public class Board : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.U))
+        if (Input.GetKeyDown(KeyCode.U)) AdvanceCharges(player, Vector2Int.up);
+        if (Input.GetKeyDown(KeyCode.J)) AdvanceCharges(opponent, Vector2Int.down);
+    }
+
+    private void AdvanceCharges(BoardPlayer owner, Vector2Int direction)
+    {
+        int startY = direction == Vector2Int.up ? grid.Height - 1 : 0;
+        int endYExclusive = direction == Vector2Int.up ? -1 : grid.Height;
+        int stepY = direction == Vector2Int.up ? -1 : 1;
+
+        for (int y = startY; y != endYExclusive; y += stepY)
         {
-            AdvancePlayerCharges();
-        }
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            AdvanceOpponentCharges();
+            for (int x = 0; x < grid.Width; x++)
+            {
+                BoardNode node = grid.Get(x, y);
+                if (node.Piece == null || node.Piece.PlayerOwner != owner) continue;
+
+                node.TranslatePiece(direction, new PushOtherPiece());
+            }
         }
     }
 
-    void AdvancePlayerCharges()
-    {
-        for (int y = grid.Height - 1; y >= 0; y--)
-        {
-            for (int x = 0; x < grid.Width; x++)
-            {
-                BoardNode node = grid.Get(x, y);
-                if (node.Piece == null || node.Piece.PlayerOwner != player) continue;
-                node.TranslatePiece(Vector2Int.up, new PushOtherPiece());
-            }
-        }
-    }
-    
-    void AdvanceOpponentCharges()
-    {
-        for (int y = 0; y <= grid.Height; y++)
-        {
-            for (int x = 0; x < grid.Width; x++)
-            {
-                BoardNode node = grid.Get(x, y);
-                if (node.Piece == null || node.Piece.PlayerOwner != opponent) continue;
-                node.TranslatePiece(Vector2Int.down, new PushOtherPiece());
-            }
-        }
-    }
+    public void AdvancePlayerCharges() => AdvanceCharges(player, Vector2Int.up);
+    public void AdvanceOpponentCharges() => AdvanceCharges(opponent, Vector2Int.down);
 }

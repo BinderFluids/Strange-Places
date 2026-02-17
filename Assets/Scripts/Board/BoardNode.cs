@@ -22,12 +22,22 @@ public class BoardNode : MonoBehaviour, IGridNode
         EventBus<SelectBoardNodeEvent>.Register(selectBinding);
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            if (piece == null) return;
+            if (BoardNodeModifier.Instance.ActiveNode != this) return;
+            piece.AddAttribute(new NeutralizingAttribute(piece));
+            PieceUpdated();
+        }
+    }
+
     void OnSelectBindingEvent(SelectBoardNodeEvent boardNodeEvent)
     {
         if (boardNodeEvent.selectedNode != this) return;
         BoardNodeModifier.Instance.SetActiveNode(this); 
     }
-
     public void Init(Grid<BoardNode> grid)
     {
         this.grid = grid;
@@ -37,20 +47,23 @@ public class BoardNode : MonoBehaviour, IGridNode
     {
         onPieceUpdate?.Invoke(piece);
     }
-    
     public void AddPiece(BoardPiece incomingPiece)
     {
         if (piece != null)
         {
-            piece.ChangeCharge(incomingPiece.Charge);
+            if (incomingPiece.PlayerOwner == piece.PlayerOwner)
+                piece.ChangeCharge(incomingPiece.Charge);
         }
         else
         {
             piece = incomingPiece;
         }
+
+        foreach (var attribute in incomingPiece.Attributes)
+            attribute.OnEnterNode(this); 
+        
         onPieceUpdate?.Invoke(piece);
     }
-
     public BoardPiece TakePiece()
     {
         if (piece == null) return null;
@@ -59,7 +72,6 @@ public class BoardNode : MonoBehaviour, IGridNode
         PieceUpdated();
         return returnPiece;
     }
-
     public BoardPiece TakeCharge(int amt)
     {
         BoardPiece returnPiece; 
@@ -86,13 +98,17 @@ public class BoardNode : MonoBehaviour, IGridNode
         
         BoardNode newNode = grid.Get(newNodeCoords);
         if (newNode == null)
+        {
+            TakePiece(); 
             return;
+        }
 
         if (newNode.IsOccupied())
         {
             if (newNode.Piece.PlayerOwner != piece.PlayerOwner)
             {
-                resolver.ResolveConflict(this, newNode, direction, grid);
+                PieceConflictResolver usedResolver = piece.Resolver ?? newNode.piece.Resolver ?? resolver;
+                usedResolver.ResolveConflict(this, newNode, direction, grid);
                 return;
             }
         }
@@ -104,7 +120,6 @@ public class BoardNode : MonoBehaviour, IGridNode
         PieceUpdated();
         newNode.AddPiece(returnPiece);
     }
-
     public void TranslateCharge(Vector2Int direction, PieceConflictResolver resolver, int amt = 1)
     {
         if (piece == null)
@@ -122,6 +137,8 @@ public class BoardNode : MonoBehaviour, IGridNode
         BoardNode newNode = grid.Get(newNodeCoords);
         if (newNode == null)
             return;
+        foreach (var attribute in piece.Attributes)
+            attribute.OnExitNode(this); 
         
         if (newNode.IsOccupied())
         {

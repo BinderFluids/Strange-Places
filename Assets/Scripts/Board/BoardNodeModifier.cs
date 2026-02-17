@@ -9,6 +9,7 @@ public class BoardNodeModifier : MonoBehaviour
     
     [SerializeField] private BoardPlayer boardPlayer;
     [SerializeField] private BoardNode activeNode;
+    public BoardNode ActiveNode => activeNode;
 
     public void SetBoardPlayer(BoardPlayer boardPlayer)
     {
