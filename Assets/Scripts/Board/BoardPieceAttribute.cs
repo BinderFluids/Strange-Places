@@ -7,6 +7,7 @@ public abstract class BoardPieceAttribute
     public abstract void OnChargeChange();
 }
 
+
 public class NeutralizingAttribute : BoardPieceAttribute
 {
     public NeutralizingAttribute(BoardPiece parentPiece)

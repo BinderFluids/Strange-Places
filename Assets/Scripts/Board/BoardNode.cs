@@ -7,11 +7,12 @@ using Registry;
 
 public class BoardNode : MonoBehaviour, IGridNode
 {
-    private Grid<BoardNode> grid;
-    public Vector2Int Coords => grid.Find(this); 
+    [SerializeField] private Transform pieceAnchor;
     private BoardPiece piece;
     public BoardPiece Piece => piece;
-    [SerializeField] private Transform pieceAnchor;
+    
+    private Grid<BoardNode> grid;
+    public Vector2Int Coords => grid.Find(this); 
     private EventBinding<SelectBoardNodeEvent> selectBinding;
     public event Action<BoardPiece> onPieceUpdate =  delegate { };
 
