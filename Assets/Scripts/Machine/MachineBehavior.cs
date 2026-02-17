@@ -28,17 +28,17 @@ public class MachineBehavior : MonoBehaviour
         if (movementTween.isAlive) return;
         
         int moveDir = 0; 
-        switch (boardPositionEvent.piece.pieceType)
-        {
-            case BoardPiece.PieceType.Opponent:
-                moveDir = -1;
-                break;
-            case BoardPiece.PieceType.Player:
-                moveDir = 1; 
-                break;
-            default:
-                break;
-        }   
+        // switch (boardPositionEvent.piece.pieceType)
+        // {
+        //     case BoardPiece.PieceType.Opponent:
+        //         moveDir = -1;
+        //         break;
+        //     case BoardPiece.PieceType.Player:
+        //         moveDir = 1; 
+        //         break;
+        //     default:
+        //         break;
+        // }   
         float moveVector = moveDistance * moveDir;
         points.Value += moveDir;
         

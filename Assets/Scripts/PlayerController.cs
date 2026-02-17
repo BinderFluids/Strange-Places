@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.Contracts;
 using EventBus;
 using UnityEngine;
 
@@ -6,11 +7,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    enum BoardInteractionState { None, Take, Place }
-    [SerializeField] private BoardInteractionState boardInteractionState;
-    [SerializeField] private BoardPiece heldPiece;
+    [SerializeField] private BoardPlayer boardPlayer;
     [SerializeField] private Transform heldPieceAnchor; 
-    private bool hasPiece => heldPiece != null;
     
     private EventBinding<SelectBoardNodeEvent> boardNodeSelectBinding;
     
@@ -23,30 +21,7 @@ public class PlayerController : MonoBehaviour
     
     void OnBoardNodeSelect(SelectBoardNodeEvent boardNodeEvent)
     {
-        if (hasPiece)
-            HandlePlacePiece(boardNodeEvent);
-        else
-            HandleTakePiece(boardNodeEvent);
-    }
-    
-    void HandleTakePiece(SelectBoardNodeEvent boardNodeEvent)
-    {
-        if (heldPiece != null) return;
-        if (!boardNodeEvent.selectedNode.IsOccupied()) return;
+        BoardNode boardNode = boardNodeEvent.selectedNode;
         
-        BoardPiece piece = boardNodeEvent.selectedNode.TakePiece();
-        
-        piece.transform.SetParent(heldPieceAnchor);
-        piece.transform.localPosition = Vector3.zero;
-        piece.transform.localRotation = Quaternion.identity;
-        heldPiece = piece;
-    }
-    
-    void HandlePlacePiece(SelectBoardNodeEvent boardNodeEvent)
-    {
-        if (heldPiece == null) return;
-        bool couldSetPiece = boardNodeEvent.selectedNode.SetPiece(heldPiece);
-        if (couldSetPiece)
-            heldPiece = null;
     }
 }

@@ -1,9 +1,11 @@
 
+using UnityEngine;
+using UnityEngine.Rendering;
+
 [System.Serializable]
 public class Grid<T> where T : IGridNode
 {
     private T[,] grid;
-    public T this[int x, int y] => Get(x, y);
     
     public Grid(int width, int height)
     {
@@ -21,6 +23,7 @@ public class Grid<T> where T : IGridNode
         }
         return default;
     }
+    public T Get(Vector2Int pos) => Get(pos.x, pos.y);
     
     public bool Set(int x, int y, T item)
     {
@@ -32,4 +35,20 @@ public class Grid<T> where T : IGridNode
         return false;
     }
     public bool Clear(int x, int y) => Set(x, y, default);
+    
+    public Vector2Int Find(T node)
+    {
+        for (int y = 0; y < grid.GetLength(1); y++)
+        {
+            for (int x = 0; x < grid.GetLength(0); x++)
+            {
+                T current = Get(x, y);
+                if (current == null) continue;
+                if (node.Equals(current)) return new Vector2Int(x, y);
+            }
+        }
+
+        Debug.LogWarning("Didn't find node, returning zero");
+        return Vector2Int.zero; 
+    }
 }

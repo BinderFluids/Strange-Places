@@ -1,22 +1,22 @@
 
 using System;
+using System.Collections.Generic;
 using EventBus;
 using UnityEngine;
 using Registry;
-using UnityEditor;
 
 public class BoardNode : MonoBehaviour, IGridNode
 {
-    private static int count = 0;
-    private int id; 
-    [SerializeField] private BoardPiece piece;
+    private Grid<BoardNode> grid;
+    public Vector2Int Coords => grid.Find(this); 
+    private BoardPiece piece;
+    public BoardPiece Piece => piece;
     [SerializeField] private Transform pieceAnchor;
     private EventBinding<SelectBoardNodeEvent> selectBinding;
+    public event Action<BoardPiece> onPieceUpdate =  delegate { };
 
     private void Awake()
     {
-        id = count; 
-        count++;
         Registry<BoardNode>.TryAdd(this); 
         selectBinding = new EventBinding<SelectBoardNodeEvent>(OnSelectBindingEvent);
         EventBus<SelectBoardNodeEvent>.Register(selectBinding);
@@ -24,41 +24,116 @@ public class BoardNode : MonoBehaviour, IGridNode
 
     void OnSelectBindingEvent(SelectBoardNodeEvent boardNodeEvent)
     {
-        if (boardNodeEvent.selectedNode != this) return;    
+        if (boardNodeEvent.selectedNode != this) return;
+        BoardNodeModifier.Instance.SetActiveNode(this); 
     }
 
-    public bool SetPiece(BoardPiece piece)
+    public void Init(Grid<BoardNode> grid)
     {
-        if (!IsOccupied())
-        {
-            this.piece = piece;
-            piece.transform.SetParent(pieceAnchor);
-            piece.transform.localPosition = Vector3.zero;
-            piece.transform.localRotation = Quaternion.identity;
-            
-            return true;
-        }
-        return false;
+        this.grid = grid;
     }
+
+    void PieceUpdated()
+    {
+        onPieceUpdate?.Invoke(piece);
+    }
+    
+    public void AddPiece(BoardPiece incomingPiece)
+    {
+        Debug.Log("adding piece");
+        if (piece != null)
+        {
+            Debug.Log("adding charge");
+            piece.ChangeCharge(incomingPiece.Charge);
+        }
+        else
+        {
+            Debug.Log("setting piece");
+            piece = incomingPiece;
+        }
+        onPieceUpdate?.Invoke(piece);
+    }
+
     public BoardPiece TakePiece()
     {
         if (piece == null) return null;
-        
-        BoardPiece returnPiece = piece; 
+        BoardPiece returnPiece = piece;
         piece = null;
-        
+        PieceUpdated();
+        return returnPiece;
+    }
+
+    public BoardPiece TakeCharge(int amt)
+    {
+        BoardPiece returnPiece; 
+        if (piece == null) return null;
+        if (piece.Charge <= amt)
+        {
+            returnPiece = piece;
+            piece = null;
+            PieceUpdated();
+            return returnPiece;
+        }
+        returnPiece = piece.Pop(amt);
+        PieceUpdated();
         return returnPiece; 
+    }
+
+    public void TranslatePiece(Vector2Int vector2Int)
+    {
+        if (piece == null)
+            return;
+        
+        Vector2Int currentNodeCoords = grid.Find(this);
+        Vector2Int newNodeCoords = currentNodeCoords + vector2Int; 
+        
+        BoardNode newNode = grid.Get(newNodeCoords);
+        if (newNode == null)
+            return; 
+
+        BoardPiece returnPiece = TakePiece();
+        if (returnPiece == null)
+            return;
+
+        PieceUpdated();
+        newNode.AddPiece(returnPiece);
+    }
+
+    public void TranslateCharge(Vector2Int vector2Int, int amt = 1)
+    {
+        if (piece == null)
+            return;
+        
+        if (amt >= piece.Charge)
+        {
+            TranslatePiece(vector2Int);
+            return;
+        }
+        
+        Vector2Int currentNodeCoords = grid.Find(this);
+        Vector2Int newNodeCoords = currentNodeCoords + vector2Int;  
+        
+        BoardNode newNode = grid.Get(newNodeCoords);
+        if (newNode == null)
+            return;
+
+        BoardPiece returnPiece = TakeCharge(amt); 
+        if (returnPiece == null)
+            return;
+        
+        PieceUpdated();
+        newNode.AddPiece(returnPiece);
     }
     
     public bool IsOccupied()
     {
-        return piece != null; 
+        return piece != null;
     }
     
 #if UNITY_EDITOR
     private Color gizmoColor;
     private float gizmoSize;
-    public void Init(Color gizmoColor, float gizmoSize)
+    public void InitGizmos(Color gizmoColor, float gizmoSize)
     {
         this.gizmoColor = gizmoColor;
         this.gizmoSize = gizmoSize;

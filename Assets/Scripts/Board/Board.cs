@@ -12,7 +12,7 @@ public class Board : MonoBehaviour
     
     private Grid<BoardNode> grid;
     public Grid<BoardNode> Grid => grid;
-
+    
     private void Awake()
     {
         grid = new Grid<BoardNode>(gridWidth, gridHeight);
@@ -23,21 +23,23 @@ public class Board : MonoBehaviour
             Color.blue
         };
         
-        for (int y = 0; y < gridWidth; y++)
+        for (int y = 0; y < gridHeight; y++)
         {
-            for (int x = 0; x < gridHeight; x++)
+            for (int x = 0; x < gridWidth; x++)
             {
                 BoardNode node = Instantiate(boardNodePrefab, transform);
-                
+                grid.Set(x, y, node);
+                node.Init(grid);
 #if UNITY_EDITOR
-                node.Init(colors[colorIndex % 2], gridCellSize);
+                node.InitGizmos(colors[colorIndex % 2], gridCellSize);
 #endif
                 
-                Vector3 boardOffset = new Vector3(x * gridCellSize, 0, y * gridCellSize);
-                Vector3 squareOffset = new Vector3(gridCellSize / 2, 0, gridCellSize / 2);
-                node.transform.localPosition = boardAnchor.position + boardOffset + squareOffset;
-                node.transform.SetParent(boardNodeContainer);
-                
+                Vector3 boardOffsetLocal = new Vector3(x * gridCellSize, 0f, y * gridCellSize);
+                Vector3 squareOffsetLocal = new Vector3(gridCellSize / 2f, 0f, gridCellSize / 2f);
+                Vector3 cellLocalPosInAnchorSpace = boardOffsetLocal + squareOffsetLocal;
+
+                node.transform.position = boardAnchor.TransformPoint(cellLocalPosInAnchorSpace);
+
                 colorIndex++;
             }
             colorIndex++;

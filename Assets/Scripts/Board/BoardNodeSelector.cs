@@ -1,11 +1,12 @@
 using EventBus;
 using UnityEngine;
 using Registry; 
-public class MouseRaycast3D : MonoBehaviour
+public class BoardNodeSelector : MonoBehaviour
 {
     [SerializeField] private Camera cam;
     [SerializeField] private LayerMask mask = ~0;
     [SerializeField] private float maxDistance = 1000f;
+    [SerializeField] private BoardPlayer boardPlayer;
 
     private void Awake()
     {
@@ -26,7 +27,9 @@ public class MouseRaycast3D : MonoBehaviour
         
         EventBus<SelectBoardNodeEvent>.Raise(new SelectBoardNodeEvent
         {
-            selectedNode = selectedNode
+            selectedNode = selectedNode,
+            boardPlayer = boardPlayer,
+            //boardPiece = boardPiecePrefab
         });
     }
     
@@ -36,4 +39,6 @@ public class MouseRaycast3D : MonoBehaviour
 public struct SelectBoardNodeEvent : IEvent
 {
     public BoardNode selectedNode;
+    public BoardPlayer boardPlayer;
+    public BoardPiece boardPiece;
 }
