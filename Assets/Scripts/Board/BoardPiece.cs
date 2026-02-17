@@ -4,11 +4,15 @@ using UnityEngine;
 [System.Serializable]
 public class BoardPiece
 {
+
+    [SerializeField] private BoardPlayer playerOwner;
+    public BoardPlayer PlayerOwner => playerOwner;
     [SerializeField] private int charge;
     public int Charge => charge;
 
-    public BoardPiece(int charge = 1)
+    public BoardPiece(BoardPlayer playerOwner, int charge = 1)
     {
+        this.playerOwner = playerOwner;
         this.charge = charge;
     }
     
@@ -26,6 +30,8 @@ public class BoardPiece
         }
         
         charge -= amt;
-        return new BoardPiece(amt);
+        return new BoardPiece(playerOwner, amt);
     }
 }
+
+

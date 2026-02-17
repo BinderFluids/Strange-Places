@@ -7,6 +7,8 @@ public class Grid<T> where T : IGridNode
 {
     private T[,] grid;
     
+    public int Width => grid.GetLength(0);
+    public int Height => grid.GetLength(1);
     public Grid(int width, int height)
     {
         grid = new T[width, height];

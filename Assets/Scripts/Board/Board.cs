@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Board : MonoBehaviour
 {
+    [SerializeField] private BoardPlayer player;
+    [SerializeField] private BoardPlayer opponent; 
     [SerializeField] private BoardNode boardNodePrefab;
     [SerializeField] private Transform boardNodeContainer;
     [SerializeField] private Transform boardAnchor;
@@ -43,6 +45,44 @@ public class Board : MonoBehaviour
                 colorIndex++;
             }
             colorIndex++;
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            AdvancePlayerCharges();
+        }
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            AdvanceOpponentCharges();
+        }
+    }
+
+    void AdvancePlayerCharges()
+    {
+        for (int y = grid.Height - 1; y >= 0; y--)
+        {
+            for (int x = 0; x < grid.Width; x++)
+            {
+                BoardNode node = grid.Get(x, y);
+                if (node.Piece == null || node.Piece.PlayerOwner != player) continue;
+                node.TranslatePiece(Vector2Int.up, new PushOtherPiece());
+            }
+        }
+    }
+    
+    void AdvanceOpponentCharges()
+    {
+        for (int y = 0; y <= grid.Height; y++)
+        {
+            for (int x = 0; x < grid.Width; x++)
+            {
+                BoardNode node = grid.Get(x, y);
+                if (node.Piece == null || node.Piece.PlayerOwner != opponent) continue;
+                node.TranslatePiece(Vector2Int.down, new PushOtherPiece());
+            }
         }
     }
 }

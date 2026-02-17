@@ -40,15 +40,12 @@ public class BoardNode : MonoBehaviour, IGridNode
     
     public void AddPiece(BoardPiece incomingPiece)
     {
-        Debug.Log("adding piece");
         if (piece != null)
         {
-            Debug.Log("adding charge");
             piece.ChangeCharge(incomingPiece.Charge);
         }
         else
         {
-            Debug.Log("setting piece");
             piece = incomingPiece;
         }
         onPieceUpdate?.Invoke(piece);
@@ -79,17 +76,26 @@ public class BoardNode : MonoBehaviour, IGridNode
         return returnPiece; 
     }
 
-    public void TranslatePiece(Vector2Int vector2Int)
+    public void TranslatePiece(Vector2Int direction, PieceConflictResolver resolver)
     {
         if (piece == null)
             return;
         
         Vector2Int currentNodeCoords = grid.Find(this);
-        Vector2Int newNodeCoords = currentNodeCoords + vector2Int; 
+        Vector2Int newNodeCoords = currentNodeCoords + direction; 
         
         BoardNode newNode = grid.Get(newNodeCoords);
         if (newNode == null)
-            return; 
+            return;
+
+        if (newNode.IsOccupied())
+        {
+            if (newNode.Piece.PlayerOwner != piece.PlayerOwner)
+            {
+                resolver.ResolveConflict(this, newNode, direction, grid);
+                return;
+            }
+        }
 
         BoardPiece returnPiece = TakePiece();
         if (returnPiece == null)
@@ -99,23 +105,32 @@ public class BoardNode : MonoBehaviour, IGridNode
         newNode.AddPiece(returnPiece);
     }
 
-    public void TranslateCharge(Vector2Int vector2Int, int amt = 1)
+    public void TranslateCharge(Vector2Int direction, PieceConflictResolver resolver, int amt = 1)
     {
         if (piece == null)
             return;
         
         if (amt >= piece.Charge)
         {
-            TranslatePiece(vector2Int);
+            TranslatePiece(direction, resolver);
             return;
         }
         
         Vector2Int currentNodeCoords = grid.Find(this);
-        Vector2Int newNodeCoords = currentNodeCoords + vector2Int;  
+        Vector2Int newNodeCoords = currentNodeCoords + direction;  
         
         BoardNode newNode = grid.Get(newNodeCoords);
         if (newNode == null)
             return;
+        
+        if (newNode.IsOccupied())
+        {
+            if (newNode.Piece.PlayerOwner != piece.PlayerOwner)
+            {
+                resolver.ResolveConflict(this, newNode, direction, grid);
+                return;
+            }
+        }
 
         BoardPiece returnPiece = TakeCharge(amt); 
         if (returnPiece == null)

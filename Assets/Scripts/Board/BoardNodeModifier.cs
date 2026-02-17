@@ -7,10 +7,14 @@ public class BoardNodeModifier : MonoBehaviour
 {
     public static BoardNodeModifier Instance;
     
-    [SerializeField] private Board board;
     [SerializeField] private BoardPlayer boardPlayer;
     [SerializeField] private BoardNode activeNode;
 
+    public void SetBoardPlayer(BoardPlayer boardPlayer)
+    {
+        this.boardPlayer = boardPlayer;
+    }
+    
     private void Awake()
     {
         Instance = this;
@@ -27,15 +31,13 @@ public class BoardNodeModifier : MonoBehaviour
         
         
         if (Input.GetKeyDown(KeyCode.W))
-            activeNode.AddPiece(new BoardPiece());
+            activeNode.AddPiece(new BoardPiece(boardPlayer));
         if (Input.GetKeyDown(KeyCode.S))
             activeNode.TakeCharge(1);
         if (Input.GetKeyDown(KeyCode.A))
-            activeNode.TranslateCharge(Vector2Int.left);
+            activeNode.TranslateCharge(Vector2Int.left, new PushOtherPiece());
         if (Input.GetKeyDown(KeyCode.D))
-            activeNode.TranslateCharge(Vector2Int.right);
-        if (Input.GetKeyDown(KeyCode.Space))
-            activeNode.TranslatePiece(Vector2Int.up);
+            activeNode.TranslateCharge(Vector2Int.right, new PushOtherPiece());
             
     }
 

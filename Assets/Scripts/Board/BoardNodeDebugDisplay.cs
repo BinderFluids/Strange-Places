@@ -16,9 +16,11 @@ public class BoardNodeDebugDisplay : MonoBehaviour
 
     void OnPieceUpdate(BoardPiece piece)
     {
-        if (piece == null)
-            chargeText.text = "Empty";
-        else
-            chargeText.text = piece.Charge.ToString(); 
+        chargeText.text = piece == null ? "Empty" : piece.Charge.ToString();
+    }
+
+    private void OnDestroy()
+    {
+        node.onPieceUpdate -= OnPieceUpdate;
     }
 }
