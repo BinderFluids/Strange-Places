@@ -57,9 +57,15 @@ public class BoardPiece
     
     public void AddAttribute<T>() where T : BoardPieceAttribute
     {
+        if (attributes.Exists(a => a is T)) return;
+        
         T attribute = BoardPieceAttribute.Create<T>(this);
         attributes.Add(attribute);
         attribute.OnAdd();
+    }
+    public void RemoveAttribute<T>() where T : BoardPieceAttribute
+    {
+        attributes.RemoveAll(a => a is T);
     }
     public void ClearAttributes() => attributes.Clear();
 

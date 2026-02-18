@@ -43,9 +43,9 @@ public class BoardModifier : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.D))
             Board.Instance.DoAction(new TranslatePiece(Vector2Int.right, 1), activeNode);
-        
+
         if (Input.GetKeyDown(KeyCode.Q))
-            activeNode.Piece.AddAttribute<NeutralizingAttribute>();
+            Board.Instance.DoAction(new AddAttribute<NeutralizingAttribute>(), activeNode); 
             
         Board.Instance.StopObservingAction();
             

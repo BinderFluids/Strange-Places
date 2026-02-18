@@ -57,3 +57,19 @@ public class GivePiece : IGridAction<BoardNode>
         takePiece.Execute(activeNode, ctx);
     }
 }
+
+public class AddAttribute<T> : IGridAction<BoardNode> where T : BoardPieceAttribute
+{
+    private BoardNode activeNode;
+    
+    public void Execute(BoardNode active, Grid<BoardNode> ctx)
+    {
+        activeNode = active;
+        active.Piece.AddAttribute<T>();
+    }
+
+    public void Undo()
+    {
+        activeNode.Piece.RemoveAttribute<T>();
+    }
+}

@@ -69,7 +69,8 @@ public class Board : MonoBehaviour
     public void DoAction(IGridAction<BoardNode> action, BoardNode active)
     {
         if (observeAction) actionStack.Push(action);
-        grid.ExecuteGridAction(active, action); 
+        grid.ExecuteGridAction(active, action);
+        UpdatePieces();
     }
 
     public void Undo()
@@ -80,6 +81,7 @@ public class Board : MonoBehaviour
             Debug.Log("Undo");
             actionStack.Pop().Undo();
         }
+        UpdatePieces();
         StartObservingAction();
     }
 

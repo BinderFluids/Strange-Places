@@ -49,6 +49,8 @@ public class TranslatePiece<T> : BoardActionChain where T : BoardConflictResolve
             BoardConflictResolver resolver; 
             if (active.Piece.ResolverType != ResolverType.None)
                 resolver = BoardConflictResolver.Create(activePiece.ResolverType, targetNode, direction);
+            else if (targetNode.Piece.ResolverType != ResolverType.None)
+                resolver = BoardConflictResolver.Create(targetNode.Piece.ResolverType, targetNode, direction);
             else
                 resolver = BoardConflictResolver.Create<T>(targetNode, direction);
 
