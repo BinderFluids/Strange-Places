@@ -32,17 +32,10 @@ public class BoardNodeSelector : MonoBehaviour
         
         if (selectedNode == null) return;
         if (boardPlayer.Reach > 0)
-        {
-            Debug.Log("Player side reach");
             if (selectedNode.Coords.y > boardPlayer.Reach - 1) return;
-        }
         if (boardPlayer.Reach < 0)
-        {
-            Debug.Log("Opp side reach");
             if (selectedNode.Coords.y < board.Grid.Height + boardPlayer.Reach)
                 return;
-            
-        }
         
         EventBus<SelectBoardNodeEvent>.Raise(new SelectBoardNodeEvent
         {

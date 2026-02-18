@@ -57,7 +57,7 @@ public class BoardNode : MonoBehaviour, IGridNode
             return TakePiece(); 
         
         BoardPiece returnPiece = piece.Pop(amt);
-        if (returnPiece == piece) piece = null;
+        if (piece.Charge == 0) piece = null;
         
         PieceUpdated();
         return returnPiece;

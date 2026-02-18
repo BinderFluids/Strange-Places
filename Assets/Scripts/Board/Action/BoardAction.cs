@@ -7,6 +7,7 @@ public class TakePiece : IGridAction<BoardNode>
     private int charge;
     private BoardNode activeNode;
     private BoardPiece takenPiece;
+    public BoardPiece TakenPiece => takenPiece;
     
     public TakePiece(int charge = 0)
     {
@@ -17,6 +18,7 @@ public class TakePiece : IGridAction<BoardNode>
     {
         activeNode = active;
         takenPiece = active.TakePiece(charge); 
+        Debug.Log($"Took {takenPiece} from {activeNode}");
     }
 
     public void Undo()
@@ -25,7 +27,7 @@ public class TakePiece : IGridAction<BoardNode>
     }
 }
 
-public class GivePiece<T> : IGridAction<BoardNode> where T : BoardConflictResolver
+public class GivePiece : IGridAction<BoardNode>
 {
     private BoardNode activeNode;
     private BoardPiece incomingPiece;
@@ -39,14 +41,11 @@ public class GivePiece<T> : IGridAction<BoardNode> where T : BoardConflictResolv
     {
         activeNode = active;
         active.AddPiece(incomingPiece);
+        Debug.Log($"Gave {incomingPiece} to {active}");
     }
 
     public void Undo()
     {
         activeNode.TakePiece(incomingPiece.Charge); 
     }
-}
-public class GivePiece : GivePiece<None>
-{
-    public GivePiece(BoardPiece incomingPiece) : base(incomingPiece) { }
 }

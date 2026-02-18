@@ -56,9 +56,6 @@ public class BoardPiece
             Debug.LogError("Piece does not have enough charge!");
             return null;
         }
-
-        if (amt == charge)
-            return this; 
         
         charge -= amt;
         return new BoardPiece(playerOwner, amt, attributes);
