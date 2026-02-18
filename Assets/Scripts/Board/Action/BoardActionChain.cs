@@ -35,7 +35,7 @@ public class TranslatePiece<T> : BoardActionChain where T : BoardConflictResolve
         if (active == null) return; 
         if (!active.IsOccupied()) return;
 
-        BoardPiece activePiece = active.Piece; 
+        BoardPiece activePiece = new BoardPiece(active.Piece); 
         targetNode = ctx.Get(active.Coords + direction);
 
         if (targetNode == null)

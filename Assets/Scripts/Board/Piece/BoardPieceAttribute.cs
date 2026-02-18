@@ -1,31 +1,36 @@
 using System.Linq;
+using UnityEngine;
 
 public abstract class BoardPieceAttribute
 {
-    public abstract void OnEnterNode(BoardNode node); 
-    public abstract void OnExitNode(BoardNode node);
-    public abstract void OnChargeChange();
+    protected BoardPiece parentPiece;
+    public BoardPieceAttribute(BoardPiece parent)
+    {
+        parentPiece = parent;
+    }
+    
+    public abstract void OnAdd();
+    public static T Create<T>(BoardPiece parent) => (T)System.Activator.CreateInstance(typeof(T), parent);
 }
 
 
 public class NeutralizingAttribute : BoardPieceAttribute
 {
-    public NeutralizingAttribute(BoardPiece parentPiece)
+    private BoardPiece parentPiece;
+    public NeutralizingAttribute(BoardPiece parentPiece) : base(parentPiece)
     {
-        //parentPiece.SetResolver<NeutralizeCharges>();
+        this.parentPiece = parentPiece;
+        SetResolver();
     }
     
-    public override void OnEnterNode(BoardNode node)
+    public override void OnAdd()
     {
-        if (!node.Piece.Attributes.Any(attr => attr is NeutralizingAttribute))
-            node.Piece.AddAttribute(new NeutralizingAttribute(node.Piece));
+        SetResolver();
     }
 
-    public override void OnExitNode(BoardNode node)
+    void SetResolver()
     {
-    }
-
-    public override void OnChargeChange()
-    {
+        Debug.Log("Setting Neutralizing Attribute");
+        parentPiece.SetResolver(ResolverType.Neutralize);
     }
 }

@@ -25,16 +25,6 @@ public class BoardNode : MonoBehaviour, IGridNode
         EventBus<SelectBoardNodeEvent>.Register(selectBinding);
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            if (piece == null) return;
-            if (BoardModifier.Instance.ActiveNode != this) return;
-            piece.AddAttribute(new NeutralizingAttribute(piece));
-            PieceUpdated();
-        }
-    }
 
     void OnSelectBindingEvent(SelectBoardNodeEvent boardNodeEvent)
     {

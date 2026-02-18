@@ -69,9 +69,13 @@ public class Neutralize : BoardConflictResolver
         {
             var translateActive = new TranslatePiece(direction);
             var neutralizeOtherPiece = new TakePiece(active.Piece.Charge);
+            var neutralizeActivePieceAfterTranslation = new TakePiece(otherNode.Piece.Charge);
+            int otherPieceCharge = otherNode.Piece.Charge;
             
             Chain(neutralizeOtherPiece, otherNode, ctx);
             Chain(translateActive, active, ctx);
+            Chain(neutralizeActivePieceAfterTranslation, otherNode, ctx);
+            
             return; 
         }
 

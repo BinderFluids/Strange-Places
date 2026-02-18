@@ -55,9 +55,11 @@ public class BoardPiece
         charge += amt;
     }
     
-    public void AddAttribute(BoardPieceAttribute attribute)
+    public void AddAttribute<T>() where T : BoardPieceAttribute
     {
+        T attribute = BoardPieceAttribute.Create<T>(this);
         attributes.Add(attribute);
+        attribute.OnAdd();
     }
     public void ClearAttributes() => attributes.Clear();
 
@@ -72,22 +74,17 @@ public class BoardPiece
         
         ChangeCharge(otherPiece.Charge);
         attributes.AddRange(otherPiece.Attributes);
+        
         return true;
     }
     public BoardPiece Pop(int amt = 0)
     {
 
-        if (amt == 0 || amt == charge)
+        if (amt == 0 || amt == charge || amt > charge)
         {
             BoardPiece returnPiece = new BoardPiece(this);
             Charge = 0; 
             return returnPiece;
-        }
-        
-        if (amt > charge)
-        {
-            Debug.LogError("Piece does not have enough charge!");
-            return null;
         }
         
         Charge -= amt; 
