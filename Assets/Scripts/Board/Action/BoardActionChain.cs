@@ -33,9 +33,9 @@ public class TranslatePiece<T> : BoardActionChain where T : BoardConflictResolve
     public override void Execute(BoardNode active, Grid<BoardNode> ctx)
     {
         if (active == null) return; 
-        if (!active.IsOccupied()) return; 
-        
-        BoardPiece activePiece = active.Piece;
+        if (!active.IsOccupied()) return;
+
+        BoardPiece activePiece = active.Piece; 
         targetNode = ctx.Get(active.Coords + direction);
 
         if (targetNode == null)
@@ -44,7 +44,6 @@ public class TranslatePiece<T> : BoardActionChain where T : BoardConflictResolve
             Chain(removePiece, active, ctx);
             return;
         }
-        
         if (targetNode.IsOccupied() && active.Piece.PlayerOwner != targetNode.Piece.PlayerOwner)
         {
             BoardConflictResolver resolver; 
@@ -57,11 +56,16 @@ public class TranslatePiece<T> : BoardActionChain where T : BoardConflictResolve
         }
         else
         {
-            var takePiece = new TakePiece(charge); 
+            //remove charge from active piece
+            //give charge to target piece
+            var takePiece = new TakePiece(charge);
             Chain(takePiece, active, ctx); 
+            BoardPiece givenPiece = new BoardPiece(takePiece.TakenPiece);
             
-            var givePiece = new GivePiece(takePiece.TakenPiece); 
+            var givePiece = new GivePiece(givenPiece); 
             Chain(givePiece, targetNode, ctx);
+            
+            ctx.SetDirty(targetNode); 
         }
     }
 }
@@ -86,5 +90,16 @@ public class ShiftBoard : BoardActionChain
 
     public override void Execute(BoardNode active, Grid<BoardNode> ctx)
     {
+        ctx.ForEach(node =>
+        {
+            if (node == null) return;
+            if (!node.IsOccupied()) return;
+            if (node.Piece.PlayerOwner != targetOwner) return;
+            
+            Debug.Log("Shifted");
+            
+            TranslatePiece translation = new TranslatePiece(direction);
+            Chain(translation, node, ctx);
+        });
     }
 }

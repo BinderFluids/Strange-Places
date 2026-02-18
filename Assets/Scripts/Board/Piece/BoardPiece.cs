@@ -1,6 +1,8 @@
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [System.Serializable]
 public class BoardPiece
@@ -8,9 +10,22 @@ public class BoardPiece
 
     [SerializeField] private BoardPlayer playerOwner;
     public BoardPlayer PlayerOwner => playerOwner;
-    [SerializeField] private int charge;
-    public int Charge => charge;
-    
+    private int charge;
+    private int id; 
+    public int Id => id;
+    public int Charge
+    {
+        get
+        {
+            return charge;
+        }
+        private set
+        {
+            Debug.Log($"{id}: Setting Charge to {value}\n{Environment.StackTrace}");
+            charge = value;
+        }
+    }
+
     private List<BoardPieceAttribute> attributes = new();
     public IReadOnlyList<BoardPieceAttribute> Attributes => attributes;
     
@@ -19,15 +34,29 @@ public class BoardPiece
     
     public BoardPiece(BoardPlayer playerOwner, int charge = 1, List<BoardPieceAttribute> attributes = null)
     {
+        id = Random.Range(0, 1000000); 
         this.playerOwner = playerOwner;
-        this.charge = charge;
+        Charge = charge;
         this.attributes = attributes ?? new List<BoardPieceAttribute>();
         resolverType = ResolverType.None;
+        
+        Debug.Log($"Created {this}");
+    }
+
+    public BoardPiece(BoardPiece other)
+    {
+        id = Random.Range(0, 1000000); 
+        playerOwner = other.PlayerOwner;
+        Charge = other.Charge;
+        attributes = new List<BoardPieceAttribute>(other.Attributes);
+        resolverType = other.ResolverType;
+        
+        Debug.Log($"Created {this}");
     }
     
     public void ChangeCharge(int amt)
     { 
-        charge = Mathf.Max(1, charge += amt);
+        charge += amt;
     }
     
     public void AddAttribute(BoardPieceAttribute attribute)
@@ -49,19 +78,27 @@ public class BoardPiece
         attributes.AddRange(otherPiece.Attributes);
         return true;
     }
-    public BoardPiece Pop(int amt)
+    public BoardPiece Pop(int amt = 0)
     {
+
+        if (amt == 0 || amt == charge)
+        {
+            BoardPiece returnPiece = new BoardPiece(this);
+            Charge = 0; 
+            return returnPiece;
+        }
+        
         if (amt > charge)
         {
             Debug.LogError("Piece does not have enough charge!");
             return null;
         }
         
-        charge -= amt;
+        Charge -= amt; 
         return new BoardPiece(playerOwner, amt, attributes);
     }
     
-    public override string ToString() => $"[{playerOwner.ToString()}] {charge}";
+    public override string ToString() => $"{id}: [{playerOwner.ToString()}] {Charge}";
 }
 
 

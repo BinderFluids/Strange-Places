@@ -74,6 +74,7 @@ public class Board : MonoBehaviour
 
     public void Undo()
     {
+        Debug.Log("Undo");
         StopObservingAction();
         if (actionStack.Count > 0) actionStack.Pop().Undo();
         StartObservingAction();

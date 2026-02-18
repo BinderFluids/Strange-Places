@@ -51,27 +51,19 @@ public class BoardNode : MonoBehaviour, IGridNode
         onPieceUpdate?.Invoke(piece);
     }
 
-    public BoardPiece TakePiece(int amt)
+    public BoardPiece TakePiece(int amt = 0)
     {
-        if (amt == 0)
-            return TakePiece(); 
-        
         BoardPiece returnPiece = piece.Pop(amt);
         if (piece.Charge == 0) piece = null;
         
         PieceUpdated();
         return returnPiece;
     }
-    public BoardPiece TakePiece()
-    {
-        return TakePiece(piece.Charge);
-    }
-
-    
     public void AddPiece(BoardPiece incomingPiece)
     {
         if (piece != null)
         {
+            Debug.Log($"Add {incomingPiece} to {Coords}");
             if (incomingPiece.PlayerOwner == piece.PlayerOwner)
                 piece.Assimilate(incomingPiece);
         }

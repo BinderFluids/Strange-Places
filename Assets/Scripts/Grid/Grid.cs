@@ -16,23 +16,36 @@ public class Grid<T> where T : IGridNode
     {
         grid = new T[width, height];
     }
+
+    private HashSet<IGridNode> dirtyNodes = new(); 
     
 
     private bool InBounds(int x, int y) => (0 <= x && x < grid.GetLength(0) && 0 <= y && y < grid.GetLength(1));
     private bool IsOccupied(int x, int y) => grid[x, y] != null;
 
+    public bool IsDirty(IGridNode node)
+    {
+        return dirtyNodes.Contains(node); 
+    }
+    public void SetDirty(IGridNode node)
+    {
+        dirtyNodes.Add(node); 
+    }
+
+    void CleanNodes() => dirtyNodes.Clear(); 
+    
     public void ForEach(GridItemsStrategy strategy)
     {
-        for (int y = grid.GetLength(1) - 1; y >= 0; y--)
+        for (int y = Height - 1; y >= 0; y--)
+        for (int x = 0; x < Width; x++)
         {
-            for (int x = grid.GetLength(0) - 1; x >= 0; x--)
-            {
-                T item = grid[x, y];
-                if (item == null) continue;
+            T item = grid[x, y];
+            if (item == null) continue;
+            if (IsDirty(item)) continue;
 
-                strategy(item);
-            }
+            strategy(item);
         }
+        CleanNodes();
     }
 
     public void ExecuteGridAction(T item, IGridAction<T> action)
