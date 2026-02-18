@@ -63,7 +63,6 @@ public class BoardNode : MonoBehaviour, IGridNode
     {
         if (piece != null)
         {
-            Debug.Log($"Add {incomingPiece} to {Coords}");
             if (incomingPiece.PlayerOwner == piece.PlayerOwner)
                 piece.Assimilate(incomingPiece);
         }

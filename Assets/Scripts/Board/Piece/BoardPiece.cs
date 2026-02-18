@@ -11,8 +11,6 @@ public class BoardPiece
     [SerializeField] private BoardPlayer playerOwner;
     public BoardPlayer PlayerOwner => playerOwner;
     private int charge;
-    private int id; 
-    public int Id => id;
     public int Charge
     {
         get
@@ -21,7 +19,7 @@ public class BoardPiece
         }
         private set
         {
-            DoDebug($"{id}: Setting Charge to {value}\n{Environment.StackTrace}");
+            DoDebug($"Setting Charge to {value}\n{Environment.StackTrace}");
             charge = value;
         }
     }
@@ -38,24 +36,18 @@ public class BoardPiece
     
     public BoardPiece(BoardPlayer playerOwner, int charge = 1, List<BoardPieceAttribute> attributes = null)
     {
-        id = Random.Range(0, 1000000); 
         this.playerOwner = playerOwner;
         Charge = charge;
         this.attributes = attributes ?? new List<BoardPieceAttribute>();
         resolverType = ResolverType.None;
-        
-        DoDebug($"Created {this}");
     }
 
     public BoardPiece(BoardPiece other)
     {
-        id = Random.Range(0, 1000000); 
         playerOwner = other.PlayerOwner;
         Charge = other.Charge;
         attributes = new List<BoardPieceAttribute>(other.Attributes);
         resolverType = other.ResolverType;
-        
-        DoDebug($"Created {this}");
     }
     
     public void ChangeCharge(int amt)
@@ -102,7 +94,7 @@ public class BoardPiece
         return new BoardPiece(playerOwner, amt, attributes);
     }
     
-    public override string ToString() => $"{id}: [{playerOwner.ToString()}] {Charge}";
+    public override string ToString() => $"[{playerOwner}] {Charge}";
 }
 
 
