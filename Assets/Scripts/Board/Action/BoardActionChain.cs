@@ -60,9 +60,8 @@ public class TranslatePiece<T> : BoardActionChain where T : BoardConflictResolve
             //give charge to target piece
             var takePiece = new TakePiece(charge);
             Chain(takePiece, active, ctx); 
-            BoardPiece givenPiece = new BoardPiece(takePiece.TakenPiece);
             
-            var givePiece = new GivePiece(givenPiece); 
+            var givePiece = new GivePiece(new BoardPiece(takePiece.TakenPiece)); 
             Chain(givePiece, targetNode, ctx);
             
             ctx.SetDirty(targetNode); 
