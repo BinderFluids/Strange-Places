@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 public enum ResolverType { None, Neutralize, TryPush };
@@ -52,11 +53,38 @@ public class Neutralize : BoardConflictResolver
 
     public override void Execute(BoardNode active, Grid<BoardNode> ctx)
     {
-        var takeOtherPiece = new TakePiece(active.Piece.Charge);
-        var translateActive = new TranslatePiece(direction);
+        //Destroy both pieces if they have the same charge
+        if (active.Piece.Charge == otherNode.Piece.Charge)
+        {
+            var takeActivePiece = new TakePiece();
+            var takeOtherPiece = new TakePiece();
+            
+            Chain(takeActivePiece, active, ctx);
+            Chain(takeOtherPiece, otherNode, ctx);
+            return;
+        }
+        
+        //Active piece has more charge, so get rid of other piece and move active piece
+        if (active.Piece.Charge > otherNode.Piece.Charge)
+        {
+            var translateActive = new TranslatePiece(direction);
+            var neutralizeOtherPiece = new TakePiece(active.Piece.Charge);
+            
+            Chain(neutralizeOtherPiece, otherNode, ctx);
+            Chain(translateActive, active, ctx);
+            return; 
+        }
 
-        Chain(takeOtherPiece, otherNode, ctx); 
-        Chain(translateActive, active, ctx);
+        //Other piece has more charge, so remove other charges and delete active piece
+        if (active.Piece.Charge < otherNode.Piece.Charge)
+        {
+            var takeActivePiece = new TakePiece();
+            var neutralizeOtherPiece = new TakePiece(active.Piece.Charge);
+            
+            Chain(neutralizeOtherPiece, otherNode, ctx);
+            Chain(takeActivePiece, active, ctx);
+            return; 
+        }
     }
 }
 
