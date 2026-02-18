@@ -7,10 +7,16 @@ public class BoardNodeSelector : MonoBehaviour
     [SerializeField] private LayerMask mask = ~0;
     [SerializeField] private float maxDistance = 1000f;
     [SerializeField] private BoardPlayer boardPlayer;
+    [SerializeField] private Board board;
 
     private void Awake()
     {
         if (cam == null) cam = Camera.main;
+    }
+
+    public void SetBoardPlayer(BoardPlayer boardPlayer)
+    {
+        this.boardPlayer = boardPlayer;
     }
 
     private void Update()
@@ -23,7 +29,20 @@ public class BoardNodeSelector : MonoBehaviour
         if (!Physics.Raycast(ray, out RaycastHit hit, maxDistance, mask, QueryTriggerInteraction.Ignore)) return; 
         
         BoardNode selectedNode = Registry<BoardNode>.Get(new Closest(Mathf.Sqrt(0.5f), hit.point));
-        if (selectedNode == null) return; 
+        
+        if (selectedNode == null) return;
+        if (boardPlayer.Reach > 0)
+        {
+            Debug.Log("Player side reach");
+            if (selectedNode.Coords.y > boardPlayer.Reach - 1) return;
+        }
+        if (boardPlayer.Reach < 0)
+        {
+            Debug.Log("Opp side reach");
+            if (selectedNode.Coords.y < board.Grid.Height + boardPlayer.Reach)
+                return;
+            
+        }
         
         EventBus<SelectBoardNodeEvent>.Raise(new SelectBoardNodeEvent
         {

@@ -3,9 +3,9 @@ using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class BoardNodeModifier : MonoBehaviour
+public class BoardModifier : MonoBehaviour
 {
-    public static BoardNodeModifier Instance;
+    public static BoardModifier Instance;
     
     [SerializeField] private BoardPlayer boardPlayer;
     [SerializeField] private BoardNode activeNode;
@@ -29,16 +29,22 @@ public class BoardNodeModifier : MonoBehaviour
     private void Update()
     {
         if (activeNode == null) return;
-        
-        
+
+
+        Board.Instance.StartObservingAction();
         if (Input.GetKeyDown(KeyCode.W))
-            activeNode.AddPiece(new BoardPiece(boardPlayer));
+            Board.Instance.DoAction(new GivePiece(new BoardPiece(boardPlayer)), activeNode);
+        
         if (Input.GetKeyDown(KeyCode.S))
-            activeNode.TakeCharge(1);
+            Board.Instance.DoAction(new TakePiece(1), activeNode);
+            
         if (Input.GetKeyDown(KeyCode.A))
-            activeNode.TranslateCharge(Vector2Int.left, new PushOtherPiece());
+            Board.Instance.DoAction(new TranslatePiece(Vector2Int.left), activeNode);
+        
         if (Input.GetKeyDown(KeyCode.D))
-            activeNode.TranslateCharge(Vector2Int.right, new PushOtherPiece());
+            Board.Instance.DoAction(new TranslatePiece(Vector2Int.right), activeNode);
+            
+        Board.Instance.StopObservingAction();
             
     }
 

@@ -12,7 +12,7 @@ public class NeutralizingAttribute : BoardPieceAttribute
 {
     public NeutralizingAttribute(BoardPiece parentPiece)
     {
-        parentPiece.SetResolver(new NeutralizeCharges());
+        //parentPiece.SetResolver<NeutralizeCharges>();
     }
     
     public override void OnEnterNode(BoardNode node)

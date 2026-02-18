@@ -1,10 +1,13 @@
 
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+
 
 [System.Serializable]
 public class Grid<T> where T : IGridNode
 {
+    public delegate void GridItemsStrategy(T item);
     private T[,] grid;
     
     public int Width => grid.GetLength(0);
@@ -13,10 +16,30 @@ public class Grid<T> where T : IGridNode
     {
         grid = new T[width, height];
     }
+    
 
     private bool InBounds(int x, int y) => (0 <= x && x < grid.GetLength(0) && 0 <= y && y < grid.GetLength(1));
     private bool IsOccupied(int x, int y) => grid[x, y] != null;
 
+    public void ForEach(GridItemsStrategy strategy)
+    {
+        for (int y = grid.GetLength(1) - 1; y >= 0; y--)
+        {
+            for (int x = grid.GetLength(0) - 1; x >= 0; x--)
+            {
+                T item = grid[x, y];
+                if (item == null) continue;
+
+                strategy(item);
+            }
+        }
+    }
+
+    public void ExecuteGridAction(T item, IGridAction<T> action)
+    {
+        action.Execute(item, this); 
+    }
+    
     public T Get(int x, int y)
     {
         if (InBounds(x, y) && IsOccupied(x, y))

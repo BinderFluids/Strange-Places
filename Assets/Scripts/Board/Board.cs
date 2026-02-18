@@ -1,8 +1,10 @@
-using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Board : MonoBehaviour
 {
+    public static Board Instance;
+    
     [SerializeField] private BoardPlayer player;
     [SerializeField] private BoardPlayer opponent; 
     [SerializeField] private BoardNode boardNodePrefab;
@@ -15,8 +17,24 @@ public class Board : MonoBehaviour
     private Grid<BoardNode> grid;
     public Grid<BoardNode> Grid => grid;
     
+    private Stack<IGridAction<BoardNode>> actionStack = new();
+    [SerializeField] private List<string> actionStackString = new();
+    
+    private bool observeAction;
+    public bool ObserveAction => observeAction;
+
+    public void StartObservingAction()
+    {
+        observeAction = true; 
+    }
+    public void StopObservingAction()
+    {
+        observeAction = false; 
+    }
+    
     private void Awake()
     {
+        Instance = this; 
         grid = new Grid<BoardNode>(gridWidth, gridHeight);
         int colorIndex = 0;
         Color[] colors =
@@ -48,30 +66,42 @@ public class Board : MonoBehaviour
         }
     }
 
+    public void DoAction(IGridAction<BoardNode> action, BoardNode active)
+    {
+        if (observeAction) actionStack.Push(action);
+        grid.ExecuteGridAction(active, action); 
+    }
+
+    public void Undo()
+    {
+        StopObservingAction();
+        if (actionStack.Count > 0) actionStack.Pop().Undo();
+        StartObservingAction();
+    }
+
+    void UpdatePieces()
+    {
+        grid.ForEach(node => node.PieceUpdated());
+        
+    }
+    void VisualizeStack()
+    {
+        actionStackString.Clear();
+        foreach (BoardActionChain action in actionStack)
+            actionStackString.Add(action.ToString());
+    }
+    
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.U)) AdvanceCharges(player, Vector2Int.up);
-        if (Input.GetKeyDown(KeyCode.J)) AdvanceCharges(opponent, Vector2Int.down);
-    }
-
-    private void AdvanceCharges(BoardPlayer owner, Vector2Int direction)
-    {
-        int startY = direction == Vector2Int.up ? grid.Height - 1 : 0;
-        int endYExclusive = direction == Vector2Int.up ? -1 : grid.Height;
-        int stepY = direction == Vector2Int.up ? -1 : 1;
-
-        for (int y = startY; y != endYExclusive; y += stepY)
-        {
-            for (int x = 0; x < grid.Width; x++)
-            {
-                BoardNode node = grid.Get(x, y);
-                if (node.Piece == null || node.Piece.PlayerOwner != owner) continue;
-
-                node.TranslatePiece(direction, new PushOtherPiece());
+        StartObservingAction();
+        if (Input.GetKeyDown(KeyCode.U)) {
+            try {
+                DoAction(new ShiftBoard(Vector2Int.up, player), null);
+            } catch(System.Exception e) {
+                Debug.LogException(e);
             }
         }
+        if (Input.GetKeyDown(KeyCode.Z)) Undo();
+        StopObservingAction();
     }
-
-    public void AdvancePlayerCharges() => AdvanceCharges(player, Vector2Int.up);
-    public void AdvanceOpponentCharges() => AdvanceCharges(opponent, Vector2Int.down);
 }
