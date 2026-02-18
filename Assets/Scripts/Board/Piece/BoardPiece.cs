@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 [System.Serializable]
 public class BoardPiece
 {
-
+    private bool doDebug = false; 
     [SerializeField] private BoardPlayer playerOwner;
     public BoardPlayer PlayerOwner => playerOwner;
     private int charge;
@@ -21,11 +21,15 @@ public class BoardPiece
         }
         private set
         {
-            Debug.Log($"{id}: Setting Charge to {value}\n{Environment.StackTrace}");
+            DoDebug($"{id}: Setting Charge to {value}\n{Environment.StackTrace}");
             charge = value;
         }
     }
 
+    void DoDebug(object message)
+    {
+        if (doDebug) Debug.Log(message);
+    }
     private List<BoardPieceAttribute> attributes = new();
     public IReadOnlyList<BoardPieceAttribute> Attributes => attributes;
     
@@ -40,7 +44,7 @@ public class BoardPiece
         this.attributes = attributes ?? new List<BoardPieceAttribute>();
         resolverType = ResolverType.None;
         
-        Debug.Log($"Created {this}");
+        DoDebug($"Created {this}");
     }
 
     public BoardPiece(BoardPiece other)
@@ -51,7 +55,7 @@ public class BoardPiece
         attributes = new List<BoardPieceAttribute>(other.Attributes);
         resolverType = other.ResolverType;
         
-        Debug.Log($"Created {this}");
+        DoDebug($"Created {this}");
     }
     
     public void ChangeCharge(int amt)
