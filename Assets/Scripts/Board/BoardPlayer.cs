@@ -13,6 +13,9 @@ public class BoardPlayer : MonoBehaviour, IPieceOwner
     [SerializeField] private int actionsPerTurn = 2;
     [SerializeField] private int actionsAvailable = 2;
 
+    [SerializeField] private List<IBoardItem> items = new();
+    public List<IBoardItem> Items => items;
+
     private Grid<BoardNode> workingGrid;
 
     private bool turnActive;
