@@ -17,8 +17,8 @@ public class Board : MonoBehaviour
     [Min(1), SerializeField] private int gridWidth;
     [Min(1), SerializeField] private int gridHeight;
     
-    private Grid<BoardNode> grid;
-    public Grid<BoardNode> Grid => grid;
+    private BoardNodeGrid grid;
+    public BoardNodeGrid Grid => grid;
     
     private Stack<IGridAction<BoardNode>> actionStack = new();
     [SerializeField] private List<string> actionStackString = new();
@@ -38,7 +38,7 @@ public class Board : MonoBehaviour
 
     void InitGrid()
     {
-        grid = new Grid<BoardNode>(gridWidth, gridHeight);
+        grid = new BoardNodeGrid(gridWidth, gridHeight);
         
         int colorIndex = 0;
         Color[] colors =

@@ -8,10 +8,12 @@ public interface IGridAction<T> where T : IGridNode
 
 public abstract class BoardAction : IGridAction<BoardNode>
 {
-    protected Vector2Int activeCoords; 
+    private Vector2Int activeCoords; 
+    public Vector2Int ActiveCoords => activeCoords;
     
     public void Execute(Vector2Int activeCoords, Grid<BoardNode> ctx)
     {
+        this.activeCoords = activeCoords;
         if (!ctx.TryGet(activeCoords, out _)) return;
         Execute(activeCoords, ctx);
     }

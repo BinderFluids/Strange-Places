@@ -32,19 +32,15 @@ public class GameManager : MonoBehaviour
 
     void PlayerEndTurn()
     {
+        player.onTurnEnd -= PlayerEndTurn;
         ShiftPlayersPieces(); 
-        player.onTurnEnd -= ShiftPlayersPieces;
         StartTurn(player); 
     }
     
     private void ShiftPlayersPieces()
     {
         board.StartObservingAction();
-        try {
-            board.Execute(new ShiftBoard(Vector2Int.up, player), Vector2Int.zero);
-        } catch(System.Exception e) {
-            Debug.LogException(e);
-        }
+        board.Execute(new ShiftBoard(Vector2Int.up, player), Vector2Int.zero);
         board.StopObservingAction();
     }
     

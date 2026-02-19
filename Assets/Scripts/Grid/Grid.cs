@@ -18,19 +18,33 @@ public class Grid<T> where T : IGridNode
         grid = new T[width, height];
     }
     private Stack<IGridAction<T>> actionStack = new();
-    private HashSet<IGridNode> dirtyNodes = new(); 
+    private HashSet<Vector2Int> dirtyNodes = new(); 
     
     private bool observeAction = false;
+
     private bool InBounds(int x, int y) => (0 <= x && x < grid.GetLength(0) && 0 <= y && y < grid.GetLength(1));
     private bool IsOccupied(int x, int y) => grid[x, y] != null;
 
-    public bool IsDirty(IGridNode node)
+    public bool IsDirty(Vector2Int node)
     {
         return dirtyNodes.Contains(node); 
     }
-    public void SetDirty(IGridNode node)
+    public bool IsDirty(T node)
+    {
+        if (node == null) return false;
+        return IsDirty(Find(node));
+    }
+    
+    
+    public void SetDirty(Vector2Int node)
     {
         dirtyNodes.Add(node); 
+    }
+
+    public void SetDirty(T node)
+    {
+        if (node == null) throw new NullReferenceException(); 
+        SetDirty(Find(node));
     }
 
     void CleanNodes() => dirtyNodes.Clear(); 
@@ -48,7 +62,6 @@ public class Grid<T> where T : IGridNode
         }
         CleanNodes();
     }
-    
     
     public bool TryGet(int x, int y, out T item)
     {
