@@ -16,7 +16,7 @@ public class Grid<T> where T : IGridNode
     {
         grid = new T[width, height];
     }
-
+    private Stack<IGridAction<T>> actionStack = new();
     private HashSet<IGridNode> dirtyNodes = new(); 
     
 
@@ -50,7 +50,13 @@ public class Grid<T> where T : IGridNode
 
     public void ExecuteGridAction(T item, IGridAction<T> action)
     {
+        actionStack.Push(action);
         action.Execute(item, this); 
+    }
+    public void Undo()
+    {
+        if (actionStack.Count < 1) return;
+        actionStack.Pop().Undo();
     }
     
     public T Get(int x, int y)

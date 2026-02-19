@@ -21,7 +21,6 @@ public class GivePiece : IGridAction<BoardNode>
         if (active.IsOccupied())
             foreach (BoardPieceAttribute attribute in incomingPiece.Attributes)
             {
-                Debug.Log($"Looping {attribute.GetType()}");
                 var newAddAttributeAction = CreateAddAttributeAction(attribute);
                 newAddAttributeAction.Execute(activeNode, ctx);
             }

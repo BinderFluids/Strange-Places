@@ -7,6 +7,9 @@ using ScriptableVariables;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private MachineBehavior machine;
+    [SerializeField] private Board board;
+    [SerializeField] private BoardPlayer player;
+    [SerializeField] private BoardPlayer opponent; 
     
     private const int maxLoseCount = 50;
     [SerializeField] private IntVariable points;
@@ -18,9 +21,35 @@ public class GameManager : MonoBehaviour
         points.Value = 0; 
         
         machine ??= FindFirstObjectByType<MachineBehavior>();
-        machine.onMoveComplete += OnMachineMoveComplete; 
+        machine.onMoveComplete += OnMachineMoveComplete;
+
+        StartTurn(player); 
     }
 
+    void StartTurn(BoardPlayer player)
+    {
+        player.onTurnEnd += PlayerEndTurn;
+        player.StartTurn(); 
+    }
+
+    void PlayerEndTurn()
+    {
+        ShiftPlayersPieces(); 
+        player.onTurnEnd -= ShiftPlayersPieces;
+        StartTurn(player); 
+    }
+    
+    private void ShiftPlayersPieces()
+    {
+        board.StartObservingAction();
+        try {
+            board.DoAction(new ShiftBoard(Vector2Int.up, player), null);
+        } catch(System.Exception e) {
+            Debug.LogException(e);
+        }
+        board.StopObservingAction();
+    }
+    
     public void PieceReachEnd(BoardPiece piece)
     {  
         EventBus<BoardPositionEvent>.Raise(new BoardPositionEvent()

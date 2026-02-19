@@ -22,16 +22,6 @@ public class Board : MonoBehaviour
     
     private bool observeAction;
     public bool ObserveAction => observeAction;
-
-    public void StartObservingAction()
-    {
-        observeAction = true; 
-    }
-    public void StopObservingAction()
-    {
-        observeAction = false; 
-    }
-    
     private void Awake()
     {
         Instance = this; 
@@ -65,14 +55,21 @@ public class Board : MonoBehaviour
             colorIndex++;
         }
     }
-
+    
+    public void StartObservingAction()
+    {
+        observeAction = true; 
+    }
+    public void StopObservingAction()
+    {
+        observeAction = false; 
+    }
     public void DoAction(IGridAction<BoardNode> action, BoardNode active)
     {
         if (observeAction) actionStack.Push(action);
         grid.ExecuteGridAction(active, action);
         UpdatePieces();
     }
-
     public void Undo()
     {
         StopObservingAction();
@@ -85,23 +82,19 @@ public class Board : MonoBehaviour
         StartObservingAction();
     }
 
+    public void Undo(IGridAction<BoardNode> action)
+    {
+        if (actionStack.Contains(action))
+        {
+            IGridAction<BoardNode> targetAction;
+            do {
+                targetAction = actionStack.Pop();
+            } while (targetAction != action);
+        }
+    }
+
     void UpdatePieces()
     {
         grid.ForEach(node => node.PieceUpdated());
-        
-    }
-    
-    private void Update()
-    {
-        StartObservingAction();
-        if (Input.GetKeyDown(KeyCode.U)) {
-            try {
-                DoAction(new ShiftBoard(Vector2Int.up, player), null);
-            } catch(System.Exception e) {
-                Debug.LogException(e);
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.Z)) Undo();
-        StopObservingAction();
     }
 }

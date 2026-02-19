@@ -41,7 +41,6 @@ public class BoardNodeSelector : MonoBehaviour
         {
             selectedNode = selectedNode,
             boardPlayer = boardPlayer,
-            //boardPiece = boardPiecePrefab
         });
     }
     
