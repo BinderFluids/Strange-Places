@@ -51,6 +51,7 @@ public class Grid<T> where T : IGridNode
     
     public void ForEach(GridItemsStrategy strategy)
     {
+        CleanNodes();
         for (int y = Height - 1; y >= 0; y--)
         for (int x = 0; x < Width; x++)
         {

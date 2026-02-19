@@ -31,11 +31,6 @@ public class BoardNodeSelector : MonoBehaviour
         BoardNodeMonobehavior selectedNode = Registry<BoardNodeMonobehavior>.Get(new Closest(Mathf.Sqrt(0.5f), hit.point));
         
         if (selectedNode == null) return;
-        if (boardPlayer.Reach > 0)
-            if (selectedNode.Node.Coords.y > boardPlayer.Reach - 1) return;
-        if (boardPlayer.Reach < 0)
-            if (selectedNode.Node.Coords.y < board.Grid.Height + boardPlayer.Reach)
-                return;
         
         EventBus<SelectBoardNodeEvent>.Raise(new SelectBoardNodeEvent
         {

@@ -36,15 +36,24 @@ public class BoardModifier : MonoBehaviour
         if (activeNode == null) return;
         
         Board.Instance.StartObservingAction();
+
+        bool inReach = false;
+        if (boardPlayer.Reach > 0)
+            inReach = activeNode.Node.Coords.y < boardPlayer.Reach; 
+        // if (boardPlayer.Reach < 0)
+        //     inReach = activeNode.Node.Coords.y > 
         
-        if (Input.GetKeyDown(KeyCode.W))
-            PlayerDoAction(new GivePiece(new BoardPiece(boardPlayer)));
+        
             
         if (Input.GetKeyDown(KeyCode.A))
             PlayerDoAction(new TranslatePiece<Neutralize>(Vector2Int.left, 1));
         
         if (Input.GetKeyDown(KeyCode.D))
             PlayerDoAction(new TranslatePiece<Neutralize>(Vector2Int.right, 1));
+
+        if (!inReach) return; 
+        if (Input.GetKeyDown(KeyCode.W))
+            PlayerDoAction(new GivePiece(new BoardPiece(boardPlayer)));
 
             
         Board.Instance.StopObservingAction();
