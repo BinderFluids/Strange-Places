@@ -19,7 +19,7 @@ public class Grid<T> where T : IGridNode
     private Stack<IGridAction<T>> actionStack = new();
     private HashSet<IGridNode> dirtyNodes = new(); 
     
-
+    private bool observeAction = false;
     private bool InBounds(int x, int y) => (0 <= x && x < grid.GetLength(0) && 0 <= y && y < grid.GetLength(1));
     private bool IsOccupied(int x, int y) => grid[x, y] != null;
 
@@ -47,17 +47,7 @@ public class Grid<T> where T : IGridNode
         }
         CleanNodes();
     }
-
-    public void ExecuteGridAction(Vector2Int coords, IGridAction<T> action)
-    {
-        actionStack.Push(action);
-        action.Execute(coords, this); 
-    }
-    public void Undo()
-    {
-        if (actionStack.Count < 1) return;
-        actionStack.Pop().Undo();
-    }
+    
     
     public bool TryGet(int x, int y, out T item)
     {
@@ -96,5 +86,35 @@ public class Grid<T> where T : IGridNode
 
         Debug.LogWarning("Didn't find node, returning zero");
         return Vector2Int.zero; 
+    }
+    
+    public void StartObservingAction()
+    {
+        observeAction = true; 
+    }
+    public void StopObservingAction()
+    {
+        observeAction = false; 
+    }
+    public void Execute(Vector2Int coords, IGridAction<T> action)
+    {
+        if (observeAction) actionStack.Push(action);
+        action.Execute(coords, this);
+    }
+    public void Undo()
+    {
+        StopObservingAction();
+        if (actionStack.Count > 0)
+        {
+            Debug.Log("Undo");
+            actionStack.Pop().Undo();
+            UpdateNodes();
+        }
+        StartObservingAction();
+    }
+
+    void UpdateNodes()
+    {
+        ForEach(node => node.Update());
     }
 }

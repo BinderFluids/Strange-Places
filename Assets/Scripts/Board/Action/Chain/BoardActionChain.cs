@@ -8,7 +8,10 @@ public abstract class BoardActionChain : IGridAction<BoardNode>
     protected void Chain(IGridAction<BoardNode> action, Vector2Int activeCoords, Grid<BoardNode> ctx)
     {
         actions.Push(action);
-        ctx.ExecuteGridAction(activeCoords, action); 
+        
+        ctx.StopObservingAction();
+        ctx.Execute(activeCoords, action);
+        ctx.StartObservingAction();
     }
 
     public abstract void Execute(Vector2Int activeCoords, Grid<BoardNode> ctx);

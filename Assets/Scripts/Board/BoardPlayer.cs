@@ -29,7 +29,7 @@ public class BoardPlayer : MonoBehaviour
     {
         if (actionsAvailable < 1) return; 
         
-        workingGrid.ExecuteGridAction(coords, action);
+        workingGrid.Execute(coords, action);
         actionsAvailable--;
     }
     public void Undo()

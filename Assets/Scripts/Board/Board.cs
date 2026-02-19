@@ -71,46 +71,9 @@ public class Board : MonoBehaviour
             colorIndex++;
         }
     }
-    
-    public void StartObservingAction()
-    {
-        observeAction = true; 
-    }
-    public void StopObservingAction()
-    {
-        observeAction = false; 
-    }
-    public void DoAction(IGridAction<BoardNode> action, Vector2Int coords)
-    {
-        if (observeAction) actionStack.Push(action);
-        grid.ExecuteGridAction(coords, action);
-        UpdatePieces();
-    }
-    public void Undo()
-    {
-        StopObservingAction();
-        if (actionStack.Count > 0)
-        {
-            Debug.Log("Undo");
-            actionStack.Pop().Undo();
-            UpdatePieces();
-        }
-        StartObservingAction();
-    }
 
-    public void Undo(IGridAction<BoardNode> action)
-    {
-        if (actionStack.Contains(action))
-        {
-            IGridAction<BoardNode> targetAction;
-            do {
-                targetAction = actionStack.Pop();
-            } while (targetAction != action);
-        }
-    }
-
-    void UpdatePieces()
-    {
-        grid.ForEach(node => node.PieceUpdated());
-    }
+    public void StartObservingAction() => grid.StartObservingAction();
+    public void StopObservingAction() => grid.StopObservingAction();
+    public void Execute(IGridAction<BoardNode> action, Vector2Int coords) => grid.Execute(coords, action);
+    public void Undo() => grid.Undo();
 }

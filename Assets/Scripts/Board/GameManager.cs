@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
     {
         board.StartObservingAction();
         try {
-            board.DoAction(new ShiftBoard(Vector2Int.up, player), Vector2Int.zero);
+            board.Execute(new ShiftBoard(Vector2Int.up, player), Vector2Int.zero);
         } catch(System.Exception e) {
             Debug.LogException(e);
         }

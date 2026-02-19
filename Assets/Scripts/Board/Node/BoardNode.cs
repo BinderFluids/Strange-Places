@@ -21,8 +21,7 @@ public class BoardNode : IGridNode
     }
 
 
-    
-    public void PieceUpdated()
+    public void Update()
     {
         onPieceUpdate?.Invoke(piece);
     }
@@ -32,7 +31,7 @@ public class BoardNode : IGridNode
         BoardPiece returnPiece = piece.Pop(amt);
         if (piece.Charge == 0) piece = null;
         
-        PieceUpdated();
+        Update();
         return returnPiece;
     }
     public void AddPiece(BoardPiece incomingPiece)
@@ -47,7 +46,7 @@ public class BoardNode : IGridNode
             piece = incomingPiece;
         }
         
-        PieceUpdated();
+        Update();
     }
     
     public bool IsOccupied()
