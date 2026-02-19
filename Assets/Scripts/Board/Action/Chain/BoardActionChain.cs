@@ -19,8 +19,3 @@ public abstract class BoardActionChain : IGridAction<BoardNode>
 }
 
 
-//Default Translate Piece
-public class TranslatePiece : TranslatePiece<TryPush>
-{
-    public TranslatePiece(Vector2Int direction, int charge = 0) : base(direction, charge) { }
-}

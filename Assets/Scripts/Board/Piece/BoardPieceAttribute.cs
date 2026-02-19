@@ -11,6 +11,8 @@ public abstract class BoardPieceAttribute
     }
     
     public abstract void OnAdd();
+    public abstract void OnRemove(); 
+    
     public static T Create<T>(BoardPiece parent)
     {
         T attr = (T)System.Activator.CreateInstance(typeof(T), parent);
@@ -23,26 +25,5 @@ public abstract class BoardPieceAttribute
             throw new ArgumentException($"Type must derive from {nameof(BoardPieceAttribute)}: {attributeType}", nameof(attributeType));
 
         return (BoardPieceAttribute)Activator.CreateInstance(attributeType, parent);
-    }
-}
-
-
-public class NeutralizingAttribute : BoardPieceAttribute
-{
-    private BoardPiece parentPiece;
-    public NeutralizingAttribute(BoardPiece parentPiece) : base(parentPiece)
-    {
-        this.parentPiece = parentPiece;
-    }
-    
-    public override void OnAdd()
-    {
-        SetResolver();
-    }
-
-    void SetResolver()
-    {
-        Debug.Log("Setting Neutralizing Attribute");
-        parentPiece.SetResolver(ResolverType.Neutralize);
     }
 }

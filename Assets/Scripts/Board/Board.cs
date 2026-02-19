@@ -80,8 +80,8 @@ public class Board : MonoBehaviour
         {
             Debug.Log("Undo");
             actionStack.Pop().Undo();
+            UpdatePieces();
         }
-        UpdatePieces();
         StartObservingAction();
     }
 
@@ -89,12 +89,6 @@ public class Board : MonoBehaviour
     {
         grid.ForEach(node => node.PieceUpdated());
         
-    }
-    void VisualizeStack()
-    {
-        actionStackString.Clear();
-        foreach (BoardActionChain action in actionStack)
-            actionStackString.Add(action.ToString());
     }
     
     private void Update()

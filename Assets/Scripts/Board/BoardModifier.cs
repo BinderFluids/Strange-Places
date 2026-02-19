@@ -24,6 +24,8 @@ public class BoardModifier : MonoBehaviour
     public void SetActiveNode(BoardNode activeNode)
     {
         this.activeNode = activeNode;
+        if (activeNode.IsOccupied())
+            Debug.Log(activeNode.Piece);
     }
     
     private void Update()

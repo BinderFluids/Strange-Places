@@ -21,9 +21,11 @@ public class AddAttribute : IGridAction<BoardNode>
     }
 
     public void Undo()
-    {
-        Debug.Log($"Undoing Add Attribute {attributeType} to {activeNode.Coords} : {addedAttribute}");
+    { 
         if (addedAttribute)
+        {
+            Debug.Log($"Removing Attribute {attributeType} from {activeNode.Piece}");
             activeNode.Piece.RemoveAttribute(attributeType);
+        }
     }
 }

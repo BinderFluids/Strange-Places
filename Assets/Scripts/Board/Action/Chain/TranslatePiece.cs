@@ -52,3 +52,8 @@ public class TranslatePiece<T> : BoardActionChain where T : BoardConflictResolve
         }
     }
 }
+
+public class TranslatePiece : TranslatePiece<TryPush>
+{
+    public TranslatePiece(Vector2Int direction, int charge = 0) : base(direction, charge) { }
+}

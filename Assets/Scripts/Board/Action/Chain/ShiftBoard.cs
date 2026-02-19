@@ -19,8 +19,6 @@ public class ShiftBoard : BoardActionChain
             if (!node.IsOccupied()) return;
             if (node.Piece.PlayerOwner != targetOwner) return;
             
-            Debug.Log("Shifted");
-            
             TranslatePiece translation = new TranslatePiece(direction);
             Chain(translation, node, ctx);
         });

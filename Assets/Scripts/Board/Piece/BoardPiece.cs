@@ -70,12 +70,20 @@ public class BoardPiece
     
     public void RemoveAttribute(Type type)
     {
-        attributes.RemoveWhere(a => a.GetType() == type);
+        if (attributes.Any(a => a.GetType() == type))
+        {
+            var removedAttribute = attributes.First(a => a.GetType() == type);
+            removedAttribute.OnRemove();
+            attributes.Remove(removedAttribute);
+        }
+        
+        if (attributes.Count == 0) resolverType = ResolverType.None;
     }
     public void ClearAttributes() => attributes.Clear();
 
     public void SetResolver(ResolverType type)
     {
+        Debug.Log($"Setting Resolver to {type}");
         resolverType = type;
     }
 
@@ -101,8 +109,13 @@ public class BoardPiece
         Charge -= amt; 
         return new BoardPiece(playerOwner, amt, attributes);
     }
-    
-    public override string ToString() => $"[{playerOwner}] {Charge}";
+
+    public override string ToString()
+    {
+        string playerCharge = $"[{playerOwner}] {Charge}";
+        string resolverTypeString = resolverType == ResolverType.None ? "" : $"({resolverType})";
+        return $"{playerCharge} Resolver Type: {resolverTypeString} {string.Join(", ", attributes.Select(a => a.ToString()))}";
+    }
 }
 
 
