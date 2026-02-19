@@ -2,11 +2,15 @@ using System;
 using EventBus;
 using PrimeTween;
 using ScriptableVariables;
+using UnityEditor.Callbacks;
 using UnityEngine;
 
 public class MachineBehavior : MonoBehaviour
 {
-    [SerializeField] private IntVariable points;
+    [SerializeField] private BoardPlayer player; 
+    [SerializeField] private BoardPlayer opponent; 
+    [SerializeField] private IntVariable points; 
+    [SerializeField] private IntVariable movementCharge;
     [SerializeField] private float moveDistance;
     [SerializeField] private float moveDuration;
 
@@ -27,24 +31,23 @@ public class MachineBehavior : MonoBehaviour
     {
         if (movementTween.isAlive) return;
         
+        BoardPiece piece = boardPositionEvent.piece;
         int moveDir = 0; 
-        // switch (boardPositionEvent.piece.pieceType)
-        // {
-        //     case BoardPiece.PieceType.Opponent:
-        //         moveDir = -1;
-        //         break;
-        //     case BoardPiece.PieceType.Player:
-        //         moveDir = 1; 
-        //         break;
-        //     default:
-        //         break;
-        // }   
+        if (player == (BoardPlayer)piece.PlayerOwner) moveDir = 1;
+        if (opponent == (BoardPlayer)piece.PlayerOwner) moveDir = -1;
+            
         float moveVector = moveDistance * moveDir;
-        points.Value += moveDir;
+        points.Value += movementCharge.Value * moveDir; 
         
         movementTween = Tween
             .PositionX(_transform, _transform.position.x + moveVector, moveDuration)
-            .OnComplete(onMoveComplete);
+            .OnComplete(OnMoveComplete);
+    }
+
+    void OnMoveComplete()
+    {
+        movementCharge.Value = 1; 
+        onMoveComplete?.Invoke();
     }
 
     private void OnDestroy()
