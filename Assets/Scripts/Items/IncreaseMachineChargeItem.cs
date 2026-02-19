@@ -1,7 +1,7 @@
 using ScriptableVariables;
 using UnityEngine;
 
-public class IncreaseMachineChargeItem : BoardItemScriptableObject
+public class IncreaseMachineChargeItem : BoardItem
 {
     [SerializeField] private IntVariable machineMovementNumber;
     

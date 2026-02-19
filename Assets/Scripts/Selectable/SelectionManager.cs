@@ -9,6 +9,8 @@ public class SelectionManager : Singleton<SelectionManager>
     [SerializeField] private int selectionCount;
     
     private List<ISelectable> activeItems;
+    public IReadOnlyList<ISelectable> ActiveItems => activeItems; 
+    
     public Observer<ISelectable> CurrentItem = new(null); 
     private bool active = false;
 
