@@ -38,6 +38,7 @@ public class BoardPlayer : MonoBehaviour, IPieceOwner
     {
         this.ctx = ctx;
         this.clone = clone; 
+        //TODO: account for wanting to use many items
         if (items.Count > 0)
         {
             EventBus<SelectableChosenEvent>.Register(selectBinding);
