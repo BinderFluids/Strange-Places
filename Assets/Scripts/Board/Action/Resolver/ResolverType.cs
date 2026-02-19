@@ -1,0 +1,1 @@
+public enum ResolverType { None, Neutralize, TryPush };

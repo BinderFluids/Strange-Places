@@ -1,6 +1,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -28,17 +30,17 @@ public class BoardPiece
     {
         if (doDebug) Debug.Log(message);
     }
-    private List<BoardPieceAttribute> attributes = new();
-    public IReadOnlyList<BoardPieceAttribute> Attributes => attributes;
+    private HashSet<BoardPieceAttribute> attributes = new();
+    public HashSet<BoardPieceAttribute> Attributes => attributes;
     
     private ResolverType resolverType;
     public ResolverType ResolverType => resolverType;
     
-    public BoardPiece(BoardPlayer playerOwner, int charge = 1, List<BoardPieceAttribute> attributes = null)
+    public BoardPiece(BoardPlayer playerOwner, int charge = 1, HashSet<BoardPieceAttribute> attributes = null)
     {
         this.playerOwner = playerOwner;
         Charge = charge;
-        this.attributes = attributes ?? new List<BoardPieceAttribute>();
+        this.attributes = attributes ?? new HashSet<BoardPieceAttribute>();
         resolverType = ResolverType.None;
     }
 
@@ -46,7 +48,7 @@ public class BoardPiece
     {
         playerOwner = other.PlayerOwner;
         Charge = other.Charge;
-        attributes = new List<BoardPieceAttribute>(other.Attributes);
+        attributes = new HashSet<BoardPieceAttribute>(other.Attributes);
         resolverType = other.ResolverType;
     }
     
@@ -55,17 +57,20 @@ public class BoardPiece
         charge += amt;
     }
     
-    public void AddAttribute<T>() where T : BoardPieceAttribute
+
+    public bool TryAddAttribute(BoardPieceAttribute attribute)
     {
-        if (attributes.Exists(a => a is T)) return;
+        if (attributes.Any(a => a.GetType() == attribute.GetType())) return false;  
         
-        T attribute = BoardPieceAttribute.Create<T>(this);
         attributes.Add(attribute);
         attribute.OnAdd();
+
+        return true;
     }
-    public void RemoveAttribute<T>() where T : BoardPieceAttribute
+    
+    public void RemoveAttribute(Type type)
     {
-        attributes.RemoveAll(a => a is T);
+        attributes.RemoveWhere(a => a.GetType() == type);
     }
     public void ClearAttributes() => attributes.Clear();
 

@@ -39,13 +39,13 @@ public class BoardModifier : MonoBehaviour
             Board.Instance.DoAction(new TakePiece(1), activeNode);
             
         if (Input.GetKeyDown(KeyCode.A))
-            Board.Instance.DoAction(new TranslatePiece(Vector2Int.left, 1), activeNode);
+            Board.Instance.DoAction(new TranslatePiece<Neutralize>(Vector2Int.left, 1), activeNode);
         
         if (Input.GetKeyDown(KeyCode.D))
-            Board.Instance.DoAction(new TranslatePiece(Vector2Int.right, 1), activeNode);
+            Board.Instance.DoAction(new TranslatePiece<Neutralize>(Vector2Int.right, 1), activeNode);
 
         if (Input.GetKeyDown(KeyCode.Q))
-            Board.Instance.DoAction(new AddAttribute<NeutralizingAttribute>(), activeNode); 
+            Board.Instance.DoAction(new AddAttribute(typeof(NeutralizingAttribute)), activeNode); 
             
         Board.Instance.StopObservingAction();
             
