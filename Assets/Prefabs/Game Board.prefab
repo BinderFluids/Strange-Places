@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 1997376799979067207}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071065, z: -0, w: 0.7071071}
-  m_LocalPosition: {x: -1.25, y: 0.06597302, z: 0.75}
+  m_LocalPosition: {x: -1.25, y: 0.06597302, z: 1.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -222,12 +222,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7996a38c1f8e43758184fc0062a1e4c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 0}
+  player: {fileID: 0}
+  opponent: {fileID: 0}
   boardNodePrefab: {fileID: 1325094135214546743, guid: 07b8b8eb469a23d729b5503b791357fb, type: 3}
   boardNodeContainer: {fileID: 7226154363854415793}
   boardAnchor: {fileID: 514068641758468869}
   gridCellSize: 0
   gridWidth: 1
   gridHeight: 1
+  actionStackString: []
 --- !u!1 &6661397461807050715
 GameObject:
   m_ObjectHideFlags: 0

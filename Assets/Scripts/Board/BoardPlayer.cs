@@ -5,7 +5,7 @@ using EventBus;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class BoardPlayer : MonoBehaviour
+public class BoardPlayer : MonoBehaviour, IPieceOwner
 {
     [SerializeField, Range(-5, 5)] private int reach;
     public int Reach => reach;

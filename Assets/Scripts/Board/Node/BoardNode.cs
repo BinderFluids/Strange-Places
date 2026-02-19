@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 public class BoardNode : IGridNode
 {
-    private BoardPiece piece;
+    protected BoardPiece piece;
     public BoardPiece Piece => piece;
 
     private Grid<BoardNode> grid;
@@ -20,8 +20,7 @@ public class BoardNode : IGridNode
         this.grid = grid; 
         this.piece = piece;
     }
-
-
+    
     public void Update()
     {
         onPieceUpdate?.Invoke(piece);
@@ -59,5 +58,4 @@ public class BoardNode : IGridNode
     {
         return piece != null;
     }
-    
 }

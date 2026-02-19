@@ -10,8 +10,8 @@ using Random = UnityEngine.Random;
 public class BoardPiece
 {
     private bool doDebug = false; 
-    [SerializeField] private BoardPlayer playerOwner;
-    public BoardPlayer PlayerOwner => playerOwner;
+    [SerializeField] private IPieceOwner playerOwner;
+    public IPieceOwner PlayerOwner => playerOwner;
     private int charge;
     public int Charge
     {
@@ -36,7 +36,7 @@ public class BoardPiece
     private ResolverType resolverType;
     public ResolverType ResolverType => resolverType;
     
-    public BoardPiece(BoardPlayer playerOwner, int charge = 1, HashSet<BoardPieceAttribute> attributes = null)
+    public BoardPiece(IPieceOwner playerOwner, int charge = 1, HashSet<BoardPieceAttribute> attributes = null)
     {
         this.playerOwner = playerOwner;
         Charge = charge;

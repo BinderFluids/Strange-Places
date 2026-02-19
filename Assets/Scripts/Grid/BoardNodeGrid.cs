@@ -13,5 +13,4 @@ public class BoardNodeGrid : Grid<BoardNode>
             Execute(newAction.ActiveCoords, newAction);
         }
     }
-
 }

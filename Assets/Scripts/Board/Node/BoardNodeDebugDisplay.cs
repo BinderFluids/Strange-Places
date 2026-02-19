@@ -24,9 +24,19 @@ public class BoardNodeDebugDisplay : MonoBehaviour
             SetColor(Color.black);
             return;
         }
-        if (piece.PlayerOwner.gameObject.name == "Player")
+
+        if (nodeMonobehavior.Node is NullBoardNode)
+        {
+            SetColor(Color.black);
+            coordText.text = "Null";
+            chargeText.text = string.Empty;
+            return; 
+        }
+
+        BoardPlayer player = piece.PlayerOwner as BoardPlayer; 
+        if (player.gameObject.name == "Player")
             SetColor(Color.green);
-        else if (piece.PlayerOwner.gameObject.name == "Opponent")
+        else if (player.gameObject.name == "Opponent")
             SetColor(Color.red);
 
         if (piece.Attributes.Any(a => a is NeutralizingAttribute))
@@ -43,4 +53,27 @@ public class BoardNodeDebugDisplay : MonoBehaviour
     {
         nodeMonobehavior.Node.onPieceUpdate -= OnPieceUpdate;
     }
+    
+    #region GIZMOS  
+    private Color gizmoColor;
+    private float gizmoSize;
+    public void InitGizmos(Color gizmoColor, float gizmoSize)
+    {
+        this.gizmoColor = gizmoColor;
+        this.gizmoSize = gizmoSize;
+    }
+    
+    private void OnDrawGizmos()
+    {
+        if (nodeMonobehavior.Node != null)
+        {
+            if (nodeMonobehavior.Node is NullBoardNode)
+                gizmoColor = Color.black;
+        }
+        Gizmos.color = gizmoColor;
+        
+        Vector3 cubeSize = new Vector3(gizmoSize, .01f, gizmoSize);
+        Gizmos.DrawCube(transform.position, cubeSize);
+    }
+    #endregion
 }

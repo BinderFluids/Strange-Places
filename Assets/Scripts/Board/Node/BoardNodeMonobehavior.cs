@@ -30,22 +30,4 @@ public class BoardNodeMonobehavior : MonoBehaviour
         Registry<BoardNodeMonobehavior>.Remove(this);
         EventBus<SelectBoardNodeEvent>.Deregister(selectBinding);
     }
-
-    #region GIZMOS  
-    private Color gizmoColor;
-    private float gizmoSize;
-    public void InitGizmos(Color gizmoColor, float gizmoSize)
-    {
-        this.gizmoColor = gizmoColor;
-        this.gizmoSize = gizmoSize;
-    }
-    
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = gizmoColor;
-        
-        Vector3 cubeSize = new Vector3(gizmoSize, .01f, gizmoSize);
-        Gizmos.DrawCube(transform.position, cubeSize);
-    }
-    #endregion
 }

@@ -27,6 +27,7 @@ public class TranslatePiece<T> : BoardActionChain where T : BoardConflictResolve
             Chain(removePiece, activeCoords, ctx);
             return;
         }
+
         if (targetNode.IsOccupied() && activeNode.Piece.PlayerOwner != targetNode.Piece.PlayerOwner)
         {
             BoardConflictResolver resolver; 

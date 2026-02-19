@@ -38,6 +38,7 @@ public class Board : MonoBehaviour
 
     void InitGrid()
     {
+        gridWidth += 2; 
         grid = new BoardNodeGrid(gridWidth, gridHeight);
         
         int colorIndex = 0;
@@ -51,13 +52,17 @@ public class Board : MonoBehaviour
         {
             for (int x = 0; x < gridWidth; x++)
             {
+                
+                    
+                
                 BoardNodeMonobehavior nodeBehavior = Instantiate(boardNodePrefab, transform);
-                BoardNode newNode = new BoardNode(grid);
+                BoardNode newNode = (x == 0 || x == gridWidth - 1) ? new NullBoardNode(grid) : new BoardNode(grid);
+                
                 grid.Set(x, y, newNode);
                 nodeBehavior.Init(newNode); 
 #if UNITY_EDITOR
-                nodeBehavior.InitGizmos(colors[colorIndex % 2], gridCellSize);
                 BoardNodeDebugDisplay debugDisplay = nodeBehavior.gameObject.GetComponent<BoardNodeDebugDisplay>();
+                debugDisplay.InitGizmos(colors[colorIndex % 2], gridCellSize);
                 debugDisplay.Init(); 
 #endif
                 Vector3 boardOffsetLocal = new Vector3(x * gridCellSize, 0f, y * gridCellSize);
@@ -68,7 +73,8 @@ public class Board : MonoBehaviour
 
                 colorIndex++;
             }
-            colorIndex++;
+
+            if (gridWidth % 2 == 0) colorIndex++; 
         }
     }
 
