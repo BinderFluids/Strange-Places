@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 public class TakePiece : IGridAction<BoardNode>
 {
     private int charge;
-    private BoardNode activeNode;
+    private Vector2Int activeCoords;
     private BoardPiece takenPiece;
     public BoardPiece TakenPiece => takenPiece;
     private Grid<BoardNode> ctx;
@@ -16,18 +16,19 @@ public class TakePiece : IGridAction<BoardNode>
         this.charge = charge;
     }
     
-    public void Execute(BoardNode active, Grid<BoardNode> ctx)
+    public void Execute(Vector2Int activeCoords, Grid<BoardNode> ctx)
     {
-        activeNode = active;
         this.ctx = ctx;
+        this.activeCoords = activeCoords;
+        if (!ctx.TryGet(activeCoords, out BoardNode active)) return;
         
         takenPiece = new BoardPiece(active.TakePiece(charge));
-        Debug.Log($"Took Piece {takenPiece} from {activeNode.Coords}");
+        Debug.Log($"Took Piece {takenPiece} from {activeCoords}");
     }
 
     public void Undo()
     {
         GivePiece givePiece = new GivePiece(takenPiece);
-        givePiece.Execute(activeNode, ctx);
+        givePiece.Execute(activeCoords, ctx);
     }
 }

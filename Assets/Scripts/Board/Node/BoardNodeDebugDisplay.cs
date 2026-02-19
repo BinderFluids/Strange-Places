@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class BoardNodeDebugDisplay : MonoBehaviour
 {
-    [SerializeField] private BoardNode node;
+    [SerializeField] private BoardNodeMonobehavior nodeMonobehavior;
     [SerializeField] private TMP_Text coordText;
     [SerializeField] private TMP_Text chargeText;
 
-    private void Start()
+    public void Init()
     {
-        node.onPieceUpdate += OnPieceUpdate;
-        coordText.text = node.Coords.ToString();
+        nodeMonobehavior.Node.onPieceUpdate += OnPieceUpdate;
+        coordText.text = nodeMonobehavior.Node.Coords.ToString();
     }
 
     void OnPieceUpdate(BoardPiece piece)
@@ -41,6 +41,6 @@ public class BoardNodeDebugDisplay : MonoBehaviour
 
     private void OnDestroy()
     {
-        node.onPieceUpdate -= OnPieceUpdate;
+        nodeMonobehavior.Node.onPieceUpdate -= OnPieceUpdate;
     }
 }

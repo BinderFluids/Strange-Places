@@ -1,13 +1,16 @@
+using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks.Triggers;
 using UnityEngine;
 
 public class Board : MonoBehaviour
 {
     public static Board Instance;
-    
+
+    [SerializeField] private GameManager manager; 
     [SerializeField] private BoardPlayer player;
     [SerializeField] private BoardPlayer opponent; 
-    [SerializeField] private BoardNode boardNodePrefab;
+    [SerializeField] private BoardNodeMonobehavior boardNodePrefab;
     [SerializeField] private Transform boardNodeContainer;
     [SerializeField] private Transform boardAnchor;
     [SerializeField] private float gridCellSize;
@@ -25,7 +28,18 @@ public class Board : MonoBehaviour
     private void Awake()
     {
         Instance = this; 
+        InitGrid();
+    }
+
+    private void Start()
+    {
+        manager.StartTurn(player); 
+    }
+
+    void InitGrid()
+    {
         grid = new Grid<BoardNode>(gridWidth, gridHeight);
+        
         int colorIndex = 0;
         Color[] colors =
         {
@@ -37,18 +51,20 @@ public class Board : MonoBehaviour
         {
             for (int x = 0; x < gridWidth; x++)
             {
-                BoardNode node = Instantiate(boardNodePrefab, transform);
-                grid.Set(x, y, node);
-                node.Init(grid);
+                BoardNodeMonobehavior nodeBehavior = Instantiate(boardNodePrefab, transform);
+                BoardNode newNode = new BoardNode(grid);
+                grid.Set(x, y, newNode);
+                nodeBehavior.Init(newNode); 
 #if UNITY_EDITOR
-                node.InitGizmos(colors[colorIndex % 2], gridCellSize);
+                nodeBehavior.InitGizmos(colors[colorIndex % 2], gridCellSize);
+                BoardNodeDebugDisplay debugDisplay = nodeBehavior.gameObject.GetComponent<BoardNodeDebugDisplay>();
+                debugDisplay.Init(); 
 #endif
-                
                 Vector3 boardOffsetLocal = new Vector3(x * gridCellSize, 0f, y * gridCellSize);
                 Vector3 squareOffsetLocal = new Vector3(gridCellSize / 2f, 0f, gridCellSize / 2f);
                 Vector3 cellLocalPosInAnchorSpace = boardOffsetLocal + squareOffsetLocal;
 
-                node.transform.position = boardAnchor.TransformPoint(cellLocalPosInAnchorSpace);
+                nodeBehavior.transform.position = boardAnchor.TransformPoint(cellLocalPosInAnchorSpace);
 
                 colorIndex++;
             }
@@ -64,10 +80,10 @@ public class Board : MonoBehaviour
     {
         observeAction = false; 
     }
-    public void DoAction(IGridAction<BoardNode> action, BoardNode active)
+    public void DoAction(IGridAction<BoardNode> action, Vector2Int coords)
     {
         if (observeAction) actionStack.Push(action);
-        grid.ExecuteGridAction(active, action);
+        grid.ExecuteGridAction(coords, action);
         UpdatePieces();
     }
     public void Undo()

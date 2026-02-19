@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class GivePiece : IGridAction<BoardNode>
 {
-    private BoardNode activeNode;
+    private Vector2Int activeCoords;
     private BoardPiece incomingPiece;
     private Grid<BoardNode> ctx;
     private List<IGridAction<BoardNode>> giveAttributeActions = new();
@@ -13,31 +13,34 @@ public class GivePiece : IGridAction<BoardNode>
         this.incomingPiece = incomingPiece;
     }
 
-    public void Execute(BoardNode active, Grid<BoardNode> ctx)
+    public void Execute(Vector2Int activeCoords, Grid<BoardNode> ctx)
     {
         this.ctx = ctx;
-        activeNode = active;
+        this.activeCoords = activeCoords;
+        if (!ctx.TryGet(activeCoords, out BoardNode active)) return;
         
         if (active.IsOccupied())
             foreach (BoardPieceAttribute attribute in incomingPiece.Attributes)
             {
                 var newAddAttributeAction = CreateAddAttributeAction(attribute);
-                newAddAttributeAction.Execute(activeNode, ctx);
+                newAddAttributeAction.Execute(activeCoords, ctx);
             }
         active.AddPiece(incomingPiece);
         
 
-        Debug.Log($"Gave Piece {incomingPiece} to {activeNode.Coords}");
+        Debug.Log($"Gave Piece {incomingPiece} to {activeCoords}");
     }
 
     public void Undo()
     {
+        if (!ctx.TryGet(activeCoords, out BoardNode active)) return; 
+        
         foreach (IGridAction<BoardNode> attributeAction in giveAttributeActions)
             attributeAction.Undo();
         
         TakePiece takePiece = new TakePiece(incomingPiece.Charge);
         
-        takePiece.Execute(activeNode, ctx);
+        takePiece.Execute(activeCoords, ctx);
     }
     
     AddAttribute CreateAddAttributeAction(BoardPieceAttribute attribute)

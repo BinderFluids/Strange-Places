@@ -22,14 +22,12 @@ public class GameManager : MonoBehaviour
         
         machine ??= FindFirstObjectByType<MachineBehavior>();
         machine.onMoveComplete += OnMachineMoveComplete;
-
-        StartTurn(player); 
     }
 
-    void StartTurn(BoardPlayer player)
+    public void StartTurn(BoardPlayer player)
     {
         player.onTurnEnd += PlayerEndTurn;
-        player.StartTurn(); 
+        player.StartTurn(board.Grid); 
     }
 
     void PlayerEndTurn()
@@ -43,7 +41,7 @@ public class GameManager : MonoBehaviour
     {
         board.StartObservingAction();
         try {
-            board.DoAction(new ShiftBoard(Vector2Int.up, player), null);
+            board.DoAction(new ShiftBoard(Vector2Int.up, player), Vector2Int.zero);
         } catch(System.Exception e) {
             Debug.LogException(e);
         }

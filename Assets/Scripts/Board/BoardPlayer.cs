@@ -11,16 +11,33 @@ public class BoardPlayer : MonoBehaviour
     
     [SerializeField] private int actionsPerTurn = 2;
     [SerializeField] private int actionsAvailable = 2;
-        
-    private Stack<IGridAction<BoardNode>> actions = new();
+
+    private Grid<BoardNode> workingGrid;
 
     private bool turnActive;
     public event Action onTurnEnd = delegate {};
-    
-    public void StartTurn()
+
+    public void StartTurn(Grid<BoardNode> ctx, bool clone = false)
     {
+        Debug.Log("starting turn");
+        workingGrid = ctx; 
         actionsAvailable = actionsPerTurn;
         turnActive = true; 
+    }
+
+    public void DoAction(Vector2Int coords, IGridAction<BoardNode> action)
+    {
+        if (actionsAvailable < 1) return; 
+        
+        workingGrid.ExecuteGridAction(coords, action);
+        actionsAvailable--;
+    }
+    public void Undo()
+    {
+        if (actionsAvailable == actionsPerTurn) return; 
+        
+        workingGrid.Undo();
+        actionsAvailable++;
     }
 
     public void EndTurn()
@@ -40,21 +57,5 @@ public class BoardPlayer : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Z)) Undo();
-    }
-
-    public void DoAction(IGridAction<BoardNode> action, BoardNode node)
-    {
-        if (actionsAvailable == 0) return;
-        
-        Board.Instance.DoAction(action, node);
-        actions.Push(action);
-        actionsAvailable--;  
-    }
-
-    public void Undo()
-    {
-        if (actions.Count < 1) return;
-        actionsAvailable++; 
-        Board.Instance.Undo(actions.Pop());
     }
 }

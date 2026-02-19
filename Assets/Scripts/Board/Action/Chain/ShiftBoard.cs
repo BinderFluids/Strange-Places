@@ -11,7 +11,7 @@ public class ShiftBoard : BoardActionChain
         this.targetOwner = targetOwner; 
     }
 
-    public override void Execute(BoardNode active, Grid<BoardNode> ctx)
+    public override void Execute(Vector2Int activeCoords, Grid<BoardNode> ctx)
     {
         ctx.ForEach(node =>
         {
@@ -20,7 +20,7 @@ public class ShiftBoard : BoardActionChain
             if (node.Piece.PlayerOwner != targetOwner) return;
             
             TranslatePiece translation = new TranslatePiece(direction);
-            Chain(translation, node, ctx);
+            Chain(translation, node.Coords, ctx);
         });
     }
 }

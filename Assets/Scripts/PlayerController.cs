@@ -21,7 +21,6 @@ public class PlayerController : MonoBehaviour
     
     void OnBoardNodeSelect(SelectBoardNodeEvent boardNodeEvent)
     {
-        BoardNode boardNode = boardNodeEvent.selectedNode;
         
     }
 }

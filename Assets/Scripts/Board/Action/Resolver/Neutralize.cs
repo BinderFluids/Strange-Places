@@ -4,10 +4,14 @@ public class Neutralize : BoardConflictResolver
 {
     public Neutralize(BoardNode otherNode, Vector2Int direction, int charge = 0) : base(otherNode, direction, charge) { }
 
-    public override void Execute(BoardNode active, Grid<BoardNode> ctx)
+    public override void Execute(Vector2Int activeCoords, Grid<BoardNode> ctx)
     {
-        bool doTranslate = charge == 0 || charge >= active.Piece.Charge;
-        if (charge == 0) charge = active.Piece.Charge;
+        if (!ctx.TryGet(activeCoords, out var activeNode)) return; 
+        
+        Vector2Int otherCoords = activeCoords + direction;
+        
+        bool doTranslate = charge == 0 || charge >= activeNode.Piece.Charge;
+        if (charge == 0) charge = activeNode.Piece.Charge;
         
         int smallerCharge = Mathf.Min(charge, otherNode.Piece.Charge);
         bool similarCharges = charge == otherNode.Piece.Charge;
@@ -16,22 +20,22 @@ public class Neutralize : BoardConflictResolver
         Debug.Log($"Similar charges: {similarCharges}. Translate charge: {doTranslate}.");
         
         var takeActivePiece = new TakePiece(smallerCharge);
-        Chain(takeActivePiece, active, ctx);
+        Chain(takeActivePiece, activeCoords, ctx);
         
         var takeOtherPiece = new TakePiece(smallerCharge);
-        Chain(takeOtherPiece, otherNode, ctx);
+        Chain(takeOtherPiece, otherCoords, ctx);
 
         if (!otherNode.IsOccupied() && !similarCharges)
         {
             if (doTranslate)
             {
                 var translateOtherCharge = new TranslatePiece(direction);
-                Chain(translateOtherCharge, active, ctx);
+                Chain(translateOtherCharge, activeCoords, ctx);
             }
             else
             {
                 var givePiece = new GivePiece(takeActivePiece.TakenPiece); 
-                Chain(givePiece, otherNode, ctx);
+                Chain(givePiece, otherCoords, ctx);
             }
         }
     }

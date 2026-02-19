@@ -8,8 +8,8 @@ public class BoardModifier : MonoBehaviour
     public static BoardModifier Instance;
     
     [SerializeField] private BoardPlayer boardPlayer;
-    [SerializeField] private BoardNode activeNode;
-    public BoardNode ActiveNode => activeNode;
+    [SerializeField] private BoardNodeMonobehavior activeNode;
+    public BoardNodeMonobehavior ActiveNode => activeNode;
 
     public void SetBoardPlayer(BoardPlayer boardPlayer)
     {
@@ -21,15 +21,15 @@ public class BoardModifier : MonoBehaviour
         Instance = this;
     }
 
-    public void SetActiveNode(BoardNode activeNode)
+    public void SetActiveNode(BoardNodeMonobehavior activeNode)
     {
         this.activeNode = activeNode;
-        if (activeNode.IsOccupied())
-            Debug.Log(activeNode.Piece);
+        if (activeNode.Node.IsOccupied())
+            Debug.Log(activeNode.Node.Piece);
     }
 
     void PlayerDoAction(IGridAction<BoardNode> action) =>
-        boardPlayer.DoAction(action, activeNode); 
+        boardPlayer.DoAction(activeNode.Node.Coords, action); 
     
     private void Update()
     {

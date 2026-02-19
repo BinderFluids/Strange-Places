@@ -4,15 +4,18 @@ public class TryPush : BoardConflictResolver
 {
     public TryPush(BoardNode otherNode, Vector2Int direction, int charge) : base(otherNode, direction, charge) { }
 
-    public override void Execute(BoardNode active, Grid<BoardNode> ctx)
+    public override void Execute(Vector2Int activeCoords, Grid<BoardNode> ctx)
     {
-        if (active.Piece.Charge > otherNode.Piece.Charge)
+        if (!ctx.TryGet(activeCoords, out var activeNode)) return;
+        Vector2Int otherCoords = activeCoords + direction;
+        
+        if (activeNode.Piece.Charge > otherNode.Piece.Charge)
         {
             var moveOther = new TranslatePiece(direction);
             var moveActive = new TranslatePiece(direction);
             
-            Chain(moveOther, otherNode, ctx); 
-            Chain(moveActive, active, ctx);
+            Chain(moveOther, otherCoords, ctx); 
+            Chain(moveActive, activeCoords, ctx);
         }
     }
 }

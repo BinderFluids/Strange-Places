@@ -28,13 +28,13 @@ public class BoardNodeSelector : MonoBehaviour
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         if (!Physics.Raycast(ray, out RaycastHit hit, maxDistance, mask, QueryTriggerInteraction.Ignore)) return; 
         
-        BoardNode selectedNode = Registry<BoardNode>.Get(new Closest(Mathf.Sqrt(0.5f), hit.point));
+        BoardNodeMonobehavior selectedNode = Registry<BoardNodeMonobehavior>.Get(new Closest(Mathf.Sqrt(0.5f), hit.point));
         
         if (selectedNode == null) return;
         if (boardPlayer.Reach > 0)
-            if (selectedNode.Coords.y > boardPlayer.Reach - 1) return;
+            if (selectedNode.Node.Coords.y > boardPlayer.Reach - 1) return;
         if (boardPlayer.Reach < 0)
-            if (selectedNode.Coords.y < board.Grid.Height + boardPlayer.Reach)
+            if (selectedNode.Node.Coords.y < board.Grid.Height + boardPlayer.Reach)
                 return;
         
         EventBus<SelectBoardNodeEvent>.Raise(new SelectBoardNodeEvent
@@ -49,7 +49,7 @@ public class BoardNodeSelector : MonoBehaviour
 
 public struct SelectBoardNodeEvent : IEvent
 {
-    public BoardNode selectedNode;
+    public BoardNodeMonobehavior selectedNode;
     public BoardPlayer boardPlayer;
     public BoardPiece boardPiece;
 }

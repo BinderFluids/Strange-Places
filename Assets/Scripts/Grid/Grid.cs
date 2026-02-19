@@ -48,10 +48,10 @@ public class Grid<T> where T : IGridNode
         CleanNodes();
     }
 
-    public void ExecuteGridAction(T item, IGridAction<T> action)
+    public void ExecuteGridAction(Vector2Int coords, IGridAction<T> action)
     {
         actionStack.Push(action);
-        action.Execute(item, this); 
+        action.Execute(coords, this); 
     }
     public void Undo()
     {
@@ -59,15 +59,18 @@ public class Grid<T> where T : IGridNode
         actionStack.Pop().Undo();
     }
     
-    public T Get(int x, int y)
+    public bool TryGet(int x, int y, out T item)
     {
         if (InBounds(x, y) && IsOccupied(x, y))
         {
-            return grid[x, y];
+            item = grid[x, y];
+            return true; 
         }
-        return default;
+
+        item = default;
+        return false;
     }
-    public T Get(Vector2Int pos) => Get(pos.x, pos.y);
+    public bool TryGet(Vector2Int pos, out T item) => TryGet(pos.x, pos.y, out item); 
     
     public bool Set(int x, int y, T item)
     {
@@ -86,8 +89,7 @@ public class Grid<T> where T : IGridNode
         {
             for (int x = 0; x < grid.GetLength(0); x++)
             {
-                T current = Get(x, y);
-                if (current == null) continue;
+                if (!TryGet(x, y, out var current)) continue; 
                 if (node.Equals(current)) return new Vector2Int(x, y);
             }
         }

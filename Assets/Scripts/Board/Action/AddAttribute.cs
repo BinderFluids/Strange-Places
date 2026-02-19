@@ -3,29 +3,31 @@ using UnityEngine;
 
 public class AddAttribute : IGridAction<BoardNode> 
 {
-    private BoardNode activeNode;
+    private Vector2Int activeCoords;
     private Type attributeType;
     private bool addedAttribute; 
+    private Grid<BoardNode> ctx;
     
     public AddAttribute(Type attributeType)
     {
         this.attributeType = attributeType ?? throw new ArgumentNullException(nameof(attributeType));
     }
     
-    public void Execute(BoardNode active, Grid<BoardNode> ctx)
+    public void Execute(Vector2Int activeCoords, Grid<BoardNode> ctx)
     {
-        activeNode = active;
+        if (!ctx.TryGet(activeCoords, out BoardNode active)) return;
+        
+        this.activeCoords = activeCoords;
+        this.ctx = ctx; 
+        
         BoardPieceAttribute newAttribute = BoardPieceAttribute.Create(attributeType, active.Piece);
         addedAttribute = active.Piece.TryAddAttribute(newAttribute);
-        Debug.Log($"Added Attribute {attributeType} to {activeNode.Coords} : {addedAttribute}");
     }
 
     public void Undo()
     { 
         if (addedAttribute)
-        {
-            Debug.Log($"Removing Attribute {attributeType} from {activeNode.Piece}");
-            activeNode.Piece.RemoveAttribute(attributeType);
-        }
+            if (ctx.TryGet(activeCoords, out BoardNode activeNode))
+                activeNode.Piece.RemoveAttribute(attributeType);
     }
 }

@@ -449,8 +449,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8947333851654557753}
-  - component: {fileID: 1325094135214546743}
-  - component: {fileID: 2486986633242328682}
+  - component: {fileID: 6457036500889089031}
+  - component: {fileID: 8566193568340994145}
   m_Layer: 0
   m_Name: BoardNode
   m_TagString: Untagged
@@ -475,7 +475,7 @@ Transform:
   - {fileID: 2110310217273376126}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1325094135214546743
+--- !u!114 &6457036500889089031
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -484,13 +484,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6610275682922610620}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a7c3c6cd6624e88a3c3229ea298a708, type: 3}
+  m_Script: {fileID: 11500000, guid: c67ec1e27705467d9141a1466238ac4e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  piece:
-    charge: 0
-  pieceAnchor: {fileID: 7346842681215082641}
---- !u!114 &2486986633242328682
+  m_EditorClassIdentifier: Assembly-CSharp::BoardNodeMonobehavior
+--- !u!114 &8566193568340994145
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -502,7 +499,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6db1258aec2c49b1a80be9ce1bed8159, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoardNodeDebugDisplay
-  node: {fileID: 1325094135214546743}
+  nodeMonobehavior: {fileID: 6457036500889089031}
   coordText: {fileID: 7218623293619977639}
   chargeText: {fileID: 7387560076129814119}
 --- !u!1 &7280713165042658687
