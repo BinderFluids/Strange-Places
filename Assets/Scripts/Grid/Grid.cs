@@ -1,10 +1,11 @@
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 
-[System.Serializable]
+[Serializable]
 public class Grid<T> where T : IGridNode
 {
     public delegate void GridItemsStrategy(T item);
@@ -116,5 +117,19 @@ public class Grid<T> where T : IGridNode
     void UpdateNodes()
     {
         ForEach(node => node.Update());
+    }
+    
+    public Grid<T> Copy()
+    {
+        var copy = new Grid<T>(Width, Height);
+
+        for (int y = 0; y < Height; y++)
+        for (int x = 0; x < Width; x++)
+        {
+            var item = grid[x, y];
+            copy.grid[x, y] = item == null ? default : (T)item.Copy();
+        }
+
+        return copy;
     }
 }

@@ -1,5 +1,6 @@
 public interface IGridNode
 {
     bool IsOccupied();
-    void Update(); 
+    void Update();
+    IGridNode Copy(); 
 }

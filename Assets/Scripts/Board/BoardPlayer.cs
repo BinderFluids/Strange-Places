@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using EventBus;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BoardPlayer : MonoBehaviour
@@ -20,7 +21,8 @@ public class BoardPlayer : MonoBehaviour
     public void StartTurn(Grid<BoardNode> ctx, bool clone = false)
     {
         Debug.Log("starting turn");
-        workingGrid = ctx; 
+        
+        workingGrid = clone ? ctx.Copy() : ctx; 
         actionsAvailable = actionsPerTurn;
         turnActive = true; 
     }

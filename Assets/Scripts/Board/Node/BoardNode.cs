@@ -15,15 +15,21 @@ public class BoardNode : IGridNode
     private EventBinding<SelectBoardNodeEvent> selectBinding;
     public event Action<BoardPiece> onPieceUpdate =  delegate { };
     
-    public BoardNode(Grid<BoardNode> grid)
+    public BoardNode(Grid<BoardNode> grid, BoardPiece piece = null)
     {
         this.grid = grid; 
+        this.piece = piece;
     }
 
 
     public void Update()
     {
         onPieceUpdate?.Invoke(piece);
+    }
+
+    public IGridNode Copy()
+    {
+        return new BoardNode(grid, piece);
     }
 
     public BoardPiece TakePiece(int amt = 0)
