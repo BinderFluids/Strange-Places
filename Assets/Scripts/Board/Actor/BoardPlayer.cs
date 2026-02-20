@@ -3,8 +3,17 @@ using Cysharp.Threading.Tasks.Triggers;
 using EventBus;
 using UnityEngine;
 
+
 public class BoardPlayer : BoardActor
 {
+    enum Phase
+    {
+        None,
+        Item,
+        Board
+    }
+
+    private Phase phase = Phase.None; 
     [SerializeField] private GameObject overHeadCam;
     [SerializeField] private GameObject firstPersonCam;
     [SerializeField] private BoardNodeSelector boardNodeSelector;
@@ -18,52 +27,86 @@ public class BoardPlayer : BoardActor
         selectBinding = new EventBinding<SelectableChosenEvent>(OnSelectableChosenEvent);
     }
 
+    protected override void OnStartTurn()
+    {
+        if (Items.Count > 0)
+            StartItemPlay();
+        else
+            StartBoardModification();
+    }
+    
+    void StartItemPlay()
+    {
+        phase = Phase.Item;
+            
+        overHeadCam.SetActive(false); 
+        firstPersonCam.SetActive(true);
+            
+        SelectionManager.Instance.onSelectonEnded += OnSelectionEnd;
+        EventBus<SelectableChosenEvent>.Register(selectBinding);
+        SelectionManager.Instance.StartSelection(
+            Items.Cast<ISelectable>().ToList(), 
+            0, 
+            itemSelectableHighlighter
+        );
+    }
+    void StartBoardModification()
+    {
+        phase = Phase.Board;
+        overHeadCam.SetActive(true); 
+        firstPersonCam.SetActive(false);
+    }
+    
+    
     void OnSelectableChosenEvent(SelectableChosenEvent selectableChosenEvent)
     {
         BoardItem chosenItem = (BoardItem)selectableChosenEvent.SelectedItem;
         Items.Remove(chosenItem);
-        chosenItem?.Use(workingGrid);
+        Destroy(chosenItem.gameObject);
         
-        EventBus<SelectableChosenEvent>.Deregister(selectBinding);
-        StartBoardModification();
-    }
-
-    protected override void OnStartTurn()
-    {
         if (Items.Count > 0)
-        {
-            overHeadCam.SetActive(false); 
-            firstPersonCam.SetActive(true);
-            
-            EventBus<SelectableChosenEvent>.Register(selectBinding);
             SelectionManager.Instance.StartSelection(
                 Items.Cast<ISelectable>().ToList(), 
                 0, 
                 itemSelectableHighlighter
             );
-            
-            return;
-        }
+        else
+            StartBoardModification();
+    }
+    void OnSelectionEnd()
+    {
+        if (phase != Phase.Board) return;
+        
+        SelectionManager.Instance.onSelectonEnded -= OnSelectionEnd;
+        EventBus<SelectableChosenEvent>.Deregister(selectBinding);
         StartBoardModification();
     }
+    
 
-    protected override void OnEndTurn()
+    void EndItemPhase()
     {
-        
-    }
-
-    void StartBoardModification()
-    {
-        
-        overHeadCam.SetActive(true); 
-        firstPersonCam.SetActive(false);
-        turnActive = true;
+        phase = Phase.Board;
+        SelectionManager.Instance.EndSelection();
     }
     
     private void Update()
-    {   
-        if (!turnActive) return;
-        
+    {
+        switch (phase)
+        {
+            case Phase.Item: ItemPhaseUpdate(); break;
+            case Phase.Board: BoardPhaseUpdate(); break;
+            default: break;
+        }
+    }
+    
+    void ItemPhaseUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+            EndItemPhase();
+    }
+    
+    void BoardPhaseUpdate()
+    {
         boardNodeSelector.UpdateSelect(this);
         boardModifier.Update(this);
         

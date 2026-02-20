@@ -14,10 +14,12 @@ public class SelectionManager : Singleton<SelectionManager>
     
     public Observer<ISelectable> CurrentItem = new(null); 
     private bool active = false;
+    private bool endOnSelect;
 
     [SerializeField] private SelectionHighlighter defaultHighligher;
     [SerializeField] private SelectionHighlighter currentHighlighter; 
     
+    public event Action onSelectonEnded = delegate {};
     
     int GetTrueIndex(int index, List<ISelectable> items)
     {
@@ -26,8 +28,9 @@ public class SelectionManager : Singleton<SelectionManager>
         return newIndex;
     }
     
-    public void StartSelection(List<ISelectable> items, int index = 0, SelectionHighlighter highlighter = null)
+    public void StartSelection(List<ISelectable> items, int index = 0, SelectionHighlighter highlighter = null, bool endOnSelect = true)
     {
+        this.endOnSelect = endOnSelect;
         print($"Try Start Selection with {items.Count} items");
         if (active)
         {
@@ -56,6 +59,7 @@ public class SelectionManager : Singleton<SelectionManager>
             return;
         }
 
+        onSelectonEnded?.Invoke();
         currentHighlighter.Deactivate();
         currentHighlighter = null; 
         
@@ -72,7 +76,7 @@ public class SelectionManager : Singleton<SelectionManager>
         if (Input.GetKeyDown(KeyCode.Space))
         {
             CurrentItem.Value.Select();
-            EndSelection();
+            if (endOnSelect) EndSelection();
             EventBus<SelectableChosenEvent>.Raise(
                 new SelectableChosenEvent
                 {

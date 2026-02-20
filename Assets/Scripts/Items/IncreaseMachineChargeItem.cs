@@ -5,7 +5,7 @@ public class IncreaseMachineChargeItem : BoardItem
 {
     [SerializeField] private IntVariable machineMovementNumber;
     
-    public override void Use(Grid<BoardNode> ctx)
+    public override void Use()
     {
         machineMovementNumber.Value++;
     }

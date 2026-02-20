@@ -3,9 +3,12 @@ using UnityEngine;
 
 public abstract class BoardItem : MonoBehaviour, IBoardItem, ISelectable
 {
-    public abstract void Use(Grid<BoardNode> ctx);
+    public abstract void Use();
     
     public event Action OnSelected;
 
-    public virtual void Select() { }
+    public void Select()
+    {
+        Use();
+    }
 }

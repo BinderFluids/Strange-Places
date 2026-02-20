@@ -17,7 +17,6 @@ public class BoardActor : MonoBehaviour, IPieceOwner
     public List<BoardItem> Items => items;
 
     protected Grid<BoardNode> workingGrid;
-    [SerializeField] protected bool turnActive;
     public event Action onTurnEnd = delegate {};
     
     public void StartTurn(BoardNodeGrid ctx, bool clone = false)
@@ -47,7 +46,6 @@ public class BoardActor : MonoBehaviour, IPieceOwner
 
     public void EndTurn()
     {
-        turnActive = false;
         OnEndTurn();
         onTurnEnd?.Invoke();
     }
