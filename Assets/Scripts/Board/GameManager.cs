@@ -8,8 +8,8 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private MachineBehavior machine;
     [SerializeField] private Board board;
-    [SerializeField] private BoardPlayer player;
-    [SerializeField] private BoardPlayer opponent; 
+    [SerializeField] private BoardActor actor;
+    [SerializeField] private BoardActor opponent; 
     
     private const int maxLoseCount = 50;
     [SerializeField] private IntVariable points;
@@ -24,23 +24,23 @@ public class GameManager : MonoBehaviour
         machine.onMoveComplete += OnMachineMoveComplete;
     }
 
-    public void StartTurn(BoardPlayer player)
+    public void StartTurn(BoardActor actor)
     {
-        player.onTurnEnd += PlayerEndTurn;
-        player.StartTurn(board.Grid); 
+        actor.onTurnEnd += PlayerEndTurn;
+        actor.StartTurn(board.Grid); 
     }
 
     void PlayerEndTurn()
     {
-        player.onTurnEnd -= PlayerEndTurn;
+        actor.onTurnEnd -= PlayerEndTurn;
         ShiftPlayersPieces(); 
-        StartTurn(player); 
+        StartTurn(actor); 
     }
     
     private void ShiftPlayersPieces()
     {
         board.StartObservingAction();
-        board.Execute(new ShiftBoard(Vector2Int.up, player), Vector2Int.zero);
+        board.Execute(new ShiftBoard(Vector2Int.up, actor), Vector2Int.zero);
         board.StopObservingAction();
     }
     

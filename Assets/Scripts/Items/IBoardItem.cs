@@ -1,4 +1,4 @@
 public interface IBoardItem
 {
-    void Use(BoardNodeGrid ctx);
+    void Use(Grid<BoardNode> ctx);
 }

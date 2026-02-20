@@ -7,8 +7,8 @@ using UnityEngine;
 
 public class MachineBehavior : MonoBehaviour
 {
-    [SerializeField] private BoardPlayer player; 
-    [SerializeField] private BoardPlayer opponent; 
+    [SerializeField] private BoardActor actor; 
+    [SerializeField] private BoardActor opponent; 
     [SerializeField] private IntVariable points; 
     [SerializeField] private IntVariable movementCharge;
     [SerializeField] private float moveDistance;
@@ -22,6 +22,8 @@ public class MachineBehavior : MonoBehaviour
     
     private void Awake()
     {
+        movementCharge.Value = 1;
+        
         _transform ??= GetComponent<Transform>();
         boardPositionEventBinding = new EventBinding<BoardPositionEvent>(OnBoardPositionEvent);
         EventBus<BoardPositionEvent>.Register(boardPositionEventBinding);
@@ -33,8 +35,8 @@ public class MachineBehavior : MonoBehaviour
         
         BoardPiece piece = boardPositionEvent.piece;
         int moveDir = 0; 
-        if (player == (BoardPlayer)piece.PlayerOwner) moveDir = 1;
-        if (opponent == (BoardPlayer)piece.PlayerOwner) moveDir = -1;
+        if (actor == (BoardActor)piece.PlayerOwner) moveDir = 1;
+        if (opponent == (BoardActor)piece.PlayerOwner) moveDir = -1;
             
         float moveVector = moveDistance * moveDir;
         points.Value += movementCharge.Value * moveDir; 

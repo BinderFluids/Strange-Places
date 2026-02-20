@@ -26,8 +26,4 @@ public abstract class SelectionHighlighter : MonoBehaviour
     }
     protected virtual void OnDeactivate() { }
     
-    private void OnDestroy()
-    {
-        Deactivate();
-    }
 }

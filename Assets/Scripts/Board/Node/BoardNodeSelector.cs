@@ -6,20 +6,13 @@ public class BoardNodeSelector : MonoBehaviour
     [SerializeField] private Camera cam;
     [SerializeField] private LayerMask mask = ~0;
     [SerializeField] private float maxDistance = 1000f;
-    [SerializeField] private BoardPlayer boardPlayer;
     [SerializeField] private Board board;
 
     private void Awake()
     {
         if (cam == null) cam = Camera.main;
     }
-
-    public void SetBoardPlayer(BoardPlayer boardPlayer)
-    {
-        this.boardPlayer = boardPlayer;
-    }
-
-    private void Update()
+    public void UpdateSelect(BoardActor actor)
     {
         if (cam == null) return;
 
@@ -35,16 +28,14 @@ public class BoardNodeSelector : MonoBehaviour
         EventBus<SelectBoardNodeEvent>.Raise(new SelectBoardNodeEvent
         {
             selectedNode = selectedNode,
-            boardPlayer = boardPlayer,
+            BoardActor = actor,
         });
     }
-    
-    
 }
 
 public struct SelectBoardNodeEvent : IEvent
 {
     public BoardNodeMonobehavior selectedNode;
-    public BoardPlayer boardPlayer;
+    public BoardActor BoardActor;
     public BoardPiece boardPiece;
 }

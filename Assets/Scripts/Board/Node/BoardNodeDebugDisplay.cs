@@ -33,10 +33,10 @@ public class BoardNodeDebugDisplay : MonoBehaviour
             return; 
         }
 
-        BoardPlayer player = piece.PlayerOwner as BoardPlayer; 
-        if (player.gameObject.name == "Player")
+        BoardActor actor = piece.PlayerOwner as BoardActor; 
+        if (actor.gameObject.name == "Player")
             SetColor(Color.green);
-        else if (player.gameObject.name == "Opponent")
+        else if (actor.gameObject.name == "Opponent")
             SetColor(Color.red);
 
         if (piece.Attributes.Any(a => a is NeutralizingAttribute))

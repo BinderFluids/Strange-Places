@@ -8,8 +8,8 @@ public class Board : MonoBehaviour
     public static Board Instance;
 
     [SerializeField] private GameManager manager; 
-    [SerializeField] private BoardPlayer player;
-    [SerializeField] private BoardPlayer opponent; 
+    [SerializeField] private BoardActor actor;
+    [SerializeField] private BoardActor opponent; 
     [SerializeField] private BoardNodeMonobehavior boardNodePrefab;
     [SerializeField] private Transform boardNodeContainer;
     [SerializeField] private Transform boardAnchor;
@@ -33,7 +33,7 @@ public class Board : MonoBehaviour
 
     private void Start()
     {
-        manager.StartTurn(player); 
+        manager.StartTurn(actor); 
     }
 
     void InitGrid()

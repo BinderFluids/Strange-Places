@@ -3,9 +3,9 @@ using UnityEngine;
 public class ShiftBoard : BoardActionChain
 {
     private Vector2Int direction;
-    private BoardPlayer targetOwner;
+    private BoardActor targetOwner;
     
-    public ShiftBoard(Vector2Int direction, BoardPlayer targetOwner)
+    public ShiftBoard(Vector2Int direction, BoardActor targetOwner)
     {
         this.direction = direction;
         this.targetOwner = targetOwner; 
@@ -18,7 +18,6 @@ public class ShiftBoard : BoardActionChain
             if (node == null) return;
             if (!node.IsOccupied()) return;
             if (node.Piece.PlayerOwner != targetOwner) return;
-            Debug.Log("YO IM SHIFTING IT RN SO GOOD BRO");
             
             TranslatePiece translation = new TranslatePiece(direction);
             Chain(translation, node.Coords, ctx);

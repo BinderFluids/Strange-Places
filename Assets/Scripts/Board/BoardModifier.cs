@@ -1,37 +1,28 @@
-
-using System;
+using EventBus;
 using UnityEngine;
-using UnityEngine.Rendering;
 
-public class BoardModifier : MonoBehaviour
+public class BoardModifier
 {
-    public static BoardModifier Instance;
-    
-    [SerializeField] private BoardPlayer boardPlayer;
-    [SerializeField] private BoardNodeMonobehavior activeNode;
+    private BoardNodeMonobehavior activeNode;
     public BoardNodeMonobehavior ActiveNode => activeNode;
+    private EventBinding<SelectBoardNodeEvent> selectBinding;
 
-    public void SetBoardPlayer(BoardPlayer boardPlayer)
+
+    public BoardModifier()
     {
-        this.boardPlayer = boardPlayer;
-    }
-    
-    private void Awake()
-    {
-        Instance = this;
+        selectBinding = new EventBinding<SelectBoardNodeEvent>(OnSelectBindingEvent);
+        EventBus<SelectBoardNodeEvent>.Register(selectBinding);
     }
 
-    public void SetActiveNode(BoardNodeMonobehavior activeNode)
+    void OnSelectBindingEvent(SelectBoardNodeEvent boardNodeEvent)
     {
-        this.activeNode = activeNode;
+        activeNode = boardNodeEvent.selectedNode;
         if (activeNode.Node.IsOccupied())
             Debug.Log(activeNode.Node.Piece);
     }
 
-    void PlayerDoAction(IGridAction<BoardNode> action) =>
-        boardPlayer.DoAction(activeNode.Node.Coords, action); 
     
-    private void Update()
+    public void Update(BoardActor actor)
     {
         if (activeNode == null) return;
         
@@ -40,20 +31,18 @@ public class BoardModifier : MonoBehaviour
         var grid = Board.Instance.Grid;
 
         bool inReach = false;
-        if (boardPlayer.Reach > 0)
-            inReach = activeNode.Node.Coords.y < boardPlayer.Reach; 
+        if (actor.Reach > 0)
+            inReach = activeNode.Node.Coords.y < actor.Reach; 
         // if (boardPlayer.Reach < 0)
         //     inReach = activeNode.Node.Coords.y > 
 
-
-
-
+        
         if (Input.GetKeyDown(KeyCode.A))
         {
             if (grid.TryGet(activeCoords.x - 1, activeCoords.y, out BoardNode leftNode))
             {
                 if (leftNode is not NullBoardNode)
-                    PlayerDoAction(new TranslatePiece<Neutralize>(Vector2Int.left, 1));
+                    actor.DoAction(activeCoords, new TranslatePiece<Neutralize>(Vector2Int.left, 1));
             }
         }
         if (Input.GetKeyDown(KeyCode.D))
@@ -61,20 +50,15 @@ public class BoardModifier : MonoBehaviour
             if (grid.TryGet(activeCoords.x + 1, activeCoords.y, out BoardNode leftNode))
             {
                 if (leftNode is not NullBoardNode)
-                    PlayerDoAction(new TranslatePiece<Neutralize>(Vector2Int.right, 1));
+                    actor.DoAction(activeCoords, new TranslatePiece<Neutralize>(Vector2Int.right, 1));
             }
         }
 
         if (!inReach) return; 
         if (Input.GetKeyDown(KeyCode.W))
-            PlayerDoAction(new GivePiece(new BoardPiece(boardPlayer)));
+            actor.DoAction(activeCoords, new GivePiece(new BoardPiece(actor)));
 
             
         Board.Instance.StopObservingAction();
-    }
-
-    public void Reset()
-    {
-        activeNode = null;
     }
 }

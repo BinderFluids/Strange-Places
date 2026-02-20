@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using EventBus; 
@@ -16,6 +17,7 @@ public class SelectionManager : Singleton<SelectionManager>
 
     [SerializeField] private SelectionHighlighter defaultHighligher;
     [SerializeField] private SelectionHighlighter currentHighlighter; 
+    
     
     int GetTrueIndex(int index, List<ISelectable> items)
     {
@@ -42,8 +44,8 @@ public class SelectionManager : Singleton<SelectionManager>
         activeItems = items; 
         selectionCount = index;
         
-        currentHighlighter.Activate();
         CurrentItem.Value = activeItems[selectionCount];
+        currentHighlighter.Activate();
     }
 
     public void EndSelection()

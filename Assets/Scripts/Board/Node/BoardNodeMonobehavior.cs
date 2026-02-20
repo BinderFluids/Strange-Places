@@ -22,7 +22,6 @@ public class BoardNodeMonobehavior : MonoBehaviour
     void OnSelectBindingEvent(SelectBoardNodeEvent boardNodeEvent)
     {
         if (boardNodeEvent.selectedNode != this) return;
-        BoardModifier.Instance.SetActiveNode(this); 
     }
     
     private void OnDestroy()
