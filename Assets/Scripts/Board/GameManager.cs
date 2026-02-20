@@ -1,5 +1,6 @@
 
 using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using EventBus;
 using ScriptableVariables;
@@ -8,7 +9,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private MachineBehavior machine;
     [SerializeField] private Board board;
-    [SerializeField] private BoardActor actor;
+    [SerializeField] private BoardActor player;
     [SerializeField] private BoardActor opponent; 
     
     private const int maxLoseCount = 50;
@@ -24,23 +25,54 @@ public class GameManager : MonoBehaviour
         machine.onMoveComplete += OnMachineMoveComplete;
     }
 
-    public void StartTurn(BoardActor actor)
-    {
-        actor.onTurnEnd += PlayerEndTurn;
-        actor.StartTurn(board.Grid); 
-    }
 
+    public void StartGame() => StartPlayerTurn();
+
+    private Grid<BoardNode> gridSnapshot; 
+    void StartPlayerTurn()
+    {
+        gridSnapshot = board.Grid.Copy(); 
+        
+        player.onTurnEnd += PlayerEndTurn;
+        player.StartTurn(board.Grid); 
+    }
     void PlayerEndTurn()
     {
-        actor.onTurnEnd -= PlayerEndTurn;
-        ShiftPlayersPieces(); 
-        StartTurn(actor); 
+        player.onTurnEnd -= PlayerEndTurn;
+        StartOpponentTurn();
+    }
+    void StartOpponentTurn()
+    {
+        opponent.onTurnEnd += TriggerEndOpponentTurn;
+        opponent.StartTurn(gridSnapshot);
+    }
+    void TriggerEndOpponentTurn() => OpponentEndTurn();
+    
+    async UniTaskVoid OpponentEndTurn()
+    {
+        float delay = .5f; 
+        opponent.onTurnEnd -= TriggerEndOpponentTurn;
+        
+        ShiftPlayersPieces();
+        await UniTask.WaitForSeconds(delay); 
+        
+        ShiftOpponentPieces();
+        await UniTask.WaitForSeconds(delay); 
+        
+        StartPlayerTurn(); 
     }
     
     private void ShiftPlayersPieces()
     {
         board.StartObservingAction();
-        board.Execute(new ShiftBoard(Vector2Int.up, actor), Vector2Int.zero);
+        board.Execute(Vector2Int.zero, new ShiftBoard(Vector2Int.up, player, GridItemsOrder.TopToBottom));
+        board.StopObservingAction();
+    }
+
+    private void ShiftOpponentPieces()
+    {
+        board.StartObservingAction();
+        board.Execute(Vector2Int.zero, new ShiftBoard(Vector2Int.down, opponent, GridItemsOrder.BottomToTop));
         board.StopObservingAction();
     }
     

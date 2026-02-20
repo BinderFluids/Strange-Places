@@ -43,7 +43,7 @@ public class BoardNode : IGridNode
     {
         if (piece != null)
         {
-            if (incomingPiece.PlayerOwner == piece.PlayerOwner)
+            if (incomingPiece.Owner == piece.Owner)
                 piece.Assimilate(incomingPiece);
         }
         else

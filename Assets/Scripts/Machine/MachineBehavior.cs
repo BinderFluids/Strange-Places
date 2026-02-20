@@ -35,8 +35,8 @@ public class MachineBehavior : MonoBehaviour
         
         BoardPiece piece = boardPositionEvent.piece;
         int moveDir = 0; 
-        if (actor == (BoardActor)piece.PlayerOwner) moveDir = 1;
-        if (opponent == (BoardActor)piece.PlayerOwner) moveDir = -1;
+        if (actor == (BoardActor)piece.Owner) moveDir = 1;
+        if (opponent == (BoardActor)piece.Owner) moveDir = -1;
             
         float moveVector = moveDistance * moveDir;
         points.Value += movementCharge.Value * moveDir; 

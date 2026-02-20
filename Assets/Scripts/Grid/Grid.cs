@@ -6,6 +6,7 @@ using UnityEngine.Rendering;
 
 
 [Serializable]
+public enum GridItemsOrder { TopToBottom, BottomToTop }
 public class Grid<T> where T : IGridNode
 {
     public delegate void GridItemsStrategy(T item);
@@ -49,18 +50,29 @@ public class Grid<T> where T : IGridNode
 
     void CleanNodes() => dirtyNodes.Clear(); 
     
-    public void ForEach(GridItemsStrategy strategy)
+    
+    public void ForEach(GridItemsStrategy strategy, GridItemsOrder order = GridItemsOrder.BottomToTop)
     {
         CleanNodes();
-        for (int y = Height - 1; y >= 0; y--)
-        for (int x = 0; x < Width; x++)
+        
+        if (order == GridItemsOrder.TopToBottom)
+            for (int y = Height - 1; y >= 0; y--)
+            for (int x = 0; x < Width; x++)
+                Iterate(x, y, strategy);
+        if (order == GridItemsOrder.BottomToTop)
+            for (int y = 0; y < Height; y++)
+            for (int x = 0; x < Width; x++)
+                Iterate(x, y, strategy);
+        
+        void Iterate(int x, int y, GridItemsStrategy strategy)
         {
             T item = grid[x, y];
-            if (item == null) continue;
-            if (IsDirty(item)) continue;
-
+            if (item == null) return;
+            if (IsDirty(item)) return;
+            
             strategy(item);
         }
+        
         CleanNodes();
     }
     

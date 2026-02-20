@@ -42,7 +42,7 @@ public class BoardModifier
             if (grid.TryGet(activeCoords.x - 1, activeCoords.y, out BoardNode leftNode))
             {
                 if (leftNode is not NullBoardNode)
-                    actor.DoAction(activeCoords, new TranslatePiece<Neutralize>(Vector2Int.left, 1));
+                    actor.UseAction(activeCoords, new TranslatePiece<Neutralize>(Vector2Int.left, 1));
             }
         }
         if (Input.GetKeyDown(KeyCode.D))
@@ -50,13 +50,13 @@ public class BoardModifier
             if (grid.TryGet(activeCoords.x + 1, activeCoords.y, out BoardNode leftNode))
             {
                 if (leftNode is not NullBoardNode)
-                    actor.DoAction(activeCoords, new TranslatePiece<Neutralize>(Vector2Int.right, 1));
+                    actor.UseAction(activeCoords, new TranslatePiece<Neutralize>(Vector2Int.right, 1));
             }
         }
 
         if (!inReach) return; 
         if (Input.GetKeyDown(KeyCode.W))
-            actor.DoAction(activeCoords, new GivePiece(new BoardPiece(actor)));
+            actor.UseAction(activeCoords, new GivePiece(new BoardPiece(actor)));
 
             
         Board.Instance.StopObservingAction();

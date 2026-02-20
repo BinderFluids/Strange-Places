@@ -10,8 +10,8 @@ using Random = UnityEngine.Random;
 public class BoardPiece
 {
     private bool doDebug = false; 
-    [SerializeField] private IPieceOwner playerOwner;
-    public IPieceOwner PlayerOwner => playerOwner;
+    [SerializeField] private IPieceOwner _owner;
+    public IPieceOwner Owner => _owner;
     private int charge;
     public int Charge
     {
@@ -36,9 +36,9 @@ public class BoardPiece
     private ResolverType resolverType;
     public ResolverType ResolverType => resolverType;
     
-    public BoardPiece(IPieceOwner playerOwner, int charge = 1, HashSet<BoardPieceAttribute> attributes = null)
+    public BoardPiece(IPieceOwner owner, int charge = 1, HashSet<BoardPieceAttribute> attributes = null)
     {
-        this.playerOwner = playerOwner;
+        this._owner = owner;
         Charge = charge;
         this.attributes = attributes ?? new HashSet<BoardPieceAttribute>();
         resolverType = ResolverType.None;
@@ -46,7 +46,7 @@ public class BoardPiece
 
     public BoardPiece(BoardPiece other)
     {
-        playerOwner = other.PlayerOwner;
+        _owner = other.Owner;
         Charge = other.Charge;
         attributes = new HashSet<BoardPieceAttribute>(other.Attributes);
         resolverType = other.ResolverType;
@@ -89,7 +89,7 @@ public class BoardPiece
 
     public bool Assimilate(BoardPiece otherPiece)
     {
-        if (otherPiece.PlayerOwner != playerOwner) return false;
+        if (otherPiece.Owner != _owner) return false;
         
         ChangeCharge(otherPiece.Charge);
         attributes.AddRange(otherPiece.Attributes);
@@ -107,12 +107,12 @@ public class BoardPiece
         }
         
         Charge -= amt; 
-        return new BoardPiece(playerOwner, amt, attributes);
+        return new BoardPiece(_owner, amt, attributes);
     }
 
     public override string ToString()
     {
-        string playerCharge = $"[{playerOwner}] {Charge}";
+        string playerCharge = $"[{_owner}] {Charge}";
         string resolverTypeString = resolverType == ResolverType.None ? "" : $"({resolverType})";
         return $"{playerCharge} Resolver Type: {resolverTypeString} {string.Join(", ", attributes.Select(a => a.ToString()))}";
     }

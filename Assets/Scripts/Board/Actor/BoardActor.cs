@@ -19,7 +19,7 @@ public class BoardActor : MonoBehaviour, IPieceOwner
     protected Grid<BoardNode> workingGrid;
     public event Action onTurnEnd = delegate {};
     
-    public void StartTurn(BoardNodeGrid ctx)
+    public void StartTurn(Grid<BoardNode> ctx)
     {
         workingGrid = ctx;
         actionsAvailable = actionsPerTurn;
@@ -29,7 +29,7 @@ public class BoardActor : MonoBehaviour, IPieceOwner
     protected virtual void OnStartTurn() { }
 
 
-    public void DoAction(Vector2Int coords, IGridAction<BoardNode> action)
+    public void UseAction(Vector2Int coords, IGridAction<BoardNode> action)
     {
         if (actionsAvailable < 1) return; 
         

@@ -7,9 +7,8 @@ public class Board : MonoBehaviour
 {
     public static Board Instance;
 
+    [SerializeField] private bool generateNullNodes;
     [SerializeField] private GameManager manager; 
-    [SerializeField] private BoardActor actor;
-    [SerializeField] private BoardActor opponent; 
     [SerializeField] private BoardNodeMonobehavior boardNodePrefab;
     [SerializeField] private Transform boardNodeContainer;
     [SerializeField] private Transform boardAnchor;
@@ -17,8 +16,8 @@ public class Board : MonoBehaviour
     [Min(1), SerializeField] private int gridWidth;
     [Min(1), SerializeField] private int gridHeight;
     
-    private BoardNodeGrid grid;
-    public BoardNodeGrid Grid => grid;
+    private Grid<BoardNode> grid;
+    public Grid<BoardNode> Grid => grid;
     
     private Stack<IGridAction<BoardNode>> actionStack = new();
     [SerializeField] private List<string> actionStackString = new();
@@ -33,13 +32,13 @@ public class Board : MonoBehaviour
 
     private void Start()
     {
-        manager.StartTurn(actor); 
+        manager.StartGame(); 
     }
 
     void InitGrid()
     {
-        gridWidth += 2; 
-        grid = new BoardNodeGrid(gridWidth, gridHeight);
+        if (generateNullNodes) gridWidth += 2; 
+        grid = new Grid<BoardNode>(gridWidth, gridHeight);
         
         int colorIndex = 0;
         Color[] colors =
@@ -54,9 +53,14 @@ public class Board : MonoBehaviour
             {
                 
                     
-                
+
                 BoardNodeMonobehavior nodeBehavior = Instantiate(boardNodePrefab, transform);
-                BoardNode newNode = (x == 0 || x == gridWidth - 1) ? new NullBoardNode(grid) : new BoardNode(grid);
+
+                BoardNode newNode;
+                if (generateNullNodes)
+                    newNode = (x == 0 || x == gridWidth - 1) ? new NullBoardNode(grid) : new BoardNode(grid);
+                else
+                    newNode = new BoardNode(grid);
                 
                 grid.Set(x, y, newNode);
                 nodeBehavior.Init(newNode); 
@@ -80,6 +84,6 @@ public class Board : MonoBehaviour
 
     public void StartObservingAction() => grid.StartObservingAction();
     public void StopObservingAction() => grid.StopObservingAction();
-    public void Execute(IGridAction<BoardNode> action, Vector2Int coords) => grid.Execute(coords, action);
+    public void Execute(Vector2Int coords, IGridAction<BoardNode> action) => grid.Execute(coords, action);
     public void Undo() => grid.Undo();
 }

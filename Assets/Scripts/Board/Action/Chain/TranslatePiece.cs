@@ -28,7 +28,7 @@ public class TranslatePiece<T> : BoardActionChain where T : BoardConflictResolve
             return;
         }
 
-        if (targetNode.IsOccupied() && activeNode.Piece.PlayerOwner != targetNode.Piece.PlayerOwner)
+        if (targetNode.IsOccupied() && activeNode.Piece.Owner != targetNode.Piece.Owner)
         {
             BoardConflictResolver resolver; 
             if (activeNode.Piece.ResolverType != ResolverType.None)

@@ -1812,7 +1812,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actor: {fileID: 1719953073}
-  opponent: {fileID: 1570905334}
+  opponent: {fileID: 0}
   points: {fileID: 11400000, guid: be5a228e57ef993579e696f54145c48a, type: 2}
   movementCharge: {fileID: 11400000, guid: 940e4bdeb4ebeffcea43fac92e368149, type: 2}
   moveDistance: 5
@@ -2489,7 +2489,7 @@ GameObject:
   - component: {fileID: 1570905331}
   - component: {fileID: 1570905334}
   m_Layer: 0
-  m_Name: Opponent
+  m_Name: Bot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2599,13 +2599,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1570905329}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9662d17adb5847d2a68b2a37749e9747, type: 3}
+  m_Script: {fileID: 11500000, guid: 04b645384d6d4b99b7a0398656a858e2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BoardActor
-  reach: -1
+  m_EditorClassIdentifier: Assembly-CSharp::BoardBot
+  reach: 0
   actionsPerTurn: 2
   actionsAvailable: 2
   items: []
+  player: {fileID: 1719953073}
 --- !u!1 &1604024001
 GameObject:
   m_ObjectHideFlags: 0
@@ -3257,7 +3258,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   machine: {fileID: 837851624}
   board: {fileID: 1964551778}
-  actor: {fileID: 1719953073}
+  player: {fileID: 1719953073}
   opponent: {fileID: 1570905334}
   points: {fileID: 11400000, guid: be5a228e57ef993579e696f54145c48a, type: 2}
   pointsToLose: -4
@@ -3772,7 +3773,7 @@ PrefabInstance:
     - target: {fileID: 4711528176800482980, guid: bcb91f9f7e7f6fbd0b2584394f10cf6a, type: 3}
       propertyPath: opponent
       value: 
-      objectReference: {fileID: 1570905334}
+      objectReference: {fileID: 0}
     - target: {fileID: 4711528176800482980, guid: bcb91f9f7e7f6fbd0b2584394f10cf6a, type: 3}
       propertyPath: gridWidth
       value: 3
