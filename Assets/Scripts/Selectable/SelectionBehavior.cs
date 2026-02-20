@@ -2,7 +2,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public abstract class SelectionHighlighter : MonoBehaviour
+public abstract class SelectionBehavior : MonoBehaviour
 {
     public void Activate()
     {

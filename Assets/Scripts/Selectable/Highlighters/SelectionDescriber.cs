@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SelectionDescriber : SelectionHighlighter
+public class SelectionDescriber : SelectionBehavior
 {
     protected override void SelectionChanged(ISelectable newSelection)
     {

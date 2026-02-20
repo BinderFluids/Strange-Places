@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 using PrimeTween;
 using UnityEngine;
 
-public class FollowSelection : SelectionHighlighter
+public class FollowSelection : SelectionBehavior
 {
     private ISelectable currentSelection;
     [SerializeField] private Transform target;

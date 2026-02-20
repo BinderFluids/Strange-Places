@@ -460,9 +460,9 @@ RectTransform:
   - {fileID: 195922725}
   m_Father: {fileID: 978540142}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 800, y: -500}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &195922724
@@ -635,9 +635,9 @@ RectTransform:
   - {fileID: 88344919}
   m_Father: {fileID: 195922725}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 80, y: -15}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &251976061
@@ -896,7 +896,7 @@ MonoBehaviour:
     DefaultMode: 2
   DefaultBlend:
     Style: 1
-    Time: 2
+    Time: 0.5
     CustomCurve:
       serializedVersion: 2
       m_Curve: []
@@ -971,9 +971,9 @@ RectTransform:
   - {fileID: 778992791}
   m_Father: {fileID: 97825833}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 80, y: -15}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &409677727
@@ -1020,7 +1020,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1865245335}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: BoardNodeModifier, Assembly-CSharp
         m_MethodName: SetBoardPlayer
         m_Mode: 2
@@ -1972,12 +1972,12 @@ GameObject:
   - component: {fileID: 978540142}
   - component: {fileID: 978540143}
   m_Layer: 5
-  m_Name: Vertical
+  m_Name: Debug Buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &978540142
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2123,13 +2123,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1210627161}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.000000014901159, y: -0.000000029802319, z: 0.000000014901159, w: 1}
-  m_LocalPosition: {x: 0, y: -0.037, z: 0.288}
+  m_LocalRotation: {x: 0.00010465458, y: 0.12248552, z: -0.03574129, w: 0.99182653}
+  m_LocalPosition: {x: 0.258, y: -0.016, z: 0.304}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 115750406}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0.514, y: 14.062, z: -4.064}
 --- !u!114 &1210627164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2179,59 +2179,39 @@ MonoBehaviour:
       TangentIn:
         x: -0
         y: -0
-        z: -0.053010292
+        z: -0.09730535
       TangentOut:
         x: 0
         y: 0
-        z: 0.053010292
+        z: 0.09730535
       Rotation:
         value:
-          x: -0.10399931
-          y: 0.6991693
-          z: 0.09484538
-          w: 0.70096415
-    - Position:
-        x: -0.0067683663
-        y: 0.009966433
-        z: 0.3601613
-      TangentIn:
-        x: -0
-        y: -0
-        z: -0.16520588
-      TangentOut:
-        x: 0
-        y: 0
-        z: 0.15887302
-      Rotation:
-        value:
-          x: 0.007935132
-          y: 0.70686555
-          z: -0.008846278
-          w: 0.7072481
+          x: -0.0007763909
+          y: 0.7069073
+          z: -0.008836996
+          w: 0.70725054
     - Position:
         x: 0.45708048
         y: -0.14871635
         z: 0.3603418
       TangentIn:
-        x: -0
-        y: -0
-        z: -0.04902408
+        x: 0
+        y: 0
+        z: 0
       TangentOut:
         x: 0
         y: 0
-        z: 0.04902408
+        z: 0
       Rotation:
         value:
-          x: 0.69231874
-          y: -0.14321543
-          z: 0.70166284
-          w: 0.08861918
+          x: 0.7061323
+          y: -0.03310196
+          z: 0.70686144
+          w: -0.025067067
     m_MetaData:
     - Mode: 0
       Tension: 0.5
-    - Mode: 0
-      Tension: 0.5
-    - Mode: 0
+    - Mode: 1
       Tension: 0.5
     m_Closed: 0
     m_IntData:
@@ -2797,9 +2777,9 @@ RectTransform:
   - {fileID: 1604024002}
   m_Father: {fileID: 195922725}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 240, y: -15}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1644966219
@@ -2962,9 +2942,9 @@ RectTransform:
   - {fileID: 678869651}
   m_Father: {fileID: 97825833}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 240, y: -15}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1696658017
@@ -3011,7 +2991,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1865245335}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: BoardNodeModifier, Assembly-CSharp
         m_MethodName: SetBoardPlayer
         m_Mode: 2
@@ -3118,7 +3098,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 581b573b5eb1456a9b076b3fdd8ac61f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoardPlayer
-  reach: 0
+  reach: 2
   actionsPerTurn: 2
   actionsAvailable: 2
   items:
@@ -3128,7 +3108,8 @@ MonoBehaviour:
   - {fileID: 1909878669}
   overHeadCam: {fileID: 1951880972}
   firstPersonCam: {fileID: 115750404}
-  itemSelectableHighlighter: {fileID: 1210627164}
+  boardNodeSelector: {fileID: 1865245334}
+  itemSelectableBehavior: {fileID: 1210627164}
 --- !u!1 &1736711367
 GameObject:
   m_ObjectHideFlags: 0
@@ -3160,9 +3141,9 @@ RectTransform:
   - {fileID: 97825833}
   m_Father: {fileID: 978540142}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 800, y: -460.75}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1857102805
@@ -3255,7 +3236,6 @@ GameObject:
   - component: {fileID: 1865245333}
   - component: {fileID: 1865245332}
   - component: {fileID: 1865245334}
-  - component: {fileID: 1865245335}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -3314,22 +3294,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   maxDistance: 1000
-  boardActor: {fileID: 1719953073}
   board: {fileID: 1964551778}
---- !u!114 &1865245335
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1865245331}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0683f583e4f4a1fb3fdeabac9b2dd16, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BoardNodeModifier
-  boardActor: {fileID: 1719953073}
-  activeNode: {fileID: 0}
 --- !u!1001 &1909878668
 PrefabInstance:
   m_ObjectHideFlags: 0

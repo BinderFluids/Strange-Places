@@ -19,9 +19,9 @@ public class BoardActor : MonoBehaviour, IPieceOwner
     protected Grid<BoardNode> workingGrid;
     public event Action onTurnEnd = delegate {};
     
-    public void StartTurn(BoardNodeGrid ctx, bool clone = false)
+    public void StartTurn(BoardNodeGrid ctx)
     {
-        workingGrid = clone ? ctx.Copy() : ctx; 
+        workingGrid = ctx;
         actionsAvailable = actionsPerTurn;
         OnStartTurn();
     }

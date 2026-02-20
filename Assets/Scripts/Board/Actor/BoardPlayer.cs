@@ -19,7 +19,7 @@ public class BoardPlayer : BoardActor
     [SerializeField] private BoardNodeSelector boardNodeSelector;
     private BoardModifier boardModifier;
     
-    [SerializeField] private ItemSelectableHighlighter itemSelectableHighlighter;
+    [SerializeField] private ItemSelectableBehavior itemSelectableBehavior;
     EventBinding<SelectableChosenEvent> selectBinding;
     private void Awake()
     {
@@ -47,12 +47,13 @@ public class BoardPlayer : BoardActor
         SelectionManager.Instance.StartSelection(
             Items.Cast<ISelectable>().ToList(), 
             0, 
-            itemSelectableHighlighter
+            itemSelectableBehavior
         );
     }
     void StartBoardModification()
     {
         phase = Phase.Board;
+        foreach(var item in Items) item.gameObject.SetActive(true);
         overHeadCam.SetActive(true); 
         firstPersonCam.SetActive(false);
     }
@@ -68,7 +69,7 @@ public class BoardPlayer : BoardActor
             SelectionManager.Instance.StartSelection(
                 Items.Cast<ISelectable>().ToList(), 
                 0, 
-                itemSelectableHighlighter
+                itemSelectableBehavior
             );
         else
             StartBoardModification();

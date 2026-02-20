@@ -16,8 +16,8 @@ public class SelectionManager : Singleton<SelectionManager>
     private bool active = false;
     private bool endOnSelect;
 
-    [SerializeField] private SelectionHighlighter defaultHighligher;
-    [SerializeField] private SelectionHighlighter currentHighlighter; 
+    [SerializeField] private SelectionBehavior defaultHighligher;
+    [SerializeField] private SelectionBehavior currentBehavior; 
     
     public event Action onSelectonEnded = delegate {};
     
@@ -28,7 +28,7 @@ public class SelectionManager : Singleton<SelectionManager>
         return newIndex;
     }
     
-    public void StartSelection(List<ISelectable> items, int index = 0, SelectionHighlighter highlighter = null, bool endOnSelect = true)
+    public void StartSelection(List<ISelectable> items, int index = 0, SelectionBehavior behavior = null, bool endOnSelect = true)
     {
         this.endOnSelect = endOnSelect;
         print($"Try Start Selection with {items.Count} items");
@@ -38,17 +38,17 @@ public class SelectionManager : Singleton<SelectionManager>
             return; 
         }
 
-        if (highlighter == null)
-            currentHighlighter ??= defaultHighligher;
+        if (behavior == null)
+            currentBehavior ??= defaultHighligher;
         else
-            currentHighlighter = highlighter;
+            currentBehavior = behavior;
         
         active = true; 
         activeItems = items; 
         selectionCount = index;
         
         CurrentItem.Value = activeItems[selectionCount];
-        currentHighlighter.Activate();
+        currentBehavior.Activate();
     }
 
     public void EndSelection()
@@ -60,8 +60,8 @@ public class SelectionManager : Singleton<SelectionManager>
         }
 
         onSelectonEnded?.Invoke();
-        currentHighlighter.Deactivate();
-        currentHighlighter = null; 
+        currentBehavior.Deactivate();
+        currentBehavior = null; 
         
         active = false; 
         activeItems.Clear();
