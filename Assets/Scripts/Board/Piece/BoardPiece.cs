@@ -9,9 +9,9 @@ using Random = UnityEngine.Random;
 [System.Serializable]
 public class BoardPiece
 {
-    private bool doDebug = false; 
-    [SerializeField] private IPieceOwner _owner;
-    public IPieceOwner Owner => _owner;
+    private bool doDebug = true; 
+    [SerializeField] private IPieceOwner owner;
+    public IPieceOwner Owner => owner;
     private int charge;
     public int Charge
     {
@@ -21,14 +21,13 @@ public class BoardPiece
         }
         private set
         {
-            DoDebug($"Setting Charge to {value}\n{Environment.StackTrace}");
             charge = value;
         }
     }
 
     void DoDebug(object message)
     {
-        if (doDebug) Debug.Log(message);
+        //if (doDebug) Debug.Log(message);
     }
     private HashSet<BoardPieceAttribute> attributes = new();
     public HashSet<BoardPieceAttribute> Attributes => attributes;
@@ -38,15 +37,16 @@ public class BoardPiece
     
     public BoardPiece(IPieceOwner owner, int charge = 1, HashSet<BoardPieceAttribute> attributes = null)
     {
-        this._owner = owner;
+        this.owner = owner;
         Charge = charge;
         this.attributes = attributes ?? new HashSet<BoardPieceAttribute>();
         resolverType = ResolverType.None;
+        DoDebug($"Created Piece {this}");
     }
 
     public BoardPiece(BoardPiece other)
     {
-        _owner = other.Owner;
+        owner = other.Owner;
         Charge = other.Charge;
         attributes = new HashSet<BoardPieceAttribute>(other.Attributes);
         resolverType = other.ResolverType;
@@ -89,7 +89,7 @@ public class BoardPiece
 
     public bool Assimilate(BoardPiece otherPiece)
     {
-        if (otherPiece.Owner != _owner) return false;
+        if (otherPiece.Owner != owner) return false;
         
         ChangeCharge(otherPiece.Charge);
         attributes.AddRange(otherPiece.Attributes);
@@ -107,12 +107,12 @@ public class BoardPiece
         }
         
         Charge -= amt; 
-        return new BoardPiece(_owner, amt, attributes);
+        return new BoardPiece(owner, amt, attributes);
     }
 
     public override string ToString()
     {
-        string playerCharge = $"[{_owner}] {Charge}";
+        string playerCharge = $"[{owner}] {Charge}";
         string resolverTypeString = resolverType == ResolverType.None ? "" : $"({resolverType})";
         return $"{playerCharge} Resolver Type: {resolverTypeString} {string.Join(", ", attributes.Select(a => a.ToString()))}";
     }

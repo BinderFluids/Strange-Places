@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 
 public class TakePiece : IGridAction<BoardNode>
 {
+    private bool doDebug = false;
     private int charge;
     private Vector2Int activeCoords;
     private BoardPiece takenPiece;
@@ -23,7 +24,7 @@ public class TakePiece : IGridAction<BoardNode>
         if (!ctx.TryGet(activeCoords, out BoardNode active)) return;
         
         takenPiece = new BoardPiece(active.TakePiece(charge));
-        Debug.Log($"Took Piece {takenPiece} from {activeCoords}");
+        if (doDebug) Debug.Log($"Took Piece {takenPiece} from {activeCoords}");
     }
 
     public void Undo()

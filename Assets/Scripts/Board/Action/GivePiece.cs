@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class GivePiece : IGridAction<BoardNode>
 {
+    private bool doDebug = false; 
     private Vector2Int activeCoords;
     private BoardPiece incomingPiece;
     private Grid<BoardNode> ctx;
@@ -28,7 +29,7 @@ public class GivePiece : IGridAction<BoardNode>
         active.AddPiece(incomingPiece);
         
 
-        Debug.Log($"Gave Piece {incomingPiece} to {activeCoords}");
+        if (doDebug) Debug.Log($"Gave Piece {incomingPiece} to {activeCoords}");
     }
 
     public void Undo()
@@ -45,7 +46,6 @@ public class GivePiece : IGridAction<BoardNode>
     
     AddAttribute CreateAddAttributeAction(BoardPieceAttribute attribute)
     {
-        Debug.Log($"Creating Add Attribute {attribute.GetType()}");
         var addAttributeAction = new AddAttribute(attribute.GetType());
         giveAttributeActions.Add(addAttributeAction);
         return addAttributeAction;

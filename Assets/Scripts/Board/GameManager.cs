@@ -50,14 +50,14 @@ public class GameManager : MonoBehaviour
     
     async UniTaskVoid OpponentEndTurn()
     {
-        float delay = .5f; 
+        float delay = 3f; 
         opponent.onTurnEnd -= TriggerEndOpponentTurn;
         
         ShiftPlayersPieces();
         await UniTask.WaitForSeconds(delay); 
         
         ShiftOpponentPieces();
-        await UniTask.WaitForSeconds(delay); 
+        await UniTask.WaitForSeconds(1f); 
         
         StartPlayerTurn(); 
     }
