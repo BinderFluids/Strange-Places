@@ -8,6 +8,8 @@ public class BoardModifier
     public BoardNodeMonobehavior ActiveNode => activeNode;
     private EventBinding<SelectBoardNodeEvent> selectBinding;
     private HashSet<BoardNode> dirtyNodes = new(); //TODO: when giving a node a charge, make it so that node can not also have a charge translated out of it
+    [SerializeField] private ItemLootTableGiver itemLootTableGiver;
+    
     
     public BoardModifier()
     {
@@ -42,6 +44,7 @@ public class BoardModifier
         {
             if (grid.TryGet(activeCoords.x - 1, activeCoords.y, out BoardNode leftNode))
             {
+                //TODO: CHECK IF ROW IS 3 AND GIVE ITEM
                 if (leftNode is not NullBoardNode)
                     actor.UseAction(activeCoords, new TranslatePiece<Neutralize>(Vector2Int.left, 1));
             }
@@ -50,6 +53,8 @@ public class BoardModifier
         {
             if (grid.TryGet(activeCoords.x + 1, activeCoords.y, out BoardNode leftNode))
             {
+                
+                //TODO: CHECK IF ROW IS 3 AND GIVE ITEM
                 if (leftNode is not NullBoardNode)
                     actor.UseAction(activeCoords, new TranslatePiece<Neutralize>(Vector2Int.right, 1));
             }

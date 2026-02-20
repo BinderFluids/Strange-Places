@@ -3100,7 +3100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoardPlayer
   reach: 2
-  actionsPerTurn: 2
+  actionsPerTurn: 3
   actionsAvailable: 2
   items:
   - {fileID: 1124184413}

@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityUtils;
 
 public delegate bool BoardEvaluatorDelegate(Grid<BoardNode> ctx, IPieceOwner activeOwner, IPieceOwner otherOwner, out Vector2Int targetCoords, out IGridAction<BoardNode> action);
+public interface IBoardEvaluatorDelegate { bool Evaluate(Grid<BoardNode> ctx, IPieceOwner activeOwner, IPieceOwner otherOwner, out Vector2Int targetCoords, out IGridAction<BoardNode> action); }
+
 public class BoardBot : BoardActor
 {
     private BoardEvaluatorDelegate[] evaluationOrder;
