@@ -20,6 +20,7 @@ public class BoardBot : BoardActor
         {
             EqualizeColumn,
             TakeOpenRank,
+            PushAdvantage,
             PlaceRandomly
         };
 
@@ -149,6 +150,34 @@ public class BoardBot : BoardActor
         return true;
     }
 
+    public bool PushAdvantage(Grid<BoardNode> ctx, IPieceOwner activeOwner, IPieceOwner otherOwner,
+        out Vector2Int targetCoords, out IGridAction<BoardNode> action)
+    {
+        targetCoords = Vector2Int.zero;
+        action = null;
+        
+        var totalColumCharge = GetTotalCharge(ctx, activeOwner, otherOwner);
+
+        bool foundTarget = false;
+        int currentLargetAdvantage = 0;
+        foreach (var kvp in totalColumCharge)
+        {
+            int column = kvp.Key;
+            int charge = kvp.Value;
+
+            if (charge <= 0) continue;
+            if (charge > currentLargetAdvantage)
+            {
+                foundTarget = true;
+                targetCoords = new Vector2Int(column, ctx.Height - 1);
+                currentLargetAdvantage = charge;
+            }
+        }
+
+        return foundTarget;
+    }
+
+    
     public bool PlaceRandomly(Grid<BoardNode> ctx, IPieceOwner activeOwner, IPieceOwner otherOwner,
         out Vector2Int targetCoords, out IGridAction<BoardNode> action)
     {

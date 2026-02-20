@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using EventBus;
 using UnityEngine;
 
@@ -6,8 +7,8 @@ public class BoardModifier
     private BoardNodeMonobehavior activeNode;
     public BoardNodeMonobehavior ActiveNode => activeNode;
     private EventBinding<SelectBoardNodeEvent> selectBinding;
-
-
+    private HashSet<BoardNode> dirtyNodes = new(); //TODO: when giving a node a charge, make it so that node can not also have a charge translated out of it
+    
     public BoardModifier()
     {
         selectBinding = new EventBinding<SelectBoardNodeEvent>(OnSelectBindingEvent);
