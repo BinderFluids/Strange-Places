@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Cysharp.Threading.Tasks.Triggers;
 using EventBus;
@@ -30,10 +31,26 @@ public class BoardPlayer : BoardActor
     {
         boardModifier = new BoardModifier(); 
         selectBinding = new EventBinding<SelectableChosenEvent>(OnSelectableChosenEvent);
+        reach.OnValueChanged += OnReachValueChanged;
     }
     public void AddItem(BoardItem item) => Items.Add(item);
     public void RemoveItem(BoardItem item) => Items.Remove(item);
 
+    private bool skipReachEvent; 
+    void OnReachValueChanged(int value)
+    {
+        if (skipReachEvent)
+        {
+            skipReachEvent = false; 
+            return;
+        }
+        if (value > 4)
+        {
+            skipReachEvent = true;
+            reach.Value = 4; 
+        }
+    }
+    
     protected override void OnStartTurn()
     {
         reach.Value = defaultReach; 
@@ -126,5 +143,10 @@ public class BoardPlayer : BoardActor
         }
 
         if (Input.GetKeyDown(KeyCode.Z)) Undo();
+    }
+
+    private void OnDestroy()
+    {
+        reach.OnValueChanged -= OnReachValueChanged;
     }
 }

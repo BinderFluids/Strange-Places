@@ -842,7 +842,7 @@ GameObject:
   m_Component:
   - component: {fileID: 379374706}
   m_Layer: 0
-  m_Name: Cameras
+  m_Name: Player Cam Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -856,14 +856,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 379374705}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 115750406}
   - {fileID: 1951880973}
-  m_Father: {fileID: 837851623}
+  m_Father: {fileID: 1806614132}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &409677725
 GameObject:
@@ -1199,6 +1199,39 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1719953072}
   m_LocalEulerAnglesHint: {x: 3.766, y: -23.825, z: -81.539}
+--- !u!1 &663561313
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 663561314}
+  m_Layer: 0
+  m_Name: Machine Moving Container
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &663561314
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 663561313}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1830131997}
+  - {fileID: 1940865304}
+  m_Father: {fileID: 1806614132}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &678869650
 GameObject:
   m_ObjectHideFlags: 0
@@ -1647,12 +1680,12 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 379374706}
   - {fileID: 1428862627}
   - {fileID: 1656016743}
   - {fileID: 974514701}
   - {fileID: 1719953072}
   - {fileID: 1570905330}
+  - {fileID: 1806614132}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &837851624
@@ -1667,9 +1700,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27243b4ccde838dffae15603155ee0b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerCamContainer: {fileID: 379374705}
+  machineMoveCameraContainer: {fileID: 663561313}
+  machineMovingForwardCamera: {fileID: 1830131996}
+  machineMovingBackwardCamera: {fileID: 1940865303}
   actor: {fileID: 1719953073}
-  opponent: {fileID: 0}
-  points: {fileID: 11400000, guid: be5a228e57ef993579e696f54145c48a, type: 2}
+  opponent: {fileID: 1570905334}
+  queuedMove: {fileID: 11400000, guid: d9df4105966ba4c9a8f3e6097b2084cc, type: 2}
   movementCharge: {fileID: 11400000, guid: 940e4bdeb4ebeffcea43fac92e368149, type: 2}
   moveDistance: 5
   moveDuration: 1
@@ -1972,6 +2009,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 290384dc8aa94721861c3bd039b909c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemSelectableHighlighter
+  lookTarget: {fileID: 115750406}
   tweenDuration: 0.25
   splineContainer: {fileID: 1210627165}
 --- !u!114 &1210627165
@@ -2971,6 +3009,114 @@ RectTransform:
   m_AnchoredPosition: {x: 800, y: -460.75}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1806614131
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1806614132}
+  m_Layer: 0
+  m_Name: Cameras
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1806614132
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1806614131}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 379374706}
+  - {fileID: 663561314}
+  m_Father: {fileID: 837851623}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1830131996
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1830131997}
+  - component: {fileID: 1830131998}
+  m_Layer: 0
+  m_Name: Machine Moving Forwards
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1830131997
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1830131996}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.062007576, y: 0.81297463, z: 0.088826954, w: 0.57213384}
+  m_LocalPosition: {x: -2.1469612, y: 0.72801065, z: -0.0040574074}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 663561314}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1830131998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1830131996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
+  Priority:
+    Enabled: 0
+    m_Value: 0
+  OutputChannel: 1
+  StandbyUpdate: 2
+  m_StreamingVersion: 20241001
+  m_LegacyPriority: 0
+  Target:
+    TrackingTarget: {fileID: 0}
+    LookAtTarget: {fileID: 0}
+    CustomLookAtTarget: 0
+  Lens:
+    FieldOfView: 60.000004
+    OrthographicSize: 5
+    NearClipPlane: 0.3
+    FarClipPlane: 1000
+    Dutch: 0
+    ModeOverride: 0
+    PhysicalProperties:
+      GateFit: 2
+      SensorSize: {x: 21.946, y: 16.002}
+      LensShift: {x: 0, y: 0}
+      FocusDistance: 10
+      Iso: 200
+      ShutterSpeed: 0.005
+      Aperture: 16
+      BladeCount: 5
+      Curvature: {x: 2, y: 11}
+      BarrelClipping: 0.25
+      Anamorphism: 0
+  BlendHint: 0
 --- !u!1 &1857102805
 GameObject:
   m_ObjectHideFlags: 0
@@ -3080,6 +3226,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1ea217d800a4d27b25f97dae880486b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  machineQueuedMoves: {fileID: 11400000, guid: d9df4105966ba4c9a8f3e6097b2084cc, type: 2}
   machine: {fileID: 837851624}
   board: {fileID: 1964551778}
   player: {fileID: 1719953073}
@@ -3120,6 +3267,81 @@ MonoBehaviour:
     m_Bits: 4294967295
   maxDistance: 1000
   board: {fileID: 1964551778}
+--- !u!1 &1940865303
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1940865304}
+  - component: {fileID: 1940865305}
+  m_Layer: 0
+  m_Name: Machine Moving Backwards
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1940865304
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1940865303}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.043166805, y: 0.8982491, z: -0.091626495, w: -0.4276562}
+  m_LocalPosition: {x: -2.147067, y: 0.7279854, z: -0.004134178}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 663561314}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1940865305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1940865303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
+  Priority:
+    Enabled: 0
+    m_Value: 0
+  OutputChannel: 1
+  StandbyUpdate: 2
+  m_StreamingVersion: 20241001
+  m_LegacyPriority: 0
+  Target:
+    TrackingTarget: {fileID: 0}
+    LookAtTarget: {fileID: 0}
+    CustomLookAtTarget: 0
+  Lens:
+    FieldOfView: 60.000004
+    OrthographicSize: 5
+    NearClipPlane: 0.3
+    FarClipPlane: 1000
+    Dutch: 0
+    ModeOverride: 0
+    PhysicalProperties:
+      GateFit: 2
+      SensorSize: {x: 21.946, y: 16.002}
+      LensShift: {x: 0, y: 0}
+      FocusDistance: 10
+      Iso: 200
+      ShutterSpeed: 0.005
+      Aperture: 16
+      BladeCount: 5
+      Curvature: {x: 2, y: 11}
+      BarrelClipping: 0.25
+      Anamorphism: 0
+  BlendHint: 0
 --- !u!1 &1951880972
 GameObject:
   m_ObjectHideFlags: 0
@@ -3517,7 +3739,7 @@ PrefabInstance:
     - target: {fileID: 4711528176800482980, guid: bcb91f9f7e7f6fbd0b2584394f10cf6a, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1719953073}
     - target: {fileID: 4711528176800482980, guid: bcb91f9f7e7f6fbd0b2584394f10cf6a, type: 3}
       propertyPath: manager
       value: 
@@ -3525,7 +3747,7 @@ PrefabInstance:
     - target: {fileID: 4711528176800482980, guid: bcb91f9f7e7f6fbd0b2584394f10cf6a, type: 3}
       propertyPath: opponent
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1570905334}
     - target: {fileID: 4711528176800482980, guid: bcb91f9f7e7f6fbd0b2584394f10cf6a, type: 3}
       propertyPath: gridWidth
       value: 3
@@ -3546,6 +3768,10 @@ PrefabInstance:
       propertyPath: boardNodePrefab
       value: 
       objectReference: {fileID: 6457036500889089031, guid: 07b8b8eb469a23d729b5503b791357fb, type: 3}
+    - target: {fileID: 4711528176800482980, guid: bcb91f9f7e7f6fbd0b2584394f10cf6a, type: 3}
+      propertyPath: machineQueuedMovement
+      value: 
+      objectReference: {fileID: 11400000, guid: d9df4105966ba4c9a8f3e6097b2084cc, type: 2}
     - target: {fileID: 5907345521320713738, guid: bcb91f9f7e7f6fbd0b2584394f10cf6a, type: 3}
       propertyPath: m_Name
       value: Game Board

@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using EventBus;
 using PrimeTween;
 using ScriptableVariables;
@@ -7,14 +8,18 @@ using UnityEngine;
 
 public class MachineBehavior : MonoBehaviour
 {
+    [SerializeField] private GameObject playerCamContainer;
+    [SerializeField] private GameObject machineMoveCameraContainer;
+    [SerializeField] private GameObject machineMovingForwardCamera;
+    [SerializeField] private GameObject machineMovingBackwardCamera;
     [SerializeField] private BoardActor actor; 
-    [SerializeField] private BoardActor opponent; 
+    [SerializeField] private BoardActor opponent;
+    [SerializeField] private IntVariable queuedMove;
     [SerializeField] private IntVariable movementCharge;
     [SerializeField] private float moveDistance;
     [SerializeField] private float moveDuration;
 
     [SerializeField] private Transform _transform;
-    private EventBinding<BoardPositionEvent> boardPositionEventBinding;
     private Tween movementTween;
 
     public event Action onMoveComplete;
@@ -24,34 +29,36 @@ public class MachineBehavior : MonoBehaviour
         movementCharge.Value = 1;
         
         _transform ??= GetComponent<Transform>();
-        boardPositionEventBinding = new EventBinding<BoardPositionEvent>(OnBoardPositionEvent);
-        EventBus<BoardPositionEvent>.Register(boardPositionEventBinding);
     }
-
-    private void OnBoardPositionEvent(BoardPositionEvent boardPositionEvent)
+    
+    public async UniTask Move()
     {
-        if (movementTween.isAlive) return;
+        int moveDir = queuedMove.Value > 0 ? 1 : -1;
+        playerCamContainer.SetActive(false);
         
-        BoardPiece piece = boardPositionEvent.piece;
-        int moveDir = 0; 
-        if (actor == (BoardActor)piece.Owner) moveDir = 1;
-        if (opponent == (BoardActor)piece.Owner) moveDir = -1;
+        machineMovingForwardCamera.SetActive(moveDir == 1);
+        machineMovingBackwardCamera.SetActive(moveDir == -1);
+        machineMoveCameraContainer.SetActive(true); 
+        
+        for (int i = 0; i < Mathf.Abs(queuedMove.Value); i++)
+        {
+            float moveVector = moveDistance * movementCharge.Value * moveDir;
+            movementTween = Tween
+                .PositionX(_transform, _transform.position.x + moveVector, moveDuration * movementCharge.Value)
+                .OnComplete(OnMoveComplete);
             
-        float moveVector = moveDistance * moveDir * movementCharge.Value;
+            await movementTween;
+            await UniTask.WaitForSeconds(1f);
+        }
         
-        movementTween = Tween
-            .PositionX(_transform, _transform.position.x + moveVector, moveDuration)
-            .OnComplete(OnMoveComplete);
+        playerCamContainer.SetActive(true); 
+        machineMoveCameraContainer.SetActive(false);
+        queuedMove.Value = 0;
+        movementCharge.Value = 1; 
     }
 
     void OnMoveComplete()
     {
-        movementCharge.Value = 1; 
         onMoveComplete?.Invoke();
-    }
-
-    private void OnDestroy()
-    {
-        EventBus<BoardPositionEvent>.Deregister(boardPositionEventBinding);
     }
 }

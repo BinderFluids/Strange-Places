@@ -1,4 +1,1 @@
-public class NoOwner : IPieceOwner
-{
-    
-}
+public struct NoOwner : IPieceOwner { }

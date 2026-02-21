@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks.Triggers;
+using ScriptableVariables;
 using UnityEditor.Rendering;
 using UnityEngine;
 
@@ -12,13 +13,15 @@ public class Board : MonoBehaviour
     {
         Null,
         Normal,
-        GiveItem
+        GiveItem,
+        OpponentEndZone,
+        PlayerEndZone
     }
 
     private int[,] boardMap =
     {
         {
-            0, 1, 1, 1, 0
+            0, 3, 3, 3, 0
         },
         {
             0, 1, 1, 1, 0
@@ -30,10 +33,13 @@ public class Board : MonoBehaviour
             0, 1, 1, 1, 0
         },
         {
-            0, 1, 1, 1, 0
+            0, 4, 4, 4, 0
         }
     };
-    
+
+    [SerializeField] private IntVariable machineQueuedMovement;
+    [SerializeField] private BoardPlayer player;
+    [SerializeField] private BoardBot opponent;
     [SerializeField] private bool generateNullNodes;
     [SerializeField] private GameManager manager; 
     [SerializeField] private BoardNodeMonobehavior boardNodePrefab;
@@ -69,7 +75,7 @@ public class Board : MonoBehaviour
         int colorIndex = 0;
         Color[] colors =
         {
-            Color.red,
+            Color.purple,
             Color.blue
         };
         
@@ -91,6 +97,26 @@ public class Board : MonoBehaviour
                         break;
                     case BoardNodeType.GiveItem:
                         newNode = new GiveItemBoardNode(grid);
+                        break;
+                    case BoardNodeType.PlayerEndZone:
+                        newNode = new EndZoneNode(grid);
+                        ((EndZoneNode)newNode)
+                            .Init(
+                                player, 
+                                GameTurnEvent.ActorType.Player, 
+                                machineQueuedMovement,
+                                1
+                                );
+                        break;
+                    case BoardNodeType.OpponentEndZone: 
+                        newNode = new EndZoneNode(grid);
+                        ((EndZoneNode)newNode)
+                            .Init(
+                                opponent, 
+                                GameTurnEvent.ActorType.Opponent, 
+                                machineQueuedMovement,
+                                -1
+                            );
                         break;
                     default:
                         Debug.LogWarning("Defaulting to Normal BoardNode ");

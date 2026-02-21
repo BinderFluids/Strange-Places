@@ -79,6 +79,14 @@ public class BoardNodeDebugDisplay : MonoBehaviour
                 gizmoColor = Color.black;
             if (nodeMonobehavior.Node is GiveItemBoardNode)
                 gizmoColor = Color.darkGreen;
+            if (nodeMonobehavior.Node is EndZoneNode endZoneNode)
+            {
+                if (endZoneNode.TargetType == GameTurnEvent.ActorType.Player)
+                    gizmoColor = Color.green;
+                if (endZoneNode.TargetType == GameTurnEvent.ActorType.Opponent)
+                    gizmoColor = Color.red;
+            }
+        
         }
         Gizmos.color = gizmoColor;
         

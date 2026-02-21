@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityUtils;
 
 public delegate bool BoardEvaluatorDelegate(Grid<BoardNode> ctx, IPieceOwner activeOwner, IPieceOwner otherOwner, out Vector2Int targetCoords, out IGridAction<BoardNode> action);
-public interface IBoardEvaluatorDelegate { bool Evaluate(Grid<BoardNode> ctx, IPieceOwner activeOwner, IPieceOwner otherOwner, out Vector2Int targetCoords, out IGridAction<BoardNode> action); }
 
 public class BoardBot : BoardActor
 {
@@ -13,10 +12,15 @@ public class BoardBot : BoardActor
     private BoardEvaluatorDelegate[] specialActions;
     private Queue<ActionCoordsPair> actionQueue = new();
     
-    [SerializeField] private BoardPlayer player; 
+    [SerializeField] private BoardPlayer player;
+    private int turnIndex = 0; 
     
     protected override void OnStartTurn()
     {
+        turnIndex++;
+        if (turnIndex % 6 == 0)
+            actionsAvailable++;
+        
         workingGrid = workingGrid.Copy(); 
         evaluationOrder = new BoardEvaluatorDelegate[]
         {
@@ -25,10 +29,15 @@ public class BoardBot : BoardActor
             PushAdvantage,
             PlaceRandomly
         };
+        specialActions = new BoardEvaluatorDelegate[]
+        {
+            RemoveChargesIfOverFive,
+        };
 
         RunEvaluations();
     }
 
+    //Run evaluations on board snapshot
     async UniTaskVoid RunEvaluations()
     {
         foreach (var eval in evaluationOrder)
@@ -55,6 +64,14 @@ public class BoardBot : BoardActor
         EndTurn();
     }
 
+    
+    //Run special actions on active board
+    public async UniTask TrySpecialActions(Grid<BoardNode> ctx)
+    {
+        foreach (var eval in specialActions)
+            eval(ctx, this, player, out var _, out var _);
+    }
+
     private struct ActionCoordsPair
     {
         public Vector2Int coords;
@@ -75,7 +92,7 @@ public class BoardBot : BoardActor
     }
 
 
-    Dictionary<int, int> GetTotalCharge(Grid<BoardNode> ctx, IPieceOwner activeOwner, IPieceOwner otherOwner,
+    Dictionary<int, int> GetTotalCharges(Grid<BoardNode> ctx, IPieceOwner activeOwner, IPieceOwner otherOwner,
         bool neutralize = true)
     {
         Dictionary<int, int> totalColumnCharge = new();
@@ -101,11 +118,12 @@ public class BoardBot : BoardActor
         return totalColumnCharge; 
     }
     
+    #region Board Evaluators
     public bool EqualizeColumn(Grid<BoardNode> ctx, IPieceOwner activeOwner, IPieceOwner otherOwner, 
         out Vector2Int targetCoords, out IGridAction<BoardNode> action)
     {
         action = null;
-        var totalColumnCharge = GetTotalCharge(ctx, activeOwner, otherOwner, false);
+        var totalColumnCharge = GetTotalCharges(ctx, activeOwner, otherOwner, false);
         
         //find the column with the greatest difference
         int greatestDifference = 0;
@@ -137,7 +155,7 @@ public class BoardBot : BoardActor
         targetCoords = Vector2Int.zero;
         action = null; 
         
-        var totalColumCharge = GetTotalCharge(ctx, activeOwner, otherOwner);
+        var totalColumCharge = GetTotalCharges(ctx, activeOwner, otherOwner);
         List<int> openRanks = new();
 
         bool foundTarget = false; 
@@ -163,7 +181,7 @@ public class BoardBot : BoardActor
         targetCoords = Vector2Int.zero;
         action = null;
         
-        var totalColumCharge = GetTotalCharge(ctx, activeOwner, otherOwner);
+        var totalColumCharge = GetTotalCharges(ctx, activeOwner, otherOwner);
 
         bool foundTarget = false;
         int currentLargetAdvantage = 0;
@@ -195,4 +213,27 @@ public class BoardBot : BoardActor
         
         return true;
     }
+    #endregion
+    
+    #region Special Actions
+
+    bool RemoveChargesIfOverFive(Grid<BoardNode> ctx, IPieceOwner activeOwner, IPieceOwner otherOwner,
+        out Vector2Int targetCoords, out IGridAction<BoardNode> action)
+    {
+        targetCoords = Vector2Int.zero;
+        action = null; 
+        
+        ctx.ForEach(node =>
+        {
+            if (!node.IsOccupied()) return;
+            if (node.Piece.Owner != otherOwner) return;
+            if (node.Piece.Charge < 5) return;
+            
+            node.TakePiece(3);
+        });
+
+        return true;
+    }
+    
+    #endregion
 }

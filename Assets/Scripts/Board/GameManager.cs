@@ -7,10 +7,11 @@ using ScriptableVariables;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private IntVariable machineQueuedMoves;
     [SerializeField] private MachineBehavior machine;
     [SerializeField] private Board board;
     [SerializeField] private BoardActor player;
-    [SerializeField] private BoardActor opponent; 
+    [SerializeField] private BoardBot opponent; 
     
     private const int maxLoseCount = 50;
     [SerializeField] private IntVariable points;
@@ -22,7 +23,6 @@ public class GameManager : MonoBehaviour
         points.Value = 0; 
         
         machine ??= FindFirstObjectByType<MachineBehavior>();
-        machine.onMoveComplete += OnMachineMoveComplete;
     }
 
 
@@ -54,17 +54,52 @@ public class GameManager : MonoBehaviour
     
     async UniTaskVoid OpponentEndTurn()
     {
-        float delay = 3f; 
+        float delay = 3f;
+
+        await opponent.TrySpecialActions(board.Grid);
         TriggerTurnEvent(GameTurnEvent.ActorType.Player, GameTurnEvent.TurnType.End);
         opponent.onTurnEnd -= TriggerEndOpponentTurn;
         
+        
+        TriggerTurnEvent(GameTurnEvent.ActorType.Player, GameTurnEvent.TurnType.ShiftStart);
         ShiftPlayersPieces();
+        TriggerTurnEvent(GameTurnEvent.ActorType.Player, GameTurnEvent.TurnType.ShiftEnd);
         await UniTask.WaitForSeconds(delay); 
         
+        
+        TriggerTurnEvent(GameTurnEvent.ActorType.Opponent, GameTurnEvent.TurnType.ShiftStart);
         ShiftOpponentPieces();
-        await UniTask.WaitForSeconds(1f); 
+        TriggerTurnEvent(GameTurnEvent.ActorType.Opponent, GameTurnEvent.TurnType.ShiftEnd);
+        await UniTask.WaitForSeconds(1f);
+
+        points.Value += machineQueuedMoves.Value;
+        if (machineQueuedMoves.Value != 0)
+        {
+            await machine.Move();
+            if (points.Value >= pointsToWin)
+            {
+                Win();
+                return;
+            }
+
+            if (points.Value <= pointsToLose)
+            {
+                Lose();
+                return;
+            }
+        } 
         
         StartPlayerTurn(); 
+    }
+
+    void Win()
+    {
+        Debug.Log("You won!");
+    }
+
+    void Lose()
+    {
+        Debug.Log("You lost!");
     }
     
     private void ShiftPlayersPieces()
@@ -81,27 +116,6 @@ public class GameManager : MonoBehaviour
         board.StopObservingAction();
     }
     
-    public void PieceReachEnd(BoardPiece piece)
-    {  
-        EventBus<BoardPositionEvent>.Raise(new BoardPositionEvent()
-        {
-            piece = piece,
-            position = Vector2Int.zero
-        });
-    }
-
-    private void OnMachineMoveComplete()
-    {
-        if (points.Value >= pointsToWin)
-            Debug.Log("You Win!");
-        else if (points.Value <= pointsToLose)
-            Debug.Log("You Lose!");
-    }
-
-    private void OnDestroy()
-    {
-        machine.onMoveComplete -= OnMachineMoveComplete;
-    }
 
     private void TriggerTurnEvent(GameTurnEvent.ActorType actorType, GameTurnEvent.TurnType turnType) =>
         EventBus<GameTurnEvent>.Raise(new GameTurnEvent()
@@ -114,7 +128,7 @@ public class GameManager : MonoBehaviour
 
 public struct GameTurnEvent : IEvent
 {
-    public enum TurnType { Start, End, Shift }
+    public enum TurnType { Start, End, ShiftStart, ShiftEnd }
     public enum ActorType { Player, Opponent }
     public ActorType actorType;
     public TurnType turnType;
