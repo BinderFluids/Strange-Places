@@ -33,6 +33,14 @@ public class BoardNodeDebugDisplay : MonoBehaviour
             return; 
         }
 
+        if (nodeMonobehavior.Node is GiveItemBoardNode)
+        {
+            SetColor(Color.darkGreen);
+            coordText.text = "Item!";
+            chargeText.text = string.Empty;
+            return; 
+        }
+
         BoardActor actor = piece.Owner as BoardActor; 
         if (actor.gameObject.name == "Player")
             SetColor(Color.green);
@@ -69,6 +77,8 @@ public class BoardNodeDebugDisplay : MonoBehaviour
         {
             if (nodeMonobehavior.Node is NullBoardNode)
                 gizmoColor = Color.black;
+            if (nodeMonobehavior.Node is GiveItemBoardNode)
+                gizmoColor = Color.darkGreen;
         }
         Gizmos.color = gizmoColor;
         

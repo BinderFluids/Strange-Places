@@ -26,6 +26,8 @@ public class BoardPlayer : BoardActor
         boardModifier = new BoardModifier(); 
         selectBinding = new EventBinding<SelectableChosenEvent>(OnSelectableChosenEvent);
     }
+    public void AddItem(BoardItem item) => Items.Add(item);
+    public void RemoveItem(BoardItem item) => Items.Remove(item);
 
     protected override void OnStartTurn()
     {

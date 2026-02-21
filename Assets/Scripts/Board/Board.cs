@@ -1,20 +1,45 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks.Triggers;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class Board : MonoBehaviour
 {
     public static Board Instance;
 
+    private enum BoardNodeType
+    {
+        Null,
+        Normal,
+        GiveItem
+    }
+
+    private int[,] boardMap =
+    {
+        {
+            0, 1, 1, 1, 0
+        },
+        {
+            0, 1, 1, 1, 0
+        },
+        {
+            2, 1, 1, 1, 2
+        },
+        {
+            0, 1, 1, 1, 0
+        },
+        {
+            0, 1, 1, 1, 0
+        }
+    };
+    
     [SerializeField] private bool generateNullNodes;
     [SerializeField] private GameManager manager; 
     [SerializeField] private BoardNodeMonobehavior boardNodePrefab;
     [SerializeField] private Transform boardNodeContainer;
     [SerializeField] private Transform boardAnchor;
     [SerializeField] private float gridCellSize;
-    [Min(1), SerializeField] private int gridWidth;
-    [Min(1), SerializeField] private int gridHeight;
     
     private Grid<BoardNode> grid;
     public Grid<BoardNode> Grid => grid;
@@ -37,7 +62,8 @@ public class Board : MonoBehaviour
 
     void InitGrid()
     {
-        if (generateNullNodes) gridWidth += 2; 
+        int gridHeight = boardMap.GetLength(0); 
+        int gridWidth = boardMap.GetLength(1);
         grid = new Grid<BoardNode>(gridWidth, gridHeight);
         
         int colorIndex = 0;
@@ -51,16 +77,26 @@ public class Board : MonoBehaviour
         {
             for (int x = 0; x < gridWidth; x++)
             {
-                
-                    
-
+                BoardNodeType type = (BoardNodeType)boardMap[y, x];
                 BoardNodeMonobehavior nodeBehavior = Instantiate(boardNodePrefab, transform);
 
                 BoardNode newNode;
-                if (generateNullNodes)
-                    newNode = (x == 0 || x == gridWidth - 1) ? new NullBoardNode(grid) : new BoardNode(grid);
-                else
-                    newNode = new BoardNode(grid);
+                switch (type)
+                {
+                    case BoardNodeType.Null:
+                        newNode = new NullBoardNode(grid);
+                        break;
+                    case BoardNodeType.Normal:
+                        newNode = new BoardNode(grid);
+                        break;
+                    case BoardNodeType.GiveItem:
+                        newNode = new GiveItemBoardNode(grid);
+                        break;
+                    default:
+                        Debug.LogWarning("Defaulting to Normal BoardNode ");
+                        newNode = new BoardNode(grid);
+                        break;
+                }
                 
                 grid.Set(x, y, newNode);
                 nodeBehavior.Init(newNode); 
@@ -82,6 +118,10 @@ public class Board : MonoBehaviour
         }
     }
 
+    public void AddSecondaryAction(ISecondaryAction action)
+    {
+        (grid.ActionStack.Peek() as BoardAction).AddSecondaryAction(action);
+    }
     public void StartObservingAction() => grid.StartObservingAction();
     public void StopObservingAction() => grid.StopObservingAction();
     public void Execute(Vector2Int coords, IGridAction<BoardNode> action) => grid.Execute(coords, action);

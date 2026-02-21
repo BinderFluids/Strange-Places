@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BoardActionChain : IGridAction<BoardNode>
+public abstract class BoardActionChain : BoardAction
 {
     private Stack<IGridAction<BoardNode>> actions = new();
 
@@ -15,7 +15,7 @@ public abstract class BoardActionChain : IGridAction<BoardNode>
     }
 
     public abstract void Execute(Vector2Int activeCoords, Grid<BoardNode> ctx);
-    public void Undo()
+    protected override void OnUndo()
     {
         while (actions.Count > 0) actions.Pop().Undo();
     }

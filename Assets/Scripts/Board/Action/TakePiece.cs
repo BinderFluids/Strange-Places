@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class TakePiece : IGridAction<BoardNode>
+public class TakePiece : BoardAction
 {
     private bool doDebug = false;
     private int charge;
@@ -27,7 +27,7 @@ public class TakePiece : IGridAction<BoardNode>
         if (doDebug) Debug.Log($"Took Piece {takenPiece} from {activeCoords}");
     }
 
-    public void Undo()
+    protected override void OnUndo()
     {
         GivePiece givePiece = new GivePiece(takenPiece);
         givePiece.Execute(activeCoords, ctx);

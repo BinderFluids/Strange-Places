@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class AddAttribute : IGridAction<BoardNode> 
+public class AddAttribute : BoardAction
 {
     private Vector2Int activeCoords;
     private Type attributeType;
@@ -24,7 +24,7 @@ public class AddAttribute : IGridAction<BoardNode>
         addedAttribute = active.Piece.TryAddAttribute(newAttribute);
     }
 
-    public void Undo()
+    protected override void OnUndo()
     { 
         if (addedAttribute)
             if (ctx.TryGet(activeCoords, out BoardNode activeNode))

@@ -23,7 +23,6 @@ public class BoardModifier
         if (activeNode.Node.IsOccupied())
             Debug.Log(activeNode.Node.Piece);
     }
-
     
     public void Update(BoardActor actor)
     {
@@ -44,7 +43,7 @@ public class BoardModifier
         {
             if (grid.TryGet(activeCoords.x - 1, activeCoords.y, out BoardNode leftNode))
             {
-                //TODO: CHECK IF ROW IS 3 AND GIVE ITEM
+                bool onItemNode = activeCoords.x == 0 && activeCoords.y == 2;
                 if (leftNode is not NullBoardNode)
                     actor.UseAction(activeCoords, new TranslatePiece<Neutralize>(Vector2Int.left, 1));
             }

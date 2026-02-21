@@ -19,6 +19,8 @@ public class Grid<T> where T : IGridNode
         grid = new T[width, height];
     }
     private Stack<IGridAction<T>> actionStack = new();
+    public Stack<IGridAction<T>> ActionStack => actionStack;
+    
     private HashSet<Vector2Int> dirtyNodes = new(); 
     
     private bool observeAction = false;

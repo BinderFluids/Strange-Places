@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GivePiece : IGridAction<BoardNode>
+
+public class GivePiece : BoardAction
 {
     private bool doDebug = false; 
     private Vector2Int activeCoords;
@@ -27,12 +28,13 @@ public class GivePiece : IGridAction<BoardNode>
                 newAddAttributeAction.Execute(activeCoords, ctx);
             }
         active.AddPiece(incomingPiece);
+        active.OnBoardEnter();
         
 
         if (doDebug) Debug.Log($"Gave Piece {incomingPiece} to {activeCoords}");
     }
 
-    public void Undo()
+    protected override void OnUndo()
     {
         if (!ctx.TryGet(activeCoords, out BoardNode active)) return; 
         
