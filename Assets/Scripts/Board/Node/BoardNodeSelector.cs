@@ -14,6 +14,7 @@ public class BoardNodeSelector : MonoBehaviour
     }
     public void UpdateSelect(BoardActor actor)
     {
+        if (!GameManager.Instance.GameStarted) return;
         if (cam == null) return;
 
         if (!Input.GetMouseButtonDown(0)) return; 

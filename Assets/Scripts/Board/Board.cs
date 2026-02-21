@@ -61,11 +61,6 @@ public class Board : MonoBehaviour
         InitGrid();
     }
 
-    private void Start()
-    {
-        manager.StartGame(); 
-    }
-
     void InitGrid()
     {
         int gridHeight = boardMap.GetLength(0); 

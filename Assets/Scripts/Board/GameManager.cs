@@ -4,9 +4,13 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using EventBus;
 using ScriptableVariables;
+using UnityUtils;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
+    private bool gameStarted;
+    public bool GameStarted => gameStarted;
+
     [SerializeField] private IntVariable machineQueuedMoves;
     [SerializeField] private MachineBehavior machine;
     [SerializeField] private Board board;
@@ -21,12 +25,17 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         points.Value = 0; 
-        
         machine ??= FindFirstObjectByType<MachineBehavior>();
+        gameStarted = false; 
     }
 
-
-    public void StartGame() => StartPlayerTurn();
+    public async void StartGame()
+    {
+        if (gameStarted) return;
+        gameStarted = true;
+        
+        StartPlayerTurn();
+    }
 
     private Grid<BoardNode> gridSnapshot; 
     void StartPlayerTurn()
