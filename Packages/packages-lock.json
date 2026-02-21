@@ -1,11 +1,11 @@
 {
   "dependencies": {
     "com.binderfluids.eventbus": {
-      "version": "git+https://github.com/BinderFluids/EventBus.git",
+      "version": "https://github.com/BinderFluids/EventBus.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "30369db441fe3ab8b884a2d47ef6ad3695224a48"
+      "hash": "66f87880e95662bce56542c77696eb10f9f5cabb"
     },
     "com.binderfluids.registry": {
       "version": "git+https://github.com/BinderFluids/Registry.git",
@@ -19,7 +19,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "25913432768ce91d631b4906ec7607727a4b9bd0"
+      "hash": "fa21c8160b39d13f5c7e75e6173e251342ff5375"
     },
     "com.cysharp.unitask": {
       "version": "git+https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
@@ -124,7 +124,7 @@
       "dependencies": {}
     },
     "com.unity.ide.rider": {
-      "version": "3.0.38",
+      "version": "3.0.39",
       "depth": 0,
       "source": "registry",
       "dependencies": {

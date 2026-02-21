@@ -45,7 +45,8 @@ public class ItemSelectableBehavior : SelectionBehavior
                 continue; 
             }
             
-            Tween.Rotation(thisItem.transform, lookRotation, tweenDuration);
+            if (thisItem.transform.rotation != lookRotation)
+                Tween.Rotation(thisItem.transform, lookRotation, tweenDuration);
             if (thisItem.transform.position != worldPosition)
                 Tween.Position(thisItem.transform, worldPosition, tweenDuration); 
         }

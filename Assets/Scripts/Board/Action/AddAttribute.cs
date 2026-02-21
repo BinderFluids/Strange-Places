@@ -22,6 +22,8 @@ public class AddAttribute : BoardAction
         
         BoardPieceAttribute newAttribute = BoardPieceAttribute.Create(attributeType, active.Piece);
         addedAttribute = active.Piece.TryAddAttribute(newAttribute);
+        
+        ctx.UpdateNodes();
     }
 
     protected override void OnUndo()
@@ -29,5 +31,6 @@ public class AddAttribute : BoardAction
         if (addedAttribute)
             if (ctx.TryGet(activeCoords, out BoardNode activeNode))
                 activeNode.Piece.RemoveAttribute(attributeType);
+        ctx.UpdateNodes();
     }
 }

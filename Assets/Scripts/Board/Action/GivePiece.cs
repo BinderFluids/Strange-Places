@@ -29,8 +29,7 @@ public class GivePiece : BoardAction
             }
         active.AddPiece(incomingPiece);
         active.OnBoardEnter();
-        
-
+        ctx.UpdateNodes();
         if (doDebug) Debug.Log($"Gave Piece {incomingPiece} to {activeCoords}");
     }
 
@@ -44,6 +43,7 @@ public class GivePiece : BoardAction
         TakePiece takePiece = new TakePiece(incomingPiece.Charge);
         
         takePiece.Execute(activeCoords, ctx);
+        ctx.UpdateNodes();
     }
     
     AddAttribute CreateAddAttributeAction(BoardPieceAttribute attribute)

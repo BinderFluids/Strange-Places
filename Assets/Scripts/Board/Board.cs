@@ -48,9 +48,6 @@ public class Board : MonoBehaviour
     private Grid<BoardNode> grid;
     public Grid<BoardNode> Grid => grid;
     
-    private Stack<IGridAction<BoardNode>> actionStack = new();
-    [SerializeField] private List<string> actionStackString = new();
-    
     private bool observeAction;
     public bool ObserveAction => observeAction;
     private void Awake()
@@ -71,11 +68,14 @@ public class Board : MonoBehaviour
             Color.purple,
             Color.blue
         };
-        
+
+        int count = 0; 
         for (int y = 0; y < gridHeight; y++)
         {
             for (int x = 0; x < gridWidth; x++)
             {
+                count++;
+                
                 BoardNodeType type = (BoardNodeType)boardMap[y, x];
                 BoardNodeMonobehavior nodeBehavior = Instantiate(boardNodePrefab, transform);
 
@@ -96,7 +96,6 @@ public class Board : MonoBehaviour
                         ((EndZoneNode)newNode)
                             .Init(
                                 player, 
-                                GameTurnEvent.ActorType.Player, 
                                 machineQueuedMovement,
                                 1
                                 );
@@ -106,7 +105,6 @@ public class Board : MonoBehaviour
                         ((EndZoneNode)newNode)
                             .Init(
                                 opponent, 
-                                GameTurnEvent.ActorType.Opponent, 
                                 machineQueuedMovement,
                                 -1
                             );

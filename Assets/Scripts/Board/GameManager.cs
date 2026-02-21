@@ -32,6 +32,8 @@ public class GameManager : Singleton<GameManager>
 
     public async void StartGame()
     {
+        await UniTask.Delay(TimeSpan.FromSeconds(5));
+        
         if (gameStarted) return;
         gameStarted = true;
         
@@ -45,6 +47,7 @@ public class GameManager : Singleton<GameManager>
         
         player.onTurnEnd += PlayerEndTurn;
         
+        TriggerTurnEvent(GameTurnEvent.ActorType.Board, GameTurnEvent.TurnType.Start);
         player.StartTurn(board.Grid);
         TriggerTurnEvent(GameTurnEvent.ActorType.Player, GameTurnEvent.TurnType.Start);
     }
@@ -64,7 +67,7 @@ public class GameManager : Singleton<GameManager>
     
     async UniTaskVoid OpponentEndTurn()
     {
-        float delay = 3f;
+        float delay = 1f;
 
         await opponent.TrySpecialActions(board.Grid);
         TriggerTurnEvent(GameTurnEvent.ActorType.Player, GameTurnEvent.TurnType.End);
@@ -80,8 +83,9 @@ public class GameManager : Singleton<GameManager>
         TriggerTurnEvent(GameTurnEvent.ActorType.Opponent, GameTurnEvent.TurnType.ShiftStart);
         ShiftOpponentPieces();
         TriggerTurnEvent(GameTurnEvent.ActorType.Opponent, GameTurnEvent.TurnType.ShiftEnd);
-        await UniTask.WaitForSeconds(1f);
-
+        TriggerTurnEvent(GameTurnEvent.ActorType.Board, GameTurnEvent.TurnType.End);
+        await UniTask.WaitForSeconds(delay);
+        
         points.Value += machineQueuedMoves.Value;
         if (machineQueuedMoves.Value != 0)
         {
@@ -143,7 +147,7 @@ public class GameManager : Singleton<GameManager>
 public struct GameTurnEvent : IEvent
 {
     public enum TurnType { Start, End, ShiftStart, ShiftEnd }
-    public enum ActorType { Player, Opponent }
+    public enum ActorType { Board, Player, Opponent }
     public ActorType actorType;
     public TurnType turnType;
 }

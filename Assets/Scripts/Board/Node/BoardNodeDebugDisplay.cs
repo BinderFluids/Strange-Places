@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class BoardNodeDebugDisplay : MonoBehaviour
 {
-    private bool enabled = false; 
+    private bool isEnabled = true; 
     [SerializeField] private BoardNodeMonobehavior nodeMonobehavior;
     [SerializeField] private TMP_Text coordText;
     [SerializeField] private TMP_Text chargeText;
 
     public void Init()
     {
-        if (!enabled)
+        if (!isEnabled)
         {
             coordText.text = string.Empty;
             chargeText.text = string.Empty;

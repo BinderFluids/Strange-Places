@@ -17,11 +17,17 @@ public class BoardModifier
         EventBus<SelectBoardNodeEvent>.Register(selectBinding);
     }
 
-    void OnSelectBindingEvent(SelectBoardNodeEvent boardNodeEvent)
+    void OnSelectBindingEvent(SelectBoardNodeEvent e)
     {
-        activeNode = boardNodeEvent.selectedNode;
-        if (activeNode.Node.IsOccupied())
-            Debug.Log(activeNode.Node.Piece);
+        if (e.selectedNode.Node.IsOccupied())
+        {
+            if (e.selectedNode.Node.Piece.Owner is BoardPlayer)
+                activeNode = e.selectedNode;
+        }
+        else
+        {
+            activeNode = e.selectedNode;
+        }
     }
     
     public void Update(BoardPlayer actor)
@@ -37,7 +43,7 @@ public class BoardModifier
             inReach = activeNode.Node.Coords.y < actor.Reach; 
 
         
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.A) && activeNode.Node.IsOccupied())
         {
             if (grid.TryGet(activeCoords.x - 1, activeCoords.y, out BoardNode leftNode))
             {
@@ -45,7 +51,7 @@ public class BoardModifier
                     actor.UseAction(activeCoords, new TranslatePiece<Neutralize>(Vector2Int.left, 1));
             }
         }
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.D) && activeNode.Node.IsOccupied())
         {
             if (grid.TryGet(activeCoords.x + 1, activeCoords.y, out BoardNode leftNode))
             {

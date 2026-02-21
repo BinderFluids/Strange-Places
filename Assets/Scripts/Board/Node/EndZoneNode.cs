@@ -1,6 +1,6 @@
 using EventBus;
-using NUnit.Framework;
 using ScriptableVariables;
+using UnityEngine;
 
 public class EndZoneNode : BoardNode
 {
@@ -23,9 +23,8 @@ public class EndZoneNode : BoardNode
 
     public void Init(
         IPieceOwner owner,
-        GameTurnEvent.ActorType targetType,
         IntVariable queuedMachineMoves,
-        [Range(0, 1)] int moveDirection
+        int moveDirection
     )
     {
         targetOwner = owner;
@@ -36,11 +35,16 @@ public class EndZoneNode : BoardNode
 
     void OnTurnEvent(GameTurnEvent e)
     {
-        if (e.actorType == targetType && e.turnType == GameTurnEvent.TurnType.ShiftEnd)
+        if (e is
+            {
+                actorType: GameTurnEvent.ActorType.Board,
+                turnType: GameTurnEvent.TurnType.End
+            })
             if (IsOccupied())
                 if (piece.Owner == targetOwner)
                 {
-                    TakePiece();
+                    var piece = TakePiece();
+                    Debug.Log($"EndZoneNode Took {piece}");
                     grid.UpdateNodes();
                 }
     }

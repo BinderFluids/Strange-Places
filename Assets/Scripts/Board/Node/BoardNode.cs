@@ -2,8 +2,6 @@
 using System;
 using EventBus;
 using UnityEngine;
-using Registry;
-using UnityEngine.UIElements;
 
 public class BoardNode : IGridNode
 {

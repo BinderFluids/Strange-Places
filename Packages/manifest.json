@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.binderfluids.eventbus": "git+https://github.com/BinderFluids/EventBus.git",
+    "com.binderfluids.eventbus": "https://github.com/BinderFluids/EventBus.git",
     "com.binderfluids.registry": "git+https://github.com/BinderFluids/Registry.git",
     "com.binderfluids.scriptablevariables": "git+https://github.com/BinderFluids/Unity-Scriptable-Variables.git",
     "com.cysharp.unitask": "git+https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
@@ -12,7 +12,7 @@
     "com.unity.ai.navigation": "2.0.9",
     "com.unity.cinemachine": "3.1.5",
     "com.unity.collab-proxy": "2.11.3",
-    "com.unity.ide.rider": "3.0.38",
+    "com.unity.ide.rider": "3.0.39",
     "com.unity.inputsystem": "1.18.0",
     "com.unity.multiplayer.center": "1.0.1",
     "com.unity.render-pipelines.universal": "17.3.0",

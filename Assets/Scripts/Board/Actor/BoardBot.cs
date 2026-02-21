@@ -58,8 +58,8 @@ public class BoardBot : BoardActor
             }
         }
 
-        TransferToLiveGrid();
-        await UniTask.WaitForSeconds(2f);
+        await TransferToLiveGrid();
+        await UniTask.WaitForSeconds(1f);
         
         EndTurn();
     }
@@ -78,7 +78,7 @@ public class BoardBot : BoardActor
         public IGridAction<BoardNode> action;
     }
     
-    void TransferToLiveGrid()
+    async UniTask TransferToLiveGrid()
     {
         var liveGrid = Board.Instance;
         
@@ -87,6 +87,7 @@ public class BoardBot : BoardActor
         {
             var pair = actionQueue.Dequeue();
             liveGrid.Execute(pair.coords, pair.action);
+            await UniTask.WaitForSeconds(.25f); 
         }
         liveGrid.StopObservingAction();
     }

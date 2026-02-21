@@ -127,7 +127,7 @@ public class BoardPlayer : BoardActor
     
     void ItemPhaseUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.E))
             EndItemPhase();
     }
     
@@ -136,7 +136,7 @@ public class BoardPlayer : BoardActor
         boardNodeSelector.UpdateSelect(this);
         boardModifier.Update(this);
         
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             if (actionsAvailable > 0) return;
             EndTurn();

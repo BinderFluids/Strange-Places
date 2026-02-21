@@ -25,11 +25,13 @@ public class TakePiece : BoardAction
         
         takenPiece = new BoardPiece(active.TakePiece(charge));
         if (doDebug) Debug.Log($"Took Piece {takenPiece} from {activeCoords}");
+        ctx.UpdateNodes();
     }
 
     protected override void OnUndo()
     {
         GivePiece givePiece = new GivePiece(takenPiece);
         givePiece.Execute(activeCoords, ctx);
+        ctx.UpdateNodes();
     }
 }
