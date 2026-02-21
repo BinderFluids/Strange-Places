@@ -930,7 +930,7 @@ MonoBehaviour:
     DefaultMode: 2
   DefaultBlend:
     Style: 1
-    Time: 4
+    Time: 0.1
     CustomCurve:
       serializedVersion: 2
       m_Curve: []
@@ -1845,8 +1845,9 @@ MonoBehaviour:
   opponent: {fileID: 1570905334}
   queuedMove: {fileID: 11400000, guid: d9df4105966ba4c9a8f3e6097b2084cc, type: 2}
   movementCharge: {fileID: 11400000, guid: 940e4bdeb4ebeffcea43fac92e368149, type: 2}
-  moveDistance: 15
-  moveDuration: 8
+  points: {fileID: 11400000, guid: be5a228e57ef993579e696f54145c48a, type: 2}
+  moveDistance: 8
+  moveDuration: 1
   _transform: {fileID: 837851623}
 --- !u!1 &872627242
 GameObject:
@@ -2045,6 +2046,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd518ce9dccb44bebedf41a751bd602d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemLootTableGiver
+  itemAnchor: {fileID: 837851623}
   lootTable: {fileID: 11400000, guid: 5266d43760ecf47e4b66c5e429d4aed4, type: 2}
   player: {fileID: 1719953073}
 --- !u!4 &932529408

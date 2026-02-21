@@ -24,7 +24,7 @@ public class TakePiece : BoardAction
         if (!ctx.TryGet(activeCoords, out BoardNode active)) return;
         
         takenPiece = new BoardPiece(active.TakePiece(charge));
-        if (doDebug) Debug.Log($"Took Piece {takenPiece} from {activeCoords}");
+        DoDebug($"Took Piece {takenPiece} from {activeCoords}");
         ctx.UpdateNodes();
     }
 

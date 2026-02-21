@@ -67,7 +67,7 @@ public class GameManager : Singleton<GameManager>
     
     async UniTaskVoid OpponentEndTurn()
     {
-        float delay = 1f;
+        float delay = .35f;
 
         await opponent.TrySpecialActions(board.Grid);
         TriggerTurnEvent(GameTurnEvent.ActorType.Player, GameTurnEvent.TurnType.End);
@@ -84,12 +84,12 @@ public class GameManager : Singleton<GameManager>
         ShiftOpponentPieces();
         TriggerTurnEvent(GameTurnEvent.ActorType.Opponent, GameTurnEvent.TurnType.ShiftEnd);
         TriggerTurnEvent(GameTurnEvent.ActorType.Board, GameTurnEvent.TurnType.End);
-        await UniTask.WaitForSeconds(delay);
         
-        points.Value += machineQueuedMoves.Value;
         if (machineQueuedMoves.Value != 0)
         {
+            await UniTask.WaitForSeconds(1f);
             await machine.Move();
+            
             if (points.Value >= pointsToWin)
             {
                 Win();
@@ -103,6 +103,7 @@ public class GameManager : Singleton<GameManager>
             }
         } 
         
+        await UniTask.WaitForSeconds(delay);
         StartPlayerTurn(); 
     }
 
@@ -112,12 +113,14 @@ public class GameManager : Singleton<GameManager>
     {
         stateText.gameObject.SetActive(true);
         stateText.text = "You won!";
+        gameStarted = false; 
     }
 
     void Lose()
     {
         stateText.gameObject.SetActive(true);
         stateText.text = "You lost!";
+        gameStarted = false; 
     }
     
     private void ShiftPlayersPieces()

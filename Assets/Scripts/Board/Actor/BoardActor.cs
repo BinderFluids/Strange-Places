@@ -17,6 +17,7 @@ public class BoardActor : MonoBehaviour, IPieceOwner
     {
         workingGrid = ctx;
         actionsAvailable = actionsPerTurn;
+        Debug.Log($"Turn started for {gameObject.name}");
         OnStartTurn();
     }
 

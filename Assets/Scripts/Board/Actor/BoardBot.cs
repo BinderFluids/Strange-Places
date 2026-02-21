@@ -31,7 +31,7 @@ public class BoardBot : BoardActor
         };
         specialActions = new BoardEvaluatorDelegate[]
         {
-            RemoveChargesIfOverFive,
+            //RemoveChargesIfOverFive,
         };
 
         RunEvaluations();
@@ -40,26 +40,28 @@ public class BoardBot : BoardActor
     //Run evaluations on board snapshot
     async UniTaskVoid RunEvaluations()
     {
-        foreach (var eval in evaluationOrder)
-        {
-            if (actionsAvailable == 0) continue;    
 
+        for (int i = 0; i < evaluationOrder.Length; i++)
+        {
+            if (actionsAvailable == 0) break;
+            
+            var eval = evaluationOrder[i];
             if (eval(workingGrid, this, player, out var targetCoords, out var action))
             {
                 Debug.Log("Executing " + eval.Method.Name);
+                
                 UseAction(targetCoords, action);
                 actionQueue.Enqueue(new ActionCoordsPair()
                 {
                     coords = targetCoords, 
                     action = action
                 });
-                RunEvaluations().Forget();
-                return;
+
+                i = -1;
             }
         }
-
+        
         await TransferToLiveGrid();
-        await UniTask.WaitForSeconds(1f);
         
         EndTurn();
     }
@@ -81,15 +83,17 @@ public class BoardBot : BoardActor
     async UniTask TransferToLiveGrid()
     {
         var liveGrid = Board.Instance;
-        
+
+        BoardAction.doDebug = true; 
         liveGrid.StartObservingAction();
         while (actionQueue.Count > 0)
         {
             var pair = actionQueue.Dequeue();
             liveGrid.Execute(pair.coords, pair.action);
-            await UniTask.WaitForSeconds(.25f); 
+            await UniTask.WaitForSeconds(.35f); 
         }
         liveGrid.StopObservingAction();
+        BoardAction.doDebug = false; 
     }
 
 
@@ -145,7 +149,7 @@ public class BoardBot : BoardActor
 
         //target coords is the bot's first rank in line with the target column
         targetCoords = new Vector2Int(targetColumn, ctx.Height - 1);
-        action = new GivePiece(new BoardPiece(activeOwner));
+        action = new GivePiece(new BoardPiece(activeOwner, 1));
         
         return foundTarget;
     }
@@ -171,7 +175,7 @@ public class BoardBot : BoardActor
         
         if (!foundTarget) return false;
 
-        action = new GivePiece(new BoardPiece(activeOwner));
+        action = new GivePiece(new BoardPiece(activeOwner, 1));
         targetCoords = new Vector2Int(openRanks.Random(), ctx.Height - 1);
         return true;
     }
@@ -198,7 +202,7 @@ public class BoardBot : BoardActor
                 foundTarget = true;
                 targetCoords = new Vector2Int(column, ctx.Height - 1);
                 currentLargetAdvantage = charge;
-                action = new GivePiece(new BoardPiece(activeOwner));
+                action = new GivePiece(new BoardPiece(activeOwner, 1));
             }
         }
 
@@ -210,7 +214,7 @@ public class BoardBot : BoardActor
         out Vector2Int targetCoords, out IGridAction<BoardNode> action)
     {
         targetCoords = new Vector2Int(Random.Range(0, ctx.Width - 1), ctx.Height - 1);
-        action = new GivePiece(new BoardPiece(activeOwner));
+        action = new GivePiece(new BoardPiece(activeOwner, 1));
         
         return true;
     }

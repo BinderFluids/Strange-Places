@@ -4,6 +4,7 @@ using UnityUtils;
 
 public class ItemLootTableGiver : Singleton<ItemLootTableGiver>, ISecondaryAction
 {
+    [SerializeField] private Transform itemAnchor; 
     [SerializeField] private ItemLootTableData lootTable;
     [SerializeField] private BoardPlayer player;
     private Stack<BoardItem> givenItemsStack = new(); 
@@ -15,7 +16,7 @@ public class ItemLootTableGiver : Singleton<ItemLootTableGiver>, ISecondaryActio
 
     public void Execute()
     {
-        BoardItem newItem = Instantiate(GetRandomItem());
+        BoardItem newItem = Instantiate(GetRandomItem(), itemAnchor); 
         newItem.gameObject.SetActive(false); 
         
         player.AddItem(newItem);    

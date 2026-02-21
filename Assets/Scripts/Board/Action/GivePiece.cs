@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class GivePiece : BoardAction
 {
-    private bool doDebug = false; 
     private Vector2Int activeCoords;
     private BoardPiece incomingPiece;
     private Grid<BoardNode> ctx;
@@ -21,16 +20,18 @@ public class GivePiece : BoardAction
         this.activeCoords = activeCoords;
         if (!ctx.TryGet(activeCoords, out BoardNode active)) return;
         
+        BoardPiece pieceToAdd = new BoardPiece(incomingPiece.Owner, incomingPiece.Charge);
+        
         if (active.IsOccupied())
             foreach (BoardPieceAttribute attribute in incomingPiece.Attributes)
             {
                 var newAddAttributeAction = CreateAddAttributeAction(attribute);
                 newAddAttributeAction.Execute(activeCoords, ctx);
             }
-        active.AddPiece(incomingPiece);
+        active.AddPiece(pieceToAdd);
         active.OnBoardEnter();
         ctx.UpdateNodes();
-        if (doDebug) Debug.Log($"Gave Piece {incomingPiece} to {activeCoords}");
+        DoDebug($"Gave Piece {incomingPiece} to {activeCoords}");
     }
 
     protected override void OnUndo()

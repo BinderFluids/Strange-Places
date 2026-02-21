@@ -14,6 +14,7 @@ public class MachineBehavior : MonoBehaviour
     [SerializeField] private BoardActor opponent;
     [SerializeField] private IntVariable queuedMove;
     [SerializeField] private IntVariable movementCharge;
+    [SerializeField] private IntVariable points; 
     [SerializeField] private float moveDistance;
     [SerializeField] private float moveDuration;
 
@@ -38,6 +39,7 @@ public class MachineBehavior : MonoBehaviour
         machineMovingBackwardCamera.SetActive(moveDir == -1);
         machineMoveCameraContainer.SetActive(true); 
         
+        Debug.Log($"Moving {queuedMove.Value} steps in direction {moveDir}, with charge {movementCharge.Value}.");
         for (int i = 0; i < Mathf.Abs(queuedMove.Value); i++)
         {
             float moveVector = moveDistance * movementCharge.Value * moveDir;
@@ -47,6 +49,8 @@ public class MachineBehavior : MonoBehaviour
             
             await movementTween;
             await UniTask.WaitForSeconds(1f);
+
+            points.Value += movementCharge.Value; 
         }
         
         playerCamContainer.SetActive(true); 

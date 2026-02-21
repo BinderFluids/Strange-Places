@@ -3,6 +3,7 @@ using UnityEngine;
 
 public abstract class BoardAction : IGridAction<BoardNode>
 {
+    public static bool doDebug; 
     private Vector2Int activeCoords; 
     public Vector2Int ActiveCoords => activeCoords;
     private Stack<ISecondaryAction> secondaryActions = new();
@@ -16,6 +17,12 @@ public abstract class BoardAction : IGridAction<BoardNode>
         OnUndo();
         while (secondaryActions.Count > 0)
             secondaryActions.Pop().Undo();
+    }
+
+    protected void DoDebug(string message)
+    {
+        if 
+            (doDebug)Debug.Log($"[{GetType().Name}] {message}");
     }
     protected abstract void OnUndo(); 
 }
