@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks.Triggers;
 using ScriptableVariables;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public class Board : MonoBehaviour
