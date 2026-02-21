@@ -125,7 +125,8 @@ public class Board : MonoBehaviour
                 }
                 
                 grid.Set(x, y, newNode);
-                nodeBehavior.Init(newNode); 
+                nodeBehavior.Init(newNode);
+                nodeBehavior.Drawer.Init(newNode); 
 #if UNITY_EDITOR
                 BoardNodeDebugDisplay debugDisplay = nodeBehavior.gameObject.GetComponent<BoardNodeDebugDisplay>();
                 debugDisplay.InitGizmos(colors[colorIndex % 2], gridCellSize);

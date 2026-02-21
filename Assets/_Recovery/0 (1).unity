@@ -2473,6 +2473,37 @@ MonoBehaviour:
   actionsPerTurn: 2
   items: []
   player: {fileID: 1719953073}
+--- !u!1 &1585795324
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1585795325}
+  m_Layer: 0
+  m_Name: --- Start Menu ---
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1585795325
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1585795324}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 27.49879, y: 9.26981, z: -33.37519}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1604024001
 GameObject:
   m_ObjectHideFlags: 0
@@ -3232,7 +3263,7 @@ MonoBehaviour:
   player: {fileID: 1719953073}
   opponent: {fileID: 1570905334}
   points: {fileID: 11400000, guid: be5a228e57ef993579e696f54145c48a, type: 2}
-  pointsToLose: -4
+  pointsToLose: -5
   pointsToWin: 5
 --- !u!4 &1865245333
 Transform:
@@ -3803,3 +3834,4 @@ SceneRoots:
   - {fileID: 763614108}
   - {fileID: 1499095587}
   - {fileID: 1857102808}
+  - {fileID: 1585795325}

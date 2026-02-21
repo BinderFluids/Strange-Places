@@ -10,10 +10,10 @@ public class BoardNode : IGridNode
     protected BoardPiece piece;
     public BoardPiece Piece => piece;
 
-    private Grid<BoardNode> grid;
+    protected Grid<BoardNode> grid;
     public Vector2Int Coords => grid.Find(this); 
     private EventBinding<SelectBoardNodeEvent> selectBinding;
-    public event Action<BoardPiece> onPieceUpdate =  delegate { };
+    public event Action onNodeUpdate =  delegate { };
     
     public BoardNode(Grid<BoardNode> grid, BoardPiece piece = null)
     {
@@ -23,10 +23,15 @@ public class BoardNode : IGridNode
     
     public void Update()
     {
-        onPieceUpdate?.Invoke(piece);
+        onNodeUpdate?.Invoke();
     }
 
     public IGridNode Copy()
+    {
+        return new BoardNode(grid, piece);
+    }
+
+    public BoardNode CopyBoardNode()
     {
         return new BoardNode(grid, piece);
     }
@@ -60,4 +65,17 @@ public class BoardNode : IGridNode
     }
 
     public virtual void OnBoardEnter() { }
+
+    // public override bool Equals(object obj)
+    // {
+    //     if (obj is not BoardNode otherNode) return false;
+    //     
+    //     bool sameCoords = Coords == otherNode.Coords;
+    //     bool samePiece = otherNode.Piece == piece;
+    //     return sameCoords && samePiece;
+    // }
+    // public override int GetHashCode()
+            //    // {
+            //    //     return HashCode.Combine(Coords, Piece);
+            //    // }
 }

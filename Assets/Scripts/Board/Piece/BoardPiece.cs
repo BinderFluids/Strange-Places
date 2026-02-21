@@ -13,17 +13,7 @@ public class BoardPiece
     [SerializeField] private IPieceOwner owner;
     public IPieceOwner Owner => owner;
     private int charge;
-    public int Charge
-    {
-        get
-        {
-            return charge;
-        }
-        private set
-        {
-            charge = value;
-        }
-    }
+    public int Charge => charge;
 
     void DoDebug(object message)
     {
@@ -38,7 +28,7 @@ public class BoardPiece
     public BoardPiece(IPieceOwner owner, int charge = 1, HashSet<BoardPieceAttribute> attributes = null)
     {
         this.owner = owner;
-        Charge = charge;
+        this.charge = charge;
         this.attributes = attributes ?? new HashSet<BoardPieceAttribute>();
         resolverType = ResolverType.None;
         DoDebug($"Created Piece {this}");
@@ -47,7 +37,7 @@ public class BoardPiece
     public BoardPiece(BoardPiece other)
     {
         owner = other.Owner;
-        Charge = other.Charge;
+        this.charge = other.Charge;
         attributes = new HashSet<BoardPieceAttribute>(other.Attributes);
         resolverType = other.ResolverType;
     }
@@ -102,11 +92,11 @@ public class BoardPiece
         if (amt == 0 || amt == charge || amt > charge)
         {
             BoardPiece returnPiece = new BoardPiece(this);
-            Charge = 0; 
+            charge = 0; 
             return returnPiece;
         }
         
-        Charge -= amt; 
+        charge -= amt; 
         return new BoardPiece(owner, amt, attributes);
     }
 
@@ -116,6 +106,35 @@ public class BoardPiece
         string resolverTypeString = resolverType == ResolverType.None ? "" : $"({resolverType})";
         return $"{playerCharge} Resolver Type: {resolverTypeString} {string.Join(", ", attributes.Select(a => a.ToString()))}";
     }
+
+    public override bool Equals(object obj)
+    {
+        if (obj is BoardPiece other)
+        {
+            bool sameCharge = other.Charge == charge;
+            bool sameOwner = other.Owner == owner;
+            
+            //check if attributes are of the same type
+            bool sameAttributes = true;
+            if (attributes.Count != other.Attributes.Count) sameAttributes = false;
+            else
+            {
+                for (int i = 0; i < attributes.Count; i++)
+                {
+                    BoardPieceAttribute thisAttribute = attributes.ElementAt(i);
+                    if (!other.Attributes
+                            .Select(a => a.GetType())
+                            .Contains(thisAttribute.GetType()))
+                        sameAttributes = false; 
+                }
+            }
+            
+            return sameCharge && sameOwner && sameAttributes;
+        }
+
+        return false;
+    }
+    public override int GetHashCode() => HashCode.Combine(owner, charge, attributes);
 }
 
 

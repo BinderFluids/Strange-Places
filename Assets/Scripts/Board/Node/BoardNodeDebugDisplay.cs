@@ -5,18 +5,26 @@ using UnityEngine;
 
 public class BoardNodeDebugDisplay : MonoBehaviour
 {
+    private bool enabled = false; 
     [SerializeField] private BoardNodeMonobehavior nodeMonobehavior;
     [SerializeField] private TMP_Text coordText;
     [SerializeField] private TMP_Text chargeText;
 
     public void Init()
     {
-        nodeMonobehavior.Node.onPieceUpdate += OnPieceUpdate;
+        if (!enabled)
+        {
+            coordText.text = string.Empty;
+            chargeText.text = string.Empty;
+            return; 
+        }
+        nodeMonobehavior.Node.onNodeUpdate += OnNodeUpdate;
         coordText.text = nodeMonobehavior.Node.Coords.ToString();
     }
 
-    void OnPieceUpdate(BoardPiece piece)
+    void OnNodeUpdate()
     {
+        BoardPiece piece = nodeMonobehavior.Node.Piece;
         chargeText.text = piece == null ? "Empty" : piece.Charge.ToString();
 
         if (nodeMonobehavior.Node is GiveItemBoardNode)
@@ -59,7 +67,7 @@ public class BoardNodeDebugDisplay : MonoBehaviour
 
     private void OnDestroy()
     {
-        nodeMonobehavior.Node.onPieceUpdate -= OnPieceUpdate;
+        nodeMonobehavior.Node.onNodeUpdate -= OnNodeUpdate;
     }
     
     #region GIZMOS  

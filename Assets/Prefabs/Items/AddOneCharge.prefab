@@ -59,7 +59,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3188836831549565015, guid: f93c67ae254e0e385ba077973adcf92a, type: 3}
       propertyPath: m_text
-      value: +1 to all Chrages
+      value: +1 to all Charges
       objectReference: {fileID: 0}
     - target: {fileID: 3306440863099361094, guid: f93c67ae254e0e385ba077973adcf92a, type: 3}
       propertyPath: m_LocalRotation.w

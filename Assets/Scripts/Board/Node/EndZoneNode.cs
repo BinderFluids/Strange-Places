@@ -39,7 +39,10 @@ public class EndZoneNode : BoardNode
         if (e.actorType == targetType && e.turnType == GameTurnEvent.TurnType.ShiftEnd)
             if (IsOccupied())
                 if (piece.Owner == targetOwner)
+                {
                     TakePiece();
+                    grid.UpdateNodes();
+                }
     }
 
     public override void OnBoardEnter()
