@@ -1,9 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
-using EventBus;
 using PrimeTween;
 using ScriptableVariables;
-using UnityEditor.Callbacks;
 using UnityEngine;
 
 public class MachineBehavior : MonoBehaviour

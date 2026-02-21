@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using EventBus;
 using ScriptableVariables;
+using TMPro;
 using UnityUtils;
 
 public class GameManager : Singleton<GameManager>
@@ -101,14 +102,18 @@ public class GameManager : Singleton<GameManager>
         StartPlayerTurn(); 
     }
 
+
+    [SerializeField] private TMP_Text stateText;
     void Win()
     {
-        Debug.Log("You won!");
+        stateText.gameObject.SetActive(true);
+        stateText.text = "You won!";
     }
 
     void Lose()
     {
-        Debug.Log("You lost!");
+        stateText.gameObject.SetActive(true);
+        stateText.text = "You lost!";
     }
     
     private void ShiftPlayersPieces()

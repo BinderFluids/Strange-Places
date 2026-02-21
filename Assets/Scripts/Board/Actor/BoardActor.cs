@@ -1,9 +1,5 @@
-
 using System;
 using System.Collections.Generic;
-using ScriptableVariables;
-using Unity.VisualScripting;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public class BoardActor : MonoBehaviour, IPieceOwner
