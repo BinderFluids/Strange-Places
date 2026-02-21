@@ -9,7 +9,6 @@ public class MachineBehavior : MonoBehaviour
 {
     [SerializeField] private BoardActor actor; 
     [SerializeField] private BoardActor opponent; 
-    [SerializeField] private IntVariable points; 
     [SerializeField] private IntVariable movementCharge;
     [SerializeField] private float moveDistance;
     [SerializeField] private float moveDuration;
@@ -38,8 +37,7 @@ public class MachineBehavior : MonoBehaviour
         if (actor == (BoardActor)piece.Owner) moveDir = 1;
         if (opponent == (BoardActor)piece.Owner) moveDir = -1;
             
-        float moveVector = moveDistance * moveDir;
-        points.Value += movementCharge.Value * moveDir; 
+        float moveVector = moveDistance * moveDir * movementCharge.Value;
         
         movementTween = Tween
             .PositionX(_transform, _transform.position.x + moveVector, moveDuration)

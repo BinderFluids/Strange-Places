@@ -24,7 +24,7 @@ public class BoardModifier
             Debug.Log(activeNode.Node.Piece);
     }
     
-    public void Update(BoardActor actor)
+    public void Update(BoardPlayer actor)
     {
         if (activeNode == null) return;
         
@@ -35,15 +35,12 @@ public class BoardModifier
         bool inReach = false;
         if (actor.Reach > 0)
             inReach = activeNode.Node.Coords.y < actor.Reach; 
-        // if (boardPlayer.Reach < 0)
-        //     inReach = activeNode.Node.Coords.y > 
 
         
         if (Input.GetKeyDown(KeyCode.A))
         {
             if (grid.TryGet(activeCoords.x - 1, activeCoords.y, out BoardNode leftNode))
             {
-                bool onItemNode = activeCoords.x == 0 && activeCoords.y == 2;
                 if (leftNode is not NullBoardNode)
                     actor.UseAction(activeCoords, new TranslatePiece<Neutralize>(Vector2Int.left, 1));
             }
@@ -52,8 +49,6 @@ public class BoardModifier
         {
             if (grid.TryGet(activeCoords.x + 1, activeCoords.y, out BoardNode leftNode))
             {
-                
-                //TODO: CHECK IF ROW IS 3 AND GIVE ITEM
                 if (leftNode is not NullBoardNode)
                     actor.UseAction(activeCoords, new TranslatePiece<Neutralize>(Vector2Int.right, 1));
             }

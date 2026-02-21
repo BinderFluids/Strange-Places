@@ -15,13 +15,18 @@ public class ItemLootTableGiver : Singleton<ItemLootTableGiver>, ISecondaryActio
 
     public void Execute()
     {
-        var newItem = GetRandomItem(); 
+        BoardItem newItem = Instantiate(GetRandomItem());
+        newItem.gameObject.SetActive(false); 
+        
         player.AddItem(newItem);    
         givenItemsStack.Push(newItem);
     }
 
     public void Undo()
     {
-        player.RemoveItem(givenItemsStack.Pop());
+        if (givenItemsStack.Count == 0) return;
+        BoardItem item = givenItemsStack.Pop();
+        player.RemoveItem(item);
+        Destroy(item.gameObject);
     }
 }

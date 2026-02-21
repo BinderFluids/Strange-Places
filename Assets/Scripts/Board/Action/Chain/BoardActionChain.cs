@@ -14,7 +14,6 @@ public abstract class BoardActionChain : BoardAction
         ctx.StartObservingAction();
     }
 
-    public abstract void Execute(Vector2Int activeCoords, Grid<BoardNode> ctx);
     protected override void OnUndo()
     {
         while (actions.Count > 0) actions.Pop().Undo();

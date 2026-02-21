@@ -1,17 +1,15 @@
 
 using System;
 using System.Collections.Generic;
+using ScriptableVariables;
 using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
 
 public class BoardActor : MonoBehaviour, IPieceOwner
 {
-    [SerializeField, Range(-5, 5)] private int reach;
-    public int Reach => reach;
-    
     [SerializeField] protected int actionsPerTurn = 2;
-    [SerializeField] protected int actionsAvailable = 2;
+    protected int actionsAvailable = 2;
     
     [SerializeField] private List<BoardItem> items = new();
     public List<BoardItem> Items => items;

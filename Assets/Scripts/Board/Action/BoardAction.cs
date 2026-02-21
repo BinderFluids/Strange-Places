@@ -5,14 +5,9 @@ public abstract class BoardAction : IGridAction<BoardNode>
 {
     private Vector2Int activeCoords; 
     public Vector2Int ActiveCoords => activeCoords;
-    private Stack<ISecondaryAction> secondaryActions; 
-    
-    public void Execute(Vector2Int activeCoords, Grid<BoardNode> ctx)
-    {
-        this.activeCoords = activeCoords;
-        if (!ctx.TryGet(activeCoords, out _)) return;
-        Execute(activeCoords, ctx);
-    }
+    private Stack<ISecondaryAction> secondaryActions = new();
+
+    public abstract void Execute(Vector2Int activeCoords, Grid<BoardNode> ctx);
 
     public void AddSecondaryAction(ISecondaryAction action) => secondaryActions.Push(action);
     

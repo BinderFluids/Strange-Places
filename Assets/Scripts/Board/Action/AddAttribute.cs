@@ -13,7 +13,7 @@ public class AddAttribute : BoardAction
         this.attributeType = attributeType ?? throw new ArgumentNullException(nameof(attributeType));
     }
     
-    public void Execute(Vector2Int activeCoords, Grid<BoardNode> ctx)
+    public override void Execute(Vector2Int activeCoords, Grid<BoardNode> ctx)
     {
         if (!ctx.TryGet(activeCoords, out BoardNode active)) return;
         

@@ -17,7 +17,7 @@ public class TakePiece : BoardAction
         this.charge = charge;
     }
     
-    public void Execute(Vector2Int activeCoords, Grid<BoardNode> ctx)
+    public override void Execute(Vector2Int activeCoords, Grid<BoardNode> ctx)
     {
         this.ctx = ctx;
         this.activeCoords = activeCoords;

@@ -61,13 +61,3 @@ public class BoardNode : IGridNode
 
     public virtual void OnBoardEnter() { }
 }
-
-public class GiveItemBoardNode : BoardNode
-{
-    public GiveItemBoardNode(Grid<BoardNode> grid, BoardPiece piece = null) : base(grid, piece) { }
-    
-    public void OnBoardEnter()
-    {
-        Board.Instance.AddSecondaryAction(ItemLootTableGiver.Instance);
-    }
-}

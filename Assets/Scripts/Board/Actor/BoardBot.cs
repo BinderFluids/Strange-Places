@@ -78,8 +78,11 @@ public class BoardBot : BoardActor
     Dictionary<int, int> GetTotalCharge(Grid<BoardNode> ctx, IPieceOwner activeOwner, IPieceOwner otherOwner,
         bool neutralize = true)
     {
-        Dictionary<int, int> totalColumnCharge = new(); 
-        for (int i = 0; i < ctx.Width; i++) totalColumnCharge.Add(i, 0);
+        Dictionary<int, int> totalColumnCharge = new();
+        
+        //Ignore null edges
+        for (int i = 1; i < ctx.Width - 1; i++)
+            totalColumnCharge.Add(i, 0);
         
         //tally up charges
         for (int y = 0; y < ctx.Height; y++)
@@ -87,6 +90,8 @@ public class BoardBot : BoardActor
         {
             if (ctx.TryGet(x, y, out BoardNode node))
             {
+                if (!totalColumnCharge.ContainsKey(x)) continue;
+                if (node is NullBoardNode || node is GiveItemBoardNode) continue; 
                 if (!node.IsOccupied()) continue;
                 
                 if (node.Piece.Owner == activeOwner) totalColumnCharge[x] += node.Piece.Charge;
@@ -168,11 +173,13 @@ public class BoardBot : BoardActor
             int charge = kvp.Value;
 
             if (charge <= 0) continue;
+            if (column == 0 || column == workingGrid.Width - 1) continue; 
             if (charge > currentLargetAdvantage)
             {
                 foundTarget = true;
                 targetCoords = new Vector2Int(column, ctx.Height - 1);
                 currentLargetAdvantage = charge;
+                action = new GivePiece(new BoardPiece(activeOwner));
             }
         }
 

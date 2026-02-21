@@ -34,15 +34,19 @@ public class GameManager : MonoBehaviour
         gridSnapshot = board.Grid.Copy(); 
         
         player.onTurnEnd += PlayerEndTurn;
-        player.StartTurn(board.Grid); 
+        
+        player.StartTurn(board.Grid);
+        TriggerTurnEvent(GameTurnEvent.ActorType.Player, GameTurnEvent.TurnType.Start);
     }
     void PlayerEndTurn()
     {
+        TriggerTurnEvent(GameTurnEvent.ActorType.Player, GameTurnEvent.TurnType.End);
         player.onTurnEnd -= PlayerEndTurn;
         StartOpponentTurn();
     }
     void StartOpponentTurn()
     {
+        TriggerTurnEvent(GameTurnEvent.ActorType.Opponent, GameTurnEvent.TurnType.Start);
         opponent.onTurnEnd += TriggerEndOpponentTurn;
         opponent.StartTurn(gridSnapshot);
     }
@@ -51,6 +55,7 @@ public class GameManager : MonoBehaviour
     async UniTaskVoid OpponentEndTurn()
     {
         float delay = 3f; 
+        TriggerTurnEvent(GameTurnEvent.ActorType.Player, GameTurnEvent.TurnType.End);
         opponent.onTurnEnd -= TriggerEndOpponentTurn;
         
         ShiftPlayersPieces();
@@ -97,4 +102,20 @@ public class GameManager : MonoBehaviour
     {
         machine.onMoveComplete -= OnMachineMoveComplete;
     }
+
+    private void TriggerTurnEvent(GameTurnEvent.ActorType actorType, GameTurnEvent.TurnType turnType) =>
+        EventBus<GameTurnEvent>.Raise(new GameTurnEvent()
+        {
+            actorType = actorType,
+            turnType = turnType
+        });
+}
+
+
+public struct GameTurnEvent : IEvent
+{
+    public enum TurnType { Start, End, Shift }
+    public enum ActorType { Player, Opponent }
+    public ActorType actorType;
+    public TurnType turnType;
 }

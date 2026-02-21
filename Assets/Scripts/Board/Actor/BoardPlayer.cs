@@ -1,6 +1,7 @@
 using System.Linq;
 using Cysharp.Threading.Tasks.Triggers;
 using EventBus;
+using ScriptableVariables;
 using UnityEngine;
 
 
@@ -13,6 +14,10 @@ public class BoardPlayer : BoardActor
         Board
     }
 
+    [SerializeField] private int defaultReach = 2; 
+    [SerializeField] private IntVariable reach;
+    public int Reach => reach.Value;
+    
     private Phase phase = Phase.None; 
     [SerializeField] private GameObject overHeadCam;
     [SerializeField] private GameObject firstPersonCam;
@@ -31,6 +36,7 @@ public class BoardPlayer : BoardActor
 
     protected override void OnStartTurn()
     {
+        reach.Value = defaultReach; 
         if (Items.Count > 0)
             StartItemPlay();
         else

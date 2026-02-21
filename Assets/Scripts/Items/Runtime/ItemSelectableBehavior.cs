@@ -6,6 +6,7 @@ using PrimeTween;
 
 public class ItemSelectableBehavior : SelectionBehavior
 {
+    [SerializeField] private Transform lookTarget;
     [SerializeField] private float tweenDuration; 
     [SerializeField] private SplineContainer splineContainer; 
     private List<BoardItem> activeItems = new();
@@ -35,13 +36,16 @@ public class ItemSelectableBehavior : SelectionBehavior
             thisItem.gameObject.SetActive(true);
             
             Vector3 worldPosition = splineContainer.EvaluatePosition(step * i);
+            Quaternion lookRotation = Quaternion.LookRotation(lookTarget.position - worldPosition);
             if (thisItem == selectedItem) worldPosition += Vector3.up * 0.1f; 
             if (!wasActive)
             {
+                thisItem.transform.rotation = lookRotation;
                 thisItem.transform.position = worldPosition;
                 continue; 
             }
             
+            Tween.Rotation(thisItem.transform, lookRotation, tweenDuration);
             if (thisItem.transform.position != worldPosition)
                 Tween.Position(thisItem.transform, worldPosition, tweenDuration); 
         }

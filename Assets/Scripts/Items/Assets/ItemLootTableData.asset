@@ -13,13 +13,9 @@ MonoBehaviour:
   m_Name: ItemLootTableData
   m_EditorClassIdentifier: Assembly-CSharp::ItemLootTableData
   lootTable:
-  - item: {fileID: 0}
+  - item: {fileID: 7585239844593404681, guid: ad361d26338f44438bff7dea657d4f98, type: 3}
     weight: 0
-  - item: {fileID: 0}
+  - item: {fileID: 5250413132192450935, guid: 6ee966878df4def07a3d11f43f068c3b, type: 3}
     weight: 0
-  - item: {fileID: 0}
-    weight: 0
-  - item: {fileID: 0}
-    weight: 0
-  - item: {fileID: 0}
+  - item: {fileID: 2974670287391853193, guid: 269a6d7ea8689211b957a87f1a61daa3, type: 3}
     weight: 0

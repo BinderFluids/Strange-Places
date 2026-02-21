@@ -15,7 +15,7 @@ public class GivePiece : BoardAction
         this.incomingPiece = incomingPiece;
     }
 
-    public void Execute(Vector2Int activeCoords, Grid<BoardNode> ctx)
+    public override void Execute(Vector2Int activeCoords, Grid<BoardNode> ctx)
     {
         this.ctx = ctx;
         this.activeCoords = activeCoords;

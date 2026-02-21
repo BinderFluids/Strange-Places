@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57d1db20313495f448d837817ff3a36b, type: 3}
   m_Name: PlayerReach
   m_EditorClassIdentifier: ScriptableVariables::ScriptableVariables.IntVariable
-  initialValue: 0
-  value: 0
+  initialValue: 2
+  value: 2
