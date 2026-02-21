@@ -142,6 +142,7 @@ public class Board : MonoBehaviour
 
             if (gridWidth % 2 == 0) colorIndex++; 
         }
+        grid.UpdateNodes();
     }
 
     public void AddSecondaryAction(ISecondaryAction action)

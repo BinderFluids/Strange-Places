@@ -142,7 +142,7 @@ public class Grid<T> where T : IGridNode
         StartObservingAction();
     }
 
-    void UpdateNodes()
+    public void UpdateNodes()
     {
         ForEach(node => node.Update());
     }

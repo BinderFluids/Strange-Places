@@ -19,6 +19,14 @@ public class BoardNodeDebugDisplay : MonoBehaviour
     {
         chargeText.text = piece == null ? "Empty" : piece.Charge.ToString();
 
+        if (nodeMonobehavior.Node is GiveItemBoardNode)
+        {
+            SetColor(Color.darkGreen);
+            coordText.text = "Item!";
+            chargeText.text = string.Empty;
+            return; 
+        }
+        
         if (piece == null)
         {
             SetColor(Color.black);
@@ -28,15 +36,7 @@ public class BoardNodeDebugDisplay : MonoBehaviour
         if (nodeMonobehavior.Node is NullBoardNode)
         {
             SetColor(Color.black);
-            coordText.text = "Null";
-            chargeText.text = string.Empty;
-            return; 
-        }
-
-        if (nodeMonobehavior.Node is GiveItemBoardNode)
-        {
-            SetColor(Color.darkGreen);
-            coordText.text = "Item!";
+            coordText.text = "BLOCKED";
             chargeText.text = string.Empty;
             return; 
         }
