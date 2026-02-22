@@ -41,10 +41,20 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject gameCameras;
     [SerializeField] private GameObject title;
     [SerializeField] private AudioSource introMusic;
-    [SerializeField] private AudioSource gameMusic; 
+    [SerializeField] private AudioSource gameMusic;
+
+    private float timeSinceStart = 0; 
     private void Update()
     {
-        if (Input.anyKeyDown && !gameStarted) StartGame();
+        timeSinceStart += Time.deltaTime;
+        if (Input.anyKeyDown && !gameStarted && timeSinceStart > 13) StartGame();
+    }
+
+    private void Start()
+    {
+        #if UNITY_EDITOR
+        StartGame();
+        #endif
     }
 
     public async void StartGame()

@@ -31,6 +31,10 @@ public class BoardPlayer : BoardActor
     
     [SerializeField] private ItemSelectableBehavior itemSelectableBehavior;
     EventBinding<SelectableChosenEvent> selectBinding;
+
+    [SerializeField] private GameObject itemPanel;
+    [SerializeField] private GameObject progressTurnPanel;
+    
     private void Awake()
     {
         boardModifier = new BoardModifier(); 
@@ -79,8 +83,11 @@ public class BoardPlayer : BoardActor
             itemSelectableBehavior
         );
     }
+
+    private int actionsStartedWith; 
     void StartBoardModification()
     {
+        actionsStartedWith = actionsAvailable;
         workingGrid.ClearActionStack();
         phase = Phase.Board;
         foreach(var item in Items) item.gameObject.SetActive(true);
@@ -134,7 +141,8 @@ public class BoardPlayer : BoardActor
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
-            SelectionManager.Instance.BlockSelection(true); 
+            SelectionManager.Instance.BlockSelection(true);
+            itemPanel.SetActive(false); 
             overHeadCam.SetActive(true);
             firstPersonCam.SetActive(false);
         }
@@ -143,24 +151,32 @@ public class BoardPlayer : BoardActor
 
         if (!Input.GetKey(KeyCode.W))
         {
+            itemPanel.SetActive(true); 
             SelectionManager.Instance.BlockSelection(false); 
             overHeadCam.SetActive(false);
             firstPersonCam.SetActive(true);
         }
     }
-    
+
+    [SerializeField] private GameObject undoButton; 
     void BoardPhaseUpdate()
     {
         boardNodeSelector.UpdateSelect(this);
         boardModifier.Update(this);
+        undoButton.SetActive(actionsAvailable < actionsStartedWith);
+        progressTurnPanel.SetActive(actionsAvailable == 0);
         
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (actionsAvailable > 0) return;
+            undoButton.SetActive(false); 
             EndTurn();
         }
+    }
 
-        if (Input.GetKeyDown(KeyCode.Z)) Undo();
+    public void ButtonUndo()
+    {
+        if (phase == Phase.Board) Undo(); 
     }
 
     private void OnDestroy()
@@ -168,3 +184,5 @@ public class BoardPlayer : BoardActor
         reach.OnValueChanged -= OnReachValueChanged;
     }
 }
+
+public struct PlayerUndoButtonEvent : IEvent { }

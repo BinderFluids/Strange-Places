@@ -17,10 +17,6 @@ public class BoardNodeSelector : MonoBehaviour
     
     public void UpdateSelect(BoardActor actor)
     {
-        if (!GameManager.Instance.GameStarted) return;
-        if (cam == null) return;
-
-    
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         BoardNodeMonobehavior selectedNode = null;
         
