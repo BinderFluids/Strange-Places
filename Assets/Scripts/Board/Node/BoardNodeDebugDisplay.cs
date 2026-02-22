@@ -25,7 +25,7 @@ public class BoardNodeDebugDisplay : MonoBehaviour
     void OnNodeUpdate()
     {
         BoardPiece piece = nodeMonobehavior.Node.Piece;
-        chargeText.text = piece == null ? "Empty" : piece.Charge.ToString();
+        chargeText.text = piece == null ? "string" : piece.Charge.ToString();
 
         if (nodeMonobehavior.Node is GiveItemBoardNode)
         {

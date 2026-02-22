@@ -132,8 +132,21 @@ public class BoardPlayer : BoardActor
     
     void ItemPhaseUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            SelectionManager.Instance.BlockSelection(true); 
+            overHeadCam.SetActive(true);
+            firstPersonCam.SetActive(false);
+        }
+        else if (Input.GetKeyDown(KeyCode.E))
             EndItemPhase();
+
+        if (!Input.GetKey(KeyCode.W))
+        {
+            SelectionManager.Instance.BlockSelection(false); 
+            overHeadCam.SetActive(false);
+            firstPersonCam.SetActive(true);
+        }
     }
     
     void BoardPhaseUpdate()

@@ -5,6 +5,8 @@ using UnityEngine;
 using EventBus;
 using ScriptableVariables;
 using TMPro;
+using Unity.Cinemachine;
+using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 using UnityUtils;
 
@@ -13,6 +15,9 @@ public class GameManager : Singleton<GameManager>
     private bool gameStarted;
     public bool GameStarted => gameStarted;
 
+    [SerializeField] private CinemachineBrain cinemachineBrain;
+    [SerializeField] private EndGame endgame; 
+    
     [SerializeField] private IntVariable machineQueuedMoves;
     [SerializeField] private MachineBehavior machine;
     [SerializeField] private Board board;
@@ -23,7 +28,8 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private IntVariable points;
     [SerializeField, Range(-maxLoseCount, -1)] private int pointsToLose;
     [SerializeField, Range(1, maxLoseCount)] private int pointsToWin;
-
+    
+    
     private void Awake()
     {
         points.Value = 0; 
@@ -33,21 +39,14 @@ public class GameManager : Singleton<GameManager>
 
     public async void StartGame()
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(5));
+        await UniTask.Delay(TimeSpan.FromSeconds(4f));
         
         if (gameStarted) return;
         gameStarted = true;
         
         StartPlayerTurn();
     }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R) && !gameStarted)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
-    }
+    
 
     private Grid<BoardNode> gridSnapshot; 
     void StartPlayerTurn()
@@ -104,35 +103,19 @@ public class GameManager : Singleton<GameManager>
             
             if (points.Value >= pointsToWin)
             {
-                Win();
+                endgame.GameWon();;
                 return;
             }
 
             if (points.Value <= pointsToLose)
             {
-                Lose();
+                endgame.GameLost();
                 return;
             }
         } 
         
         await UniTask.WaitForSeconds(delay);
         StartPlayerTurn(); 
-    }
-
-
-    [SerializeField] private TMP_Text stateText;
-    void Win()
-    {
-        stateText.gameObject.SetActive(true);
-        stateText.text = "You won!";
-        gameStarted = false; 
-    }
-
-    void Lose()
-    {
-        stateText.gameObject.SetActive(true);
-        stateText.text = "You lost!";
-        gameStarted = false; 
     }
     
     private void ShiftPlayersPieces()

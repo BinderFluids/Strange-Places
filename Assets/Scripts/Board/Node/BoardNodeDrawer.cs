@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using EventBus;
 using PrimeTween;
+using TMPro;
 using UnityEngine;
 
 public class BoardNodeDrawer : MonoBehaviour
@@ -16,7 +17,8 @@ public class BoardNodeDrawer : MonoBehaviour
     [SerializeField] private Color neutralizedColor = Color.yellow;
     [SerializeField] private Color highlightedColor = Color.blue;
     [SerializeField] private Color dullColor = Color.yellow;
-    [SerializeField] private Renderer[] highlighters; 
+    [SerializeField] private Renderer[] highlighters;
+    [SerializeField] private TMP_Text chargeText;
     
     private BoardNode previousNodeState;
     private BoardNode node;
@@ -33,6 +35,8 @@ public class BoardNodeDrawer : MonoBehaviour
 
     void OnSelectBoardNodeEvent(SelectBoardNodeEvent e)
     {
+        if (e.type != SelectBoardNodeEvent.Type.Select) return;
+        
         if (e.selectedNode.Node != node) 
             foreach (var highlighter in highlighters) highlighter.material.color = dullColor;
         else
@@ -49,9 +53,11 @@ public class BoardNodeDrawer : MonoBehaviour
         if (!node.IsOccupied())
         {
             if (orb.localScale != Vector3.zero) Tween.Scale(orb, Vector3.zero, duration);
+            chargeText.text = string.Empty;
             return;
         }
 
+        chargeText.text = node.Piece.Charge.ToString();
         Color targetColor = Color.white;
         if (node.Piece.Owner is BoardPlayer)
             targetColor = playerColor; 

@@ -20,6 +20,8 @@ public class SelectionManager : Singleton<SelectionManager>
     [SerializeField] private SelectionBehavior currentBehavior; 
     
     public event Action onSelectonEnded = delegate {};
+
+    private bool blockSelection = false;
     
     int GetTrueIndex(int index, List<ISelectable> items)
     {
@@ -69,6 +71,7 @@ public class SelectionManager : Singleton<SelectionManager>
     private void Update()
     {
         if (!active) return; 
+        if (blockSelection) return;
         
         NavigateSelectables();
         
@@ -84,6 +87,7 @@ public class SelectionManager : Singleton<SelectionManager>
             ); 
         }
     }
+    public void BlockSelection(bool block) => blockSelection = block;
 
     void NavigateSelectables()
     {

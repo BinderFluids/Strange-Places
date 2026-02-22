@@ -1,16 +1,16 @@
+using System;
+using ScriptableVariables;
+using TMPro;
 using UnityEngine;
 
 public class ActionLeftIndicator : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [SerializeField] private IntVariable actionsLeft;
+    [SerializeField] private TMP_Text text;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    private void Awake() => actionsLeft.OnValueChanged += OnValueChanged; 
+    
+    void OnValueChanged(int value) => text.text = value.ToString();
+    
+    private void OnDestroy() => actionsLeft.OnValueChanged -= OnValueChanged;
 }
