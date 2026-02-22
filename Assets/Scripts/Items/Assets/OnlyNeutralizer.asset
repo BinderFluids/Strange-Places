@@ -10,16 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a90851fabee4bbeaf2ba42414e5ab6f, type: 3}
-  m_Name: ItemLootTableData
+  m_Name: OnlyNeutralizer
   m_EditorClassIdentifier: Assembly-CSharp::ItemLootTableData
   lootTable:
-  - item: {fileID: 7585239844593404681, guid: ad361d26338f44438bff7dea657d4f98, type: 3}
-    weight: 0
-  - item: {fileID: 5250413132192450935, guid: 6ee966878df4def07a3d11f43f068c3b, type: 3}
-    weight: 0
-  - item: {fileID: 2974670287391853193, guid: 269a6d7ea8689211b957a87f1a61daa3, type: 3}
-    weight: 0
-  - item: {fileID: 2221864940729765104, guid: 3af9b10e09845d1afb46ff4e6b4bd073, type: 3}
-    weight: 0
   - item: {fileID: 2674465852263850688, guid: 4f8d8504c142cc9b49b90ab5438897b8, type: 3}
     weight: 0

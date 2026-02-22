@@ -14,10 +14,14 @@ public class BoardPlayer : BoardActor
         Item,
         Board
     }
-
+    
     [SerializeField] private int defaultReach = 2; 
     [SerializeField] private IntVariable reach;
     public int Reach => reach.Value;
+
+    [SerializeField] private IntVariable actionsAvailableVariable;
+    protected override int actionsAvailable { get => actionsAvailableVariable.Value; set => actionsAvailableVariable.Value = value; }
+    
     
     private Phase phase = Phase.None; 
     [SerializeField] private GameObject overHeadCam;
@@ -77,6 +81,7 @@ public class BoardPlayer : BoardActor
     }
     void StartBoardModification()
     {
+        workingGrid.ClearActionStack();
         phase = Phase.Board;
         foreach(var item in Items) item.gameObject.SetActive(true);
         overHeadCam.SetActive(true); 

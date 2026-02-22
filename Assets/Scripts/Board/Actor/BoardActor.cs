@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoardActor : MonoBehaviour, IPieceOwner
+public abstract class BoardActor : MonoBehaviour, IPieceOwner
 {
     [SerializeField] protected int actionsPerTurn = 2;
-    protected int actionsAvailable = 2;
+    protected abstract int actionsAvailable { get; set; }
     
     [SerializeField] private List<BoardItem> items = new();
     public List<BoardItem> Items => items;

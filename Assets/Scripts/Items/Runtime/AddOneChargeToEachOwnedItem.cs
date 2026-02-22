@@ -1,4 +1,4 @@
-public class AddOneChargeToEachOwned : BoardItem
+public class AddOneChargeToEachOwnedItem : BoardItem
 {
     public override void Use()
     {

@@ -1,7 +1,7 @@
 using ScriptableVariables;
 using UnityEngine;
 
-public class IncreasePlayerReach : BoardItem
+public class IncreasePlayerReachItem : BoardItem
 {
     [SerializeField] private IntVariable reach; 
     

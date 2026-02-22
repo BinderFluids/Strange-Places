@@ -29,7 +29,9 @@ public class BoardPiece
     {
         this.owner = owner;
         this.charge = charge;
-        this.attributes = attributes ?? new HashSet<BoardPieceAttribute>();
+        if (attributes != null) 
+            foreach (var attr in attributes) TryAddAttribute(attr);
+        
         resolverType = ResolverType.None;
         DoDebug($"Created Piece {this}");
     }
@@ -38,8 +40,9 @@ public class BoardPiece
     {
         owner = other.Owner;
         this.charge = other.Charge;
-        attributes = new HashSet<BoardPieceAttribute>(other.Attributes);
-        resolverType = other.ResolverType;
+        
+        if (other.attributes != null) 
+            foreach (var attr in other.attributes) TryAddAttribute(attr);
     }
     
     public void ChangeCharge(int amt)
@@ -52,8 +55,9 @@ public class BoardPiece
     {
         if (attributes.Any(a => a.GetType() == attribute.GetType())) return false;  
         
-        attributes.Add(attribute);
-        attribute.OnAdd();
+        var newAttribute = BoardPieceAttribute.Create(attribute.GetType(), this);
+        attributes.Add(newAttribute);
+        newAttribute.OnAdd();
 
         return true;
     }
@@ -73,7 +77,7 @@ public class BoardPiece
 
     public void SetResolver(ResolverType type)
     {
-        Debug.Log($"Setting Resolver to {type}");
+        
         resolverType = type;
     }
 

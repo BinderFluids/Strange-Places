@@ -20,6 +20,7 @@ public class Grid<T> where T : IGridNode
     }
     private Stack<IGridAction<T>> actionStack = new();
     public Stack<IGridAction<T>> ActionStack => actionStack;
+    public void ClearActionStack() => actionStack.Clear();
     
     private HashSet<Vector2Int> dirtyNodes = new(); 
     

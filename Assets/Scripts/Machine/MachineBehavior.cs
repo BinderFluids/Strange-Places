@@ -50,7 +50,7 @@ public class MachineBehavior : MonoBehaviour
             await movementTween;
             await UniTask.WaitForSeconds(1f);
 
-            points.Value += movementCharge.Value; 
+            points.Value += movementCharge.Value * moveDir; 
         }
         
         playerCamContainer.SetActive(true); 

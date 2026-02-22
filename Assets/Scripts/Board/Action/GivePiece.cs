@@ -21,17 +21,26 @@ public class GivePiece : BoardAction
         if (!ctx.TryGet(activeCoords, out BoardNode active)) return;
         
         BoardPiece pieceToAdd = new BoardPiece(incomingPiece.Owner, incomingPiece.Charge);
-        
+
         if (active.IsOccupied())
-            foreach (BoardPieceAttribute attribute in incomingPiece.Attributes)
-            {
-                var newAddAttributeAction = CreateAddAttributeAction(attribute);
-                newAddAttributeAction.Execute(activeCoords, ctx);
-            }
+            TryAddAttributes(active); 
+        
+        bool wasOccupied = active.IsOccupied();
         active.AddPiece(pieceToAdd);
+        if (!wasOccupied) TryAddAttributes(active); 
+        
         active.OnBoardEnter();
         ctx.UpdateNodes();
         DoDebug($"Gave Piece {incomingPiece} to {activeCoords}");
+    }
+
+    void TryAddAttributes(BoardNode active)
+    {
+        foreach (BoardPieceAttribute attribute in incomingPiece.Attributes)
+        {
+            var newAddAttributeAction = CreateAddAttributeAction(attribute);
+            newAddAttributeAction.Execute(activeCoords, ctx);
+        }
     }
 
     protected override void OnUndo()

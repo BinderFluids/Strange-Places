@@ -119,6 +119,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &16785238 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2674465852263850688, guid: 4f8d8504c142cc9b49b90ab5438897b8, type: 3}
+  m_PrefabInstance: {fileID: 1500346796}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d1da44ae6a749d0929102bdd40e8719, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NeutralizeNewPiecesItem
 --- !u!1 &63701861
 GameObject:
   m_ObjectHideFlags: 0
@@ -2047,7 +2058,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemLootTableGiver
   itemAnchor: {fileID: 837851623}
-  lootTable: {fileID: 11400000, guid: 5266d43760ecf47e4b66c5e429d4aed4, type: 2}
+  lootTable: {fileID: 11400000, guid: 1a7e6ef3542da87bc8d5f685b3a55ad4, type: 2}
   player: {fileID: 1719953073}
 --- !u!4 &932529408
 Transform:
@@ -2807,6 +2818,63 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1001 &1500346796
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1249511445321023332, guid: 4f8d8504c142cc9b49b90ab5438897b8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.29007
+      objectReference: {fileID: 0}
+    - target: {fileID: 1249511445321023332, guid: 4f8d8504c142cc9b49b90ab5438897b8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.24177
+      objectReference: {fileID: 0}
+    - target: {fileID: 1249511445321023332, guid: 4f8d8504c142cc9b49b90ab5438897b8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.22062
+      objectReference: {fileID: 0}
+    - target: {fileID: 1249511445321023332, guid: 4f8d8504c142cc9b49b90ab5438897b8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1249511445321023332, guid: 4f8d8504c142cc9b49b90ab5438897b8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1249511445321023332, guid: 4f8d8504c142cc9b49b90ab5438897b8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1249511445321023332, guid: 4f8d8504c142cc9b49b90ab5438897b8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1249511445321023332, guid: 4f8d8504c142cc9b49b90ab5438897b8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1249511445321023332, guid: 4f8d8504c142cc9b49b90ab5438897b8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1249511445321023332, guid: 4f8d8504c142cc9b49b90ab5438897b8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2633341866092825774, guid: 4f8d8504c142cc9b49b90ab5438897b8, type: 3}
+      propertyPath: m_Name
+      value: Neutralize
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4f8d8504c142cc9b49b90ab5438897b8, type: 3}
 --- !u!1 &1523587324
 GameObject:
   m_ObjectHideFlags: 0
@@ -3601,9 +3669,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoardPlayer
   actionsPerTurn: 3
-  items: []
+  items:
+  - {fileID: 16785238}
   defaultReach: 2
   reach: {fileID: 11400000, guid: d88d4d9413dc3481b9aec605b09d9c91, type: 2}
+  actionsAvailableVariable: {fileID: 11400000, guid: 5f6aa8d936b1d9cefac1e634befc48b3, type: 2}
   overHeadCam: {fileID: 1951880972}
   firstPersonCam: {fileID: 115750404}
   boardNodeSelector: {fileID: 1865245334}
@@ -3867,7 +3937,7 @@ MonoBehaviour:
   player: {fileID: 1719953073}
   opponent: {fileID: 1570905334}
   points: {fileID: 11400000, guid: be5a228e57ef993579e696f54145c48a, type: 2}
-  pointsToLose: -4
+  pointsToLose: -5
   pointsToWin: 5
   stateText: {fileID: 63701863}
 --- !u!4 &1865245333
@@ -4440,3 +4510,4 @@ SceneRoots:
   - {fileID: 1613818512}
   - {fileID: 763614108}
   - {fileID: 1499095587}
+  - {fileID: 1500346796}

@@ -31,7 +31,6 @@ public class SelectionManager : Singleton<SelectionManager>
     public void StartSelection(List<ISelectable> items, int index = 0, SelectionBehavior behavior = null, bool endOnSelect = true)
     {
         this.endOnSelect = endOnSelect;
-        print($"Try Start Selection with {items.Count} items");
         if (active)
         {
             Debug.LogWarning("Selection already started");

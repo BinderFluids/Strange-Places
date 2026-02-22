@@ -1,7 +1,9 @@
 
 using System.Collections.Generic;
+using System.Text;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Profiling;
 using UnityUtils;
 
 public delegate bool BoardEvaluatorDelegate(Grid<BoardNode> ctx, IPieceOwner activeOwner, IPieceOwner otherOwner, out Vector2Int targetCoords, out IGridAction<BoardNode> action);
@@ -9,9 +11,11 @@ public delegate bool BoardEvaluatorDelegate(Grid<BoardNode> ctx, IPieceOwner act
 public class BoardBot : BoardActor
 {
     private BoardEvaluatorDelegate[] evaluationOrder;
-    private BoardEvaluatorDelegate[] specialActions;
+    private BoardEvaluatorDelegate[] postPlayerPushAction;
+    private BoardEvaluatorDelegate[] postPlayerActions;
     private Queue<ActionCoordsPair> actionQueue = new();
-    
+    protected override int actionsAvailable { get ; set; }
+
     [SerializeField] private BoardPlayer player;
     private int turnIndex = 0; 
     
@@ -29,12 +33,16 @@ public class BoardBot : BoardActor
             PushAdvantage,
             PlaceRandomly
         };
-        specialActions = new BoardEvaluatorDelegate[]
+        postPlayerPushAction = new BoardEvaluatorDelegate[]
         {
-            //RemoveChargesIfOverFive,
+            FillWhenRankTwoFull
+        };
+        postPlayerActions = new BoardEvaluatorDelegate[]
+        {
+            RemoveChargesIfOverFive,
         };
 
-        RunEvaluations();
+        RunEvaluations().Forget();
     }
 
     //Run evaluations on board snapshot
@@ -67,10 +75,12 @@ public class BoardBot : BoardActor
     }
 
     
+    public async UniTask PostPlayerTurnActions(Grid<BoardNode> ctx) => await TryEvaluators(ctx, postPlayerActions);
+    public async UniTask PostPlayerPushActions(Grid<BoardNode> ctx) => await TryEvaluators(ctx, postPlayerPushAction);
     //Run special actions on active board
-    public async UniTask TrySpecialActions(Grid<BoardNode> ctx)
+    async UniTask TryEvaluators(Grid<BoardNode> ctx, BoardEvaluatorDelegate[] evaluators = null)
     {
-        foreach (var eval in specialActions)
+        foreach (var eval in evaluators)
             eval(ctx, this, player, out var _, out var _);
     }
 
@@ -128,7 +138,7 @@ public class BoardBot : BoardActor
         out Vector2Int targetCoords, out IGridAction<BoardNode> action)
     {
         action = null;
-        var totalColumnCharge = GetTotalCharges(ctx, activeOwner, otherOwner, false);
+        var totalColumnCharge = GetTotalCharges(ctx, activeOwner, otherOwner);
         
         //find the column with the greatest difference
         int greatestDifference = 0;
@@ -158,9 +168,10 @@ public class BoardBot : BoardActor
         out Vector2Int targetCoords, out IGridAction<BoardNode> action)
     {
         targetCoords = Vector2Int.zero;
+        action = null;
         action = null; 
         
-        var totalColumCharge = GetTotalCharges(ctx, activeOwner, otherOwner);
+        var totalColumCharge = GetTotalCharges(ctx, activeOwner, otherOwner, false);
         List<int> openRanks = new();
 
         bool foundTarget = false; 
@@ -213,7 +224,7 @@ public class BoardBot : BoardActor
     public bool PlaceRandomly(Grid<BoardNode> ctx, IPieceOwner activeOwner, IPieceOwner otherOwner,
         out Vector2Int targetCoords, out IGridAction<BoardNode> action)
     {
-        targetCoords = new Vector2Int(Random.Range(0, ctx.Width - 1), ctx.Height - 1);
+        targetCoords = new Vector2Int(Random.Range(1, ctx.Width - 1), ctx.Height - 1);
         action = new GivePiece(new BoardPiece(activeOwner, 1));
         
         return true;
@@ -232,12 +243,39 @@ public class BoardBot : BoardActor
         {
             if (!node.IsOccupied()) return;
             if (node.Piece.Owner != otherOwner) return;
-            if (node.Piece.Charge < 5) return;
+            if (node.Piece.Charge < 6) return;
             
             node.TakePiece(3);
         });
 
         return true;
+    }
+
+    bool FillWhenRankTwoFull(Grid<BoardNode> ctx, IPieceOwner activeOwner, IPieceOwner otherOwner,
+        out Vector2Int targetCoords, out IGridAction<BoardNode> action)
+    {
+        targetCoords = Vector2Int.zero;
+        action = null;
+        
+        int playerCount = 0;
+        for (int i = 1; i < ctx.Width - 1; i++)
+        {
+            if (ctx.TryGet(i, ctx.Height - 2, out BoardNode node))
+                if (node.IsOccupied())
+                    if (node.Piece.Owner == otherOwner) playerCount++;
+        }
+
+        if (playerCount == 3)
+        {
+            Debug.Log("Filling rank one");
+            for (int i = 1; i < ctx.Width - 1; i++)
+            {
+                GivePiece givePiece = new GivePiece(new BoardPiece(activeOwner));
+                ctx.Execute(new Vector2Int(i, ctx.Height - 1), givePiece);
+            }
+        }
+        
+        return playerCount == 3; 
     }
     
     #endregion

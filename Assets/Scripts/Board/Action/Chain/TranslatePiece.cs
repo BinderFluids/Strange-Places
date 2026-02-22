@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class TranslatePiece<T> : BoardActionChain where T : BoardConflictResolver
@@ -31,9 +32,9 @@ public class TranslatePiece<T> : BoardActionChain where T : BoardConflictResolve
         if (targetNode.IsOccupied() && activeNode.Piece.Owner != targetNode.Piece.Owner)
         {
             BoardConflictResolver resolver; 
-            if (activeNode.Piece.ResolverType != ResolverType.None)
-                resolver = BoardConflictResolver.Create(activePiece.ResolverType, targetNode, direction, charge);
-            else if (targetNode.Piece.ResolverType != ResolverType.None)
+            if (activeNode.Piece.Attributes.Count(a => a is NeutralizingAttribute) > 0)
+                resolver = BoardConflictResolver.Create<Neutralize>(targetNode, direction, charge);
+            else if (targetNode.Piece.Attributes.Count(a => a is NeutralizingAttribute) > 0)
                 resolver = BoardConflictResolver.Create(targetNode.Piece.ResolverType, targetNode, direction, charge);
             else
                 resolver = BoardConflictResolver.Create<T>(targetNode, direction, charge);

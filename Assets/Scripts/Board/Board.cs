@@ -118,11 +118,11 @@ public class Board : MonoBehaviour
                 grid.Set(x, y, newNode);
                 nodeBehavior.Init(newNode);
                 nodeBehavior.Drawer.Init(newNode); 
-#if UNITY_EDITOR
+                
                 BoardNodeDebugDisplay debugDisplay = nodeBehavior.gameObject.GetComponent<BoardNodeDebugDisplay>();
                 debugDisplay.InitGizmos(colors[colorIndex % 2], gridCellSize);
                 debugDisplay.Init(); 
-#endif
+                
                 Vector3 boardOffsetLocal = new Vector3(x * gridCellSize, 0f, y * gridCellSize);
                 Vector3 squareOffsetLocal = new Vector3(gridCellSize / 2f, 0f, gridCellSize / 2f);
                 Vector3 cellLocalPosInAnchorSpace = boardOffsetLocal + squareOffsetLocal;

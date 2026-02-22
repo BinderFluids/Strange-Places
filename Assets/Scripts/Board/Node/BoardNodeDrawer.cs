@@ -1,16 +1,19 @@
 using System;
+using System.Linq;
 using EventBus;
 using PrimeTween;
 using UnityEngine;
 
 public class BoardNodeDrawer : MonoBehaviour
 {
+    [SerializeField] private AnimationCurve sizeCurve;
     [SerializeField] private Transform pieceAnchor; 
     [SerializeField] private Transform orb;
     [SerializeField] private float orbSizeStep = 0.1f;
     [SerializeField] private Renderer orbRenderer;
     [SerializeField] private Color playerColor = Color.darkGreen;
     [SerializeField] private Color opponentColor = Color.red;
+    [SerializeField] private Color neutralizedColor = Color.yellow;
     [SerializeField] private Color highlightedColor = Color.blue;
     [SerializeField] private Color dullColor = Color.yellow;
     [SerializeField] private Renderer[] highlighters; 
@@ -25,7 +28,6 @@ public class BoardNodeDrawer : MonoBehaviour
 
         if (node is NullBoardNode) return;
         this.node = node; 
-        //node.onNodeUpdate += OnNodeUpdate;
         selectBinding = new EventBinding<SelectBoardNodeEvent>(OnSelectBoardNodeEvent);
     }
 
@@ -55,6 +57,9 @@ public class BoardNodeDrawer : MonoBehaviour
             targetColor = playerColor; 
         if (node.Piece.Owner is BoardBot)
             targetColor = opponentColor;
+        if (node.Piece.Attributes.Any(a => a is NeutralizingAttribute))
+            targetColor = neutralizedColor;
+        
         
         orbRenderer.material.color = targetColor; 
         

@@ -5,6 +5,7 @@ using UnityEngine;
 using EventBus;
 using ScriptableVariables;
 using TMPro;
+using UnityEngine.SceneManagement;
 using UnityUtils;
 
 public class GameManager : Singleton<GameManager>
@@ -40,6 +41,14 @@ public class GameManager : Singleton<GameManager>
         StartPlayerTurn();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R) && !gameStarted)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+    }
+
     private Grid<BoardNode> gridSnapshot; 
     void StartPlayerTurn()
     {
@@ -69,13 +78,16 @@ public class GameManager : Singleton<GameManager>
     {
         float delay = .35f;
 
-        await opponent.TrySpecialActions(board.Grid);
+        await opponent.PostPlayerTurnActions(board.Grid);
         TriggerTurnEvent(GameTurnEvent.ActorType.Player, GameTurnEvent.TurnType.End);
         opponent.onTurnEnd -= TriggerEndOpponentTurn;
         
         
         TriggerTurnEvent(GameTurnEvent.ActorType.Player, GameTurnEvent.TurnType.ShiftStart);
         ShiftPlayersPieces();
+        await UniTask.WaitForSeconds(delay);
+        await opponent.PostPlayerPushActions(board.Grid); 
+        
         TriggerTurnEvent(GameTurnEvent.ActorType.Player, GameTurnEvent.TurnType.ShiftEnd);
         await UniTask.WaitForSeconds(delay); 
         
