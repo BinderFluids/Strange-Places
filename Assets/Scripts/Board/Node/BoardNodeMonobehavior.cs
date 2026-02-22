@@ -19,7 +19,13 @@ public class BoardNodeMonobehavior : MonoBehaviour
         selectBinding = new EventBinding<SelectBoardNodeEvent>(OnSelectBindingEvent);
         EventBus<SelectBoardNodeEvent>.Register(selectBinding);
     }
-    public void Init(BoardNode node) => this.node = node;
+    public void Init(BoardNode node)
+    {
+        
+        this.node = node;
+        if (Node is NullBoardNode)
+            gameObject.SetActive(false); 
+    }
 
     void OnSelectBindingEvent(SelectBoardNodeEvent boardNodeEvent)
     {

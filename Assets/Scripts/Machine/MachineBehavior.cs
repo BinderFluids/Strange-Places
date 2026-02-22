@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using PrimeTween;
 using ScriptableVariables;
 using UnityEngine;
+using UnityEngine.Splines;
 
 public class MachineBehavior : MonoBehaviour
 {
@@ -15,21 +16,38 @@ public class MachineBehavior : MonoBehaviour
     [SerializeField] private IntVariable queuedMove;
     [SerializeField] private IntVariable movementCharge;
     [SerializeField] private IntVariable points; 
-    [SerializeField] private float moveDistance;
     [SerializeField] private float moveDuration;
+    [SerializeField] private SplineContainer spline;
 
     [SerializeField] private Transform _transform;
     private Tween movementTween;
-
+    [SerializeField] private float currentProgress = .5f; 
+    
     public event Action onMoveComplete;
     
     private void Awake()
     {
         movementCharge.Value = 1;
-        
         _transform ??= GetComponent<Transform>();
+        
+        EvaluateSpline(currentProgress, 1);
     }
-    
+
+    private void Update()
+    {
+# if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            queuedMove.Value = 1;
+            Move().Forget();
+        } if (Input.GetKeyDown(KeyCode.L))
+        {
+            queuedMove.Value = -1;
+            Move().Forget();
+        }
+#endif
+    }
+
     public async UniTask Move()
     {
         int moveDir = queuedMove.Value > 0 ? 1 : -1;
@@ -39,24 +57,40 @@ public class MachineBehavior : MonoBehaviour
         machineMovingBackwardCamera.SetActive(moveDir == -1);
         machineMoveCameraContainer.SetActive(true); 
         
-        Debug.Log($"Moving {queuedMove.Value} steps in direction {moveDir}, with charge {movementCharge.Value}.");
-        for (int i = 0; i < Mathf.Abs(queuedMove.Value); i++)
+        int projectedMove = Mathf.Abs(queuedMove.Value * movementCharge.Value);
+        int pointsToWin = 5 - Mathf.Abs(points.Value);
+        int actualMove = Mathf.Min(projectedMove, pointsToWin);
+        
+        for (int i = 0; i < actualMove; i++)
         {
-            float moveVector = moveDistance * movementCharge.Value * moveDir;
-            movementTween = Tween
-                .PositionX(_transform, _transform.position.x + moveVector, moveDuration * movementCharge.Value)
-                .OnComplete(OnMoveComplete);
-            
+            float newProgress = Mathf.InverseLerp(-5, 5, points.Value + moveDir);
+            movementTween =  Tween.Custom(currentProgress, newProgress, moveDuration, onValueChange: t => {
+                EvaluateSpline(t, moveDir);
+            });
             await movementTween;
             await UniTask.WaitForSeconds(1f);
 
-            points.Value += movementCharge.Value * moveDir; 
+
+            points.Value += moveDir; 
         }
         
         playerCamContainer.SetActive(true); 
         machineMoveCameraContainer.SetActive(false);
         queuedMove.Value = 0;
         movementCharge.Value = 1; 
+    }
+
+    void EvaluateSpline(float progress, int dir)
+    {
+        // Update position based on the 0-1 interpolation
+        transform.position = spline.EvaluatePosition(progress);
+        // Optionally update rotation to face the spline direction
+        var look = Quaternion.LookRotation(spline.EvaluateTangent(progress));
+        look.x = 0;
+        look.z = 0;
+        if (dir < 0) look.y *= -1; 
+        transform.rotation = look; 
+        currentProgress = progress;
     }
 
     void OnMoveComplete()
