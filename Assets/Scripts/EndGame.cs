@@ -16,7 +16,8 @@ public class EndGame : MonoBehaviour
     [SerializeField] private PlayableDirector loseDirector;
 
     [SerializeField] private GameObject endGamePanel;
-    [SerializeField] private TMP_Text endGameText;
+    [SerializeField] private TMP_Text endMessage; 
+    [SerializeField] private TMP_Text[] endGameText;
     
     [SerializeField] private UnityEvent onGameEnd;
     
@@ -38,11 +39,16 @@ public class EndGame : MonoBehaviour
         await Tween.Color(blackoutImage, Color.black, duration);
         
         director.Play();
-        Tween.Color(endGameText, Color.clear, duration);
         
-        await UniTask.WaitForSeconds((float)director.duration + 2);
+        await Tween.Color(blackoutImage, Color.clear, duration);
         
-        Tween.Color(endGameText, Color.white, duration);
+        await UniTask.WaitForSeconds((float)director.duration);
+
+        print("asjkdfl");
+        endMessage.text = text; 
+        endGamePanel.SetActive(true);
+        foreach (var t in endGameText) 
+            Tween.Color(t, Color.white, duration);
     }
     
     private void Update()
@@ -51,5 +57,15 @@ public class EndGame : MonoBehaviour
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
+#if UNITY_EDITOR
+if (Input.GetKeyDown(KeyCode.Keypad1))
+{
+    GameWon();
+}
+if (Input.GetKeyDown(KeyCode.Keypad2))
+{
+    GameLost();
+}
+#endif
     }
 }

@@ -37,8 +37,24 @@ public class GameManager : Singleton<GameManager>
         gameStarted = false; 
     }
 
+    [SerializeField] private PlayableDirector introDirector; 
+    [SerializeField] private GameObject gameCameras;
+    [SerializeField] private GameObject title;
+    [SerializeField] private AudioSource introMusic;
+    [SerializeField] private AudioSource gameMusic; 
+    private void Update()
+    {
+        if (Input.anyKeyDown && !gameStarted) StartGame();
+    }
+
     public async void StartGame()
     {
+        introDirector.Stop(); 
+        gameCameras.SetActive(true);
+        title.SetActive(false);
+        introMusic.Stop();
+        gameMusic.Play();
+        
         await UniTask.Delay(TimeSpan.FromSeconds(4f));
         
         if (gameStarted) return;
