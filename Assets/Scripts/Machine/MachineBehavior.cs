@@ -30,7 +30,7 @@ public class MachineBehavior : MonoBehaviour
         movementCharge.Value = 1;
         _transform ??= GetComponent<Transform>();
         
-        EvaluateSpline(currentProgress, 1);
+        EvaluateSpline(currentProgress);
     }
 
     private void Update()
@@ -65,7 +65,7 @@ public class MachineBehavior : MonoBehaviour
         {
             float newProgress = Mathf.InverseLerp(-5, 5, points.Value + moveDir);
             movementTween =  Tween.Custom(currentProgress, newProgress, moveDuration, onValueChange: t => {
-                EvaluateSpline(t, moveDir);
+                EvaluateSpline(t);
             });
             await movementTween;
             await UniTask.WaitForSeconds(1f);
@@ -80,7 +80,7 @@ public class MachineBehavior : MonoBehaviour
         movementCharge.Value = 1; 
     }
 
-    void EvaluateSpline(float progress, int dir)
+    void EvaluateSpline(float progress)
     {
         // Update position based on the 0-1 interpolation
         transform.position = spline.EvaluatePosition(progress);
@@ -88,7 +88,6 @@ public class MachineBehavior : MonoBehaviour
         var look = Quaternion.LookRotation(spline.EvaluateTangent(progress));
         look.x = 0;
         look.z = 0;
-        if (dir < 0) look.y *= -1; 
         transform.rotation = look; 
         currentProgress = progress;
     }

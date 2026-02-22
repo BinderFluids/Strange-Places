@@ -66,7 +66,10 @@ public class BoardModifier
             if (grid.TryGet(activeCoords.x - 1, activeCoords.y, out BoardNode leftNode))
             {
                 if (leftNode is not NullBoardNode)
+                {
                     actor.UseAction(activeCoords, new TranslatePiece<Neutralize>(Vector2Int.left, 1));
+                    UpdateHoverState();
+                }
             }
         }
         if (Input.GetKeyDown(KeyCode.D) && activeNode.Node.IsOccupied())
@@ -74,7 +77,10 @@ public class BoardModifier
             if (grid.TryGet(activeCoords.x + 1, activeCoords.y, out BoardNode leftNode))
             {
                 if (leftNode is not NullBoardNode)
+                {
                     actor.UseAction(activeCoords, new TranslatePiece<Neutralize>(Vector2Int.right, 1));
+                    UpdateHoverState();
+                }
             }
         }
 
@@ -87,10 +93,20 @@ public class BoardModifier
             Debug.Log($"New Piece: {newPiece}");
             actor.UseAction(activeCoords, givePiece);
             BoardAction.doDebug = false;
+            UpdateHoverState();
         }
 
             
         Board.Instance.StopObservingAction();
+    }
+
+    void UpdateHoverState()
+    {
+        EventBus<SelectBoardNodeEvent>.Raise(new SelectBoardNodeEvent()
+        {
+            selectedNode = activeNode,
+            type = SelectBoardNodeEvent.Type.HoverOn
+        });
     }
     
     void OnAddAttributeToBoardModifier(AddAttributeToBoardModifier e) 

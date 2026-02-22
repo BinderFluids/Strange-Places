@@ -14,6 +14,7 @@ public class BoardNodeHoverDrawer : MonoBehaviour
     [SerializeField] private GameObject moveRight;
     [SerializeField] private GameObject moveLeft;
     [SerializeField] private GameObject moveUp;
+    [SerializeField] private Vector2Int nodeCoords;
     
     private void Awake()
     {
@@ -23,42 +24,34 @@ public class BoardNodeHoverDrawer : MonoBehaviour
 
     void OnSelectBoardNodeEvent(SelectBoardNodeEvent e)
     {
-        if (playerActionsLeft.Value <= 0)
-        {
-            HoverOff();
-            return;
-        }
-
+        //not my ndoe
         if (e.selectedNode != nodeMonobehavior)
         {
             HoverOff();
-            return;
-        }
-
-        if (!e.selectedNode.Node.IsOccupied() && e.selectedNode.Node.Coords.y > playerReach.Value - 1)
-        {
-            HoverOff();
-            return;
-        }
-        if (e.selectedNode.Node.IsOccupied())
-            if (e.selectedNode.Node.Piece.Owner is BoardBot) return;
-        {
-            HoverOff();
+            return; 
         }
         
-        if (e.type == SelectBoardNodeEvent.Type.HoverOn)
-        {
-            HoverOn(e);
-        }
-        else if (e.type == SelectBoardNodeEvent.Type.HoverOff)
-        {
+        
+        //hover off obv
+        if (e.type == SelectBoardNodeEvent.Type.HoverOff)
             HoverOff();
-        }
+        //no actions
+        if (playerActionsLeft.Value <= 0)
+            return;
+        //too far forward and no piece
+        if (!e.selectedNode.Node.IsOccupied() && e.selectedNode.Node.Coords.y > playerReach.Value - 1)
+            return;
+        if (e.selectedNode.Node.IsOccupied())
+            if (e.selectedNode.Node.Piece.Owner is BoardBot)
+                return;
+        
+        if (e.type == SelectBoardNodeEvent.Type.HoverOn) HoverOn(e);
     }
 
     void HoverOn(SelectBoardNodeEvent e)
     {
         light.SetActive(true); 
+        nodeCoords = e.selectedNode.Node.Coords;
         
         Vector2Int coords = e.selectedNode.Node.Coords;
         
@@ -68,12 +61,12 @@ public class BoardNodeHoverDrawer : MonoBehaviour
         if (!e.selectedNode.Node.IsOccupied()) return; 
         if (coords.x != 1)
             moveLeft.SetActive(true);
-        if (coords.x == 1 && coords.y == 2)
-            moveRight.SetActive(true);
+        if (coords is { x: 1, y: 2} )
+            moveLeft.SetActive(true);
         if (coords.x != 3)
             moveRight.SetActive(true);
         if (coords.x == 3 && coords.y == 2)
-            moveLeft.SetActive(true);
+            moveRight.SetActive(true);
     }
 
     void HoverOff()

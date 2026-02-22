@@ -124,6 +124,7 @@ public class BoardPlayer : BoardActor
     void EndItemPhase()
     {
         phase = Phase.Board;
+        itemPanel.SetActive(false); 
         SelectionManager.Instance.EndSelection();
     }
     
@@ -146,9 +147,6 @@ public class BoardPlayer : BoardActor
             overHeadCam.SetActive(true);
             firstPersonCam.SetActive(false);
         }
-        else if (Input.GetKeyDown(KeyCode.E))
-            EndItemPhase();
-
         if (!Input.GetKey(KeyCode.W))
         {
             itemPanel.SetActive(true); 
@@ -156,11 +154,19 @@ public class BoardPlayer : BoardActor
             overHeadCam.SetActive(false);
             firstPersonCam.SetActive(true);
         }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            EndItemPhase();
+        }
+
+        
     }
 
     [SerializeField] private GameObject undoButton; 
     void BoardPhaseUpdate()
     {
+        itemPanel.SetActive(false); 
         boardNodeSelector.UpdateSelect(this);
         boardModifier.Update(this);
         undoButton.SetActive(actionsAvailable < actionsStartedWith);
@@ -169,7 +175,9 @@ public class BoardPlayer : BoardActor
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (actionsAvailable > 0) return;
-            undoButton.SetActive(false); 
+            undoButton.SetActive(false);
+            progressTurnPanel.SetActive(false);
+            phase = Phase.None; 
             EndTurn();
         }
     }
@@ -184,5 +192,3 @@ public class BoardPlayer : BoardActor
         reach.OnValueChanged -= OnReachValueChanged;
     }
 }
-
-public struct PlayerUndoButtonEvent : IEvent { }
