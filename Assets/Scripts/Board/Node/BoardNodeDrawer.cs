@@ -70,6 +70,7 @@ public class BoardNodeDrawer : MonoBehaviour
         orbRenderer.material.color = targetColor; 
         
         Vector3 targetScale = orbSizeStep * node.Piece.Charge * Vector3.one;
+        targetScale = Vector3.ClampMagnitude(targetScale, .75f); 
         Vector3 offset = orbSizeStep * node.Piece.Charge * Vector3.up;
         
         if (orb.localScale != targetScale && !scaleTween.isAlive)

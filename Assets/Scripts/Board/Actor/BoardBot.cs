@@ -245,7 +245,7 @@ public class BoardBot : BoardActor
             if (node.Piece.Owner != otherOwner) return;
             if (node.Piece.Charge < 6) return;
             
-            node.TakePiece(3);
+            node.TakePiece(1);
         });
 
         return true;

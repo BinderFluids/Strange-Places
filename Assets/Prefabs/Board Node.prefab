@@ -1225,7 +1225,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6002634566401185880}
-  m_LocalRotation: {x: 0.20487793, y: 0.6767755, z: -0.20487793, w: 0.6767755}
+  m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1233,10 +1233,10 @@ RectTransform:
   - {fileID: 7661424115876540634}
   - {fileID: 929745721806691791}
   m_Father: {fileID: 8947333851654557753}
-  m_LocalEulerAnglesHint: {x: 33.685, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 90, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -0.1293, y: 0.1217}
+  m_AnchoredPosition: {x: -0.0128, y: 0.0582}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &911302079246860733
@@ -2009,6 +2009,7 @@ MonoBehaviour:
   moveRight: {fileID: 944029963542171615}
   moveLeft: {fileID: 6552338138528630016}
   moveUp: {fileID: 4225667539995503477}
+  nodeCoords: {x: 0, y: 0}
 --- !u!1 &6689545676779276021
 GameObject:
   m_ObjectHideFlags: 0
@@ -2020,7 +2021,7 @@ GameObject:
   - component: {fileID: 929745721806691791}
   - component: {fileID: 4274551166685880914}
   m_Layer: 5
-  m_Name: Vertical Group (1)
+  m_Name: Points
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2147,7 +2148,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
+    rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3

@@ -63,15 +63,15 @@ public class MachineBehavior : MonoBehaviour
         
         for (int i = 0; i < actualMove; i++)
         {
+            
+            points.Value += moveDir; 
+            
             float newProgress = Mathf.InverseLerp(-5, 5, points.Value + moveDir);
             movementTween =  Tween.Custom(currentProgress, newProgress, moveDuration, onValueChange: t => {
                 EvaluateSpline(t);
             });
             await movementTween;
             await UniTask.WaitForSeconds(1f);
-
-
-            points.Value += moveDir; 
         }
         
         playerCamContainer.SetActive(true); 

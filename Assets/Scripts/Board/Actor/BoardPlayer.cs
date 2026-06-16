@@ -171,6 +171,12 @@ public class BoardPlayer : BoardActor
         boardModifier.Update(this);
         undoButton.SetActive(actionsAvailable < actionsStartedWith);
         progressTurnPanel.SetActive(actionsAvailable == 0);
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            Undo();
+            return;
+        }
         
         if (Input.GetKeyDown(KeyCode.Space))
         {

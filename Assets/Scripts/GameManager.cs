@@ -42,6 +42,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject title;
     [SerializeField] private AudioSource introMusic;
     [SerializeField] private AudioSource gameMusic;
+    [SerializeField] private GameObject fillImage; 
 
     private float timeSinceStart = 0; 
     private void Update()
@@ -66,6 +67,7 @@ public class GameManager : Singleton<GameManager>
         gameMusic.Play();
         
         await UniTask.Delay(TimeSpan.FromSeconds(4f));
+        fillImage.SetActive(true);
         
         if (gameStarted) return;
         gameStarted = true;
